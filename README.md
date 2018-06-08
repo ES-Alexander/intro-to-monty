@@ -8,6 +8,24 @@ _________________________________
  Release Date: 07/05/2018
 _________________________________
 
+Lesson Breakdown:
+
+ - L1: Commenting & Variables
+ - L2: Conditionals, Variable Domains, and Operators
+ - L3: Data Storage, Iteration, and Keywords
+ - L4: Functional Programming, Functions, and Abstraction
+ - L5: File Types, Typecasting, User Input, String Formatting, Searching/Regex, and Imports/Libraries
+ - L6: Object Oriented Programming, Classes, Encapsulation, and Class- and Static- Methods and Variables
+ - L7: Inheritance, Abstract Classes, Libraries/Packages, and Polymorphism
+ - L8: Error Handling, Security, and Recursion
+ - L9: Graphical User Interfaces (Model-View-Controller Paradigm, Tkinter), and eval/exec Functions
+
+---------------------------------
+
+TEMPORARY DISCLAIMER:
+
+This is a beta version, without all intended features implemented. Presently I am working through writing all the notes, after which I intend to write a number of checkable examples for each lesson, along with some more challenging problems for every few lessons. Beyond this I hope to develop the full set of lessons into an interactive application, but priority is on the completion of lesson notes and exercises. If I have missed any content you feel should be covered, feel free to raise it as an issue and I will respond as I am able, potentially adding the requested content where appropriate.
+
 DISCLAIMER:
 
 This introductory python course is intended for near-beginners of programming, who understand the very basics of possible variable/object types, and that’s about it. More advanced programmers may still benefit from the detailed explanations, but may also find the pace at times a little slow. These users are directed to the “python_dict.py” file to find a quick list of basic syntax and features, after which they may feel inclined to complete the examples and challenge tasks without reading the more extensive notes.
