@@ -5,7 +5,7 @@ _________________________________
  Python Introductory Course:  
  Version: 0.1                 
  Author: ES Alexander         
- Release Date: 07/05/2018
+ Release Date: not yet released
 _________________________________
 
 Lesson Breakdown:
