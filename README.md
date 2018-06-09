@@ -19,6 +19,7 @@ Lesson Breakdown:
  - L7: Inheritance, Abstract Classes, Libraries/Packages, and Polymorphism
  - L8: Error Handling, Security, and Recursion
  - L9: Graphical User Interfaces (Model-View-Controller Paradigm, Tkinter), and eval/exec Functions
+ - L10: Code Testing and Repositories
 
 ---------------------------------
 
