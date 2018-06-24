@@ -153,7 +153,7 @@ my_example_instance = ExampleClass('test', 3)
     def __repr__(self):
         """ A formal representation of the class instance.
 
-        Executing the returned string from a rear function should return a
+        Executing the returned string from a repr function should return a
             copy of the current class instance.
 
         ClassName.__repr__() -> str
