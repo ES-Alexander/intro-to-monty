@@ -171,7 +171,7 @@ my_example_instance = ExampleClass('test', 3)
         ClassName.__repr__() -> str
 
         """
-        # A purely functional rear format
+        # A purely functional repr format
         return "ClassName({0},{1})".format(self._param1, self._param2)
 
 
