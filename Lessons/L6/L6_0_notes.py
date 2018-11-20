@@ -256,11 +256,11 @@ my_example_instance = ExampleClass('test', 3)
     which is necessary for the implementation, but which isn't intended to be
     directly accessible to programs using the class. Ordinarily no instance
     variables should be accessed directly, other than in testing. Instead,
-    appropriate 'getter' and 'modifier' methods should be written, which helps
-    to ensure no 'illegal' or disallowed changes are made. This also proves
-    beneficial in the logging of changes, since a change-log can be updated
-    each time a modifier method is called, whereas direct changes to variables
-    are much harder to track.
+    appropriate 'getter' and 'modifier' methods should be written (e.g.
+    get_name(), set_colour()), which helps to ensure no 'illegal' or disallowed
+    changes are made. This also proves beneficial in the logging of changes,
+    since a change-log can be updated each time a modifier method is called,
+    whereas direct changes to variables are much harder to track.
 
     In order to hide instance variables and methods, appropriate syntax is
     using a single underscore '_' as a prefix to the relevant variable or
