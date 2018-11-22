@@ -155,3 +155,14 @@ help(tuple) # tuple
     and NaN is used when numbers are assigned non-sensical values, and means
     "Not a number".
 '''
+
+# ----- NOTE: Mutability ----- #
+'''
+    Mutability is a descriptor specifying if a given variable can be changed.
+    While it is always possible to redefine a variable in the local context
+    (covered in lesson 2), actually changing its value is not always possible.
+
+    This leads to different versions of variables which can and cannot be
+    modified, such as lists (mutable, can be changed), and tuples (immutable,
+    cannot be changed).
+'''

@@ -19,42 +19,39 @@
     combined, a further class can inherit from all the desired classes, and any
     others as well.
 
-    As a notation of relation between classes, the inheritance hierarchy is
-    referred to using the words 'parent', or 'superclass' and 'child', or
-    'subclass'. The former pair refers to the class or classes inherited from,
-    and the latter to the inheriting class. Often it is desired for each class
-    to inherit from one other class only, but the availability of multiple
-    inheritance, which is inheritance from more than one class, can also be
-    advantageous.
+    The inheritance hierarchy is referred to using the words 'parent', or
+    'superclass' and 'child', or 'subclass'. The former pair refers to the
+    class or classes inherited from, and the latter to the inheriting class.
+    Often it is desired for each class to inherit from one other class only,
+    but sometimes it is beneficial to have multiple inheritance, which is
+    direct inheritance from more than one parent class.
 
     Formally, any child class must at minimum implement everything in their
-    parent class(es), so each existing property and method must exist, and for
-    consistency and best practice it is highly beneficial for any parent class
-    methods that are redefined to fulfil at least the same requirements set out
-    in the parent class. This is desired because child classes can then be
-    accepted in the place of parent classes without issue. In terms of python
-    implementation, child classes will register as instances of parent classes,
-    using the 'isinstance(class, type)' command, so unless the programmer is
-    certain that a child class will never be used in the place of a parent,
-    they should uphold specifications of all parent classes in any and all
-    child classes.
+    parent class(es), so each existing property and method must exist. For
+    consistency of use, it is best practice to uphold the specification of any
+    parent class methods that are redefined in a child class. This means that
+    redefining methods should only ever make their specification tighter,
+    resulting in output behaviour that is a subset of the behaviour specified
+    as allowable by the function definition in the parent. The major benefit of
+    this is that child class instances can then be accepted in the place of a
+    parent class instance without issue. In terms of python implementation,
+    child classes will register as instances of parent classes, using the
+    'isinstance(class, type)' command, so unless you are certain that a child
+    class will never be used in the place of a parent, you should uphold
+    specifications of all a class's parents in any and all child classes.
 
-    Elaborating the issues of a child class not upholding the requirements
-    specified by the parent, an instance of said child class could then be used
-    somewhere a parent class is expected and cause unexpected behaviour, with
-    method outputs that could break the program. In general, if it is desired
-    for a child class to build upon a parent class method, without following
-    the requirements specified by the parent, a new method should be defined.
-    This can potentially make use of the existing parent method, but can also
-    provide any desired additional functionality. This helps to prevent
+    If it is desired for a child class to build upon a parent class method,
+    without following the requirements specified by the parent, a new method
+    should be defined. This may make use of the existing parent method, but can
+    also provide any desired additional functionality. This helps to prevent
     potential issues, and allows for unlimited expansion of class hierarchy.
 
     By default, any inheriting class automatically implements all methods of
     its parents, but, for instantiable classes, instance variables must be
     specified in the __init__ function. This means all instantiable subclasses
     must re-implement the __init__ function, but any methods which don't
-    require changing are not required to be rewritten or redefined - they can
-    just be used as they would in the parent class.
+    require changing do not have to be rewritten or redefined - they can just
+    be used as they would in the parent class. (Example after next section).
 '''
 
 
@@ -63,19 +60,15 @@
 #-------------------- INSTANTIABLE CLASSES WITH INHERITANCE -------------------#
 '''
     Inheritance can be applied to both instantiable and non-instantiable
-    classes. In the case where creation of instances is not required,
-    inheritance would generally be used as a means of saving device memory.
-    With modern hardware this is increasingly becoming less of an issue, but
-    certain embedded robotics or control applications still require memory
-    saving, in which case it can be beneficial to implement minimum
-    functionality in the highest class in the hierarchy, and add additional
-    features to child classes, allowing for imports of varying degrees of
-    functionality as required.
+    classes, but is almost exclusively used for the former. For
+    non-instantiable classes, inheritance could potentially be used to extend
+    someone else's library without having to edit the original.
 
-    Given this is usually not the case, the more common case of
-    instantiable-class inheritance is displayed below. For non-instantiable
-    classes, the behaviour is the same, but without the necessity for instance
-    comparison or initialisation functions, such as __init__, or __eq__.
+    Given non-instantiable classes usually don't use inheritance, an example of
+    only instantiable-class inheritance is displayed below. For
+    non-instantiable classes, the behaviour is the same, but without the
+    necessity for instance comparison or initialisation functions, such as
+    __init__, or __eq__.
 '''
 
 
@@ -83,7 +76,8 @@
 # Single Inheritance:
 '''
     This represents the most used case, where each class inherits from only one
-    other class.
+    parent class. Note the tightening of specification of some of the parent
+    class methods.
 '''
 
 class MyParentClass(object):
@@ -247,13 +241,12 @@ def is_var2_valid(self):
     are first checked for in the current instance, NOT the superclass.
 
     Care must be taken in multi-inheritance situations, particularly when
-    defining the __init__ method. Ordinarily in multi-inheritance situations
-    super first checks through the first superclass in the subclass definition
-    statement, before checking subsequent classes. While using super is
-    perfectly acceptable, and in fact strongly encouraged in single-inheritance
-    __init__ methods, how to access the __init__ function of multiple
-    superclasses, in multi-inheritance, requires explicitly specifying which
-    superclass is desired.
+    defining the __init__ method. Ordinarily, super first checks through the
+    first superclass in the subclass definition statement, before checking
+    subsequent classes. While using super is perfectly acceptable, and in fact
+    strongly encouraged in single-inheritance __init__ methods, how to access
+    the __init__ function of multiple superclasses, in multi-inheritance,
+    requires explicitly specifying which superclass is desired.
 '''
 
 # ----- NOTE: Multi-Inheritance ----- #
@@ -264,12 +257,12 @@ def is_var2_valid(self):
     defined, inheriting from a class and one of its subclasses is unnecessary,
     since the subclass will already fully implement the behaviour of its
     superclass. Beyond this, inheriting both subclass and superclass leads to
-    some ambiguity as to which class' specification should be followed. More
+    some ambiguity as to which class's specification should be followed. More
     generally, in any situation where two superclasses implement the same
     method, a subclass inheriting from both should, for consistency, implement
-    the more stringent specification. In cases where one specification is not
-    fully encompassed by the other, care must be taken to ensure the method of
-    each superclass is only used explicitly from that class, to avoid ambiguity.
+    both specifications. In cases where one specification is not fully
+    encompassed by the other, care must be taken to ensure the method of each
+    superclass is only used explicitly from that class, to avoid ambiguity.
 '''
 
 # ----- NOTE: Diamond Behaviour ----- #
@@ -281,7 +274,7 @@ def is_var2_valid(self):
     same as with unrelated classes, where the first class checked is the first
     specified in the subsubclass definition. If the ambiguity is undesired from
     using a general super(), explicit superclass specification can be used as
-    displayed in the multi-inheritance example.
+    MyParentClass.__init__(var1,...).
 '''
 
 
@@ -298,26 +291,66 @@ def is_var2_valid(self):
     remainder of the program, and this is often used to allow for later
     implementation of some code.
 
-    While creating abstract classes by simply specifying the abstract nature in
-    the relevant documentation, there also exists an abstract class library,
-    which can be downloaded and installed from online. This provides a formal
-    set of tags and code which can specify a class as abstract, and gives some
-    additional functionality similar to that found in languages such as Java
-    for abstract class definitions.
+    While it is possible to create abstract classes by simply specifying the
+    abstract nature in the relevant documentation, there also exists an
+    abstract class library, which can be downloaded and installed from online.
+    This provides a formal set of tags and code which can specify a class as
+    abstract, and gives some additional functionality similar to that found in
+    languages such as Java for abstract class definitions.
 '''
 
 
 
-# Abstract Class
+# Abstract Class - No Importing (Generic)
 class AbstractExample(object):
     ''' An example abstract class. '''
     def __init__(self, var1):
         ''' An example class intended for building upon in subclasses.
 
+        (constructor method here is not abstract)
+
         Constructor: AbstractExample(object)
 
         '''
         self._var1 = var1
+
+    def method_1(self, var):
+        ''' Returns and prints a value.
+
+        'var' must be an integer satisfying the relation:
+            12 <= var <= 123
+
+        (Abstract method is specified but not implemented here)
+
+        AbstractExample.method_1(int) -> int
+
+        '''
+        pass
+
+
+# Abstract Class - w/ Import of Abstract Base Class (abc)
+# import relevant aspects of library
+from abc import ABC, abstractmethod
+
+# class declared with ABC instead of object
+class AbstractExample2(ABC):
+    ''' An example abstract class with included usage checks. '''
+    # Non-abstract methods are the same (see __init__ in previous example)
+    # Abstract methods should use the @abstractmethod tag, but are
+    # otherwise the same
+    @abstractmethod
+    def method_1(self, var):
+        ''' Returns and prints a value.
+
+        'var' must be an integer satisfying the relation:
+            12 <= var <= 123
+
+        (Abstract method is specified but not implemented here)
+
+        AbstractExample2.method_1(int) -> int
+
+        '''
+        pass
 
 
 
@@ -390,16 +423,13 @@ class AbstractExample(object):
 
 #-------------------------------- POLYMORPHISM --------------------------------#
 '''
-    The final aspect of this lesson covers a topic mostly relevant to other
-    programming languages, but which is worth knowing the terminology for.
     Polymorphism in a programming language is the ability for functions to
-    accept more than one type of input and still provide an appropriate output.
-    Python is implicitly polymorphic in that functions are not required to
-    specify the type of input variables they accept, and python does not check
-    the type of inputs to a function when running a program. This generally
-    makes for simpler coding, but also means that if an input of an invalid
-    type for a function is used, the program can sometimes throw an error and
-    stop execution.
+    optionally accept multiple types of input. Python is implicitly polymorphic
+    in that functions are not required to specify the type of input variables
+    they accept, and python does not check the type of inputs to a function
+    when running a program. This generally makes for simpler coding, but also
+    means that if an input of an invalid type for a function is used, the
+    program can sometimes throw an error and stop execution.
 
     Python's implicit polymorphism also comes with benefits, however. Robust
     python programs will often check for the type of input variables, which
@@ -418,3 +448,12 @@ class AbstractExample(object):
     documentation) of the function, as has been presented in the course thus
     far.
 '''
+
+
+# ----- NOTE: Docstring ----- #
+'''
+    The docstring in a python function is the documentation/specification at
+    the top, that comes directly after the line where it is named (between the
+    triple quotation marks).
+
+    END

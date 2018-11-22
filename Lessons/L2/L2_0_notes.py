@@ -38,6 +38,9 @@ elif <condition n>:
 else:
     <relevant code for if no conditions were true>
 
+# An if-else block in a single line
+<relevant code 1> if <condition> else <relevant code 2>
+
 
 
 # ----- NOTE: Indentation ----- #
