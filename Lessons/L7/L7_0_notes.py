@@ -246,7 +246,9 @@ def is_var2_valid(self):
     subsequent classes. While using super is perfectly acceptable, and in fact
     strongly encouraged in single-inheritance __init__ methods, how to access
     the __init__ function of multiple superclasses, in multi-inheritance,
-    requires explicitly specifying which superclass is desired.
+    requires parent class __init__ methods which make use of *args and **kwargs
+    with no overlaps, or requires explicitly specifying which superclass is
+    desired (e.g. A.__init__(self, var1), B.__init__(self, var2, var3)).
 '''
 
 # ----- NOTE: Multi-Inheritance ----- #
@@ -270,11 +272,9 @@ def is_var2_valid(self):
     The recombination in a subsubclass, of two or more subclasses inheriting
     from the same superclass can be visualised as a diamond. This behaviour is
     sometimes desirable within multi-inheritance, but can at times cause
-    confusion as to which superclass is preferred. Preferencing here is the
-    same as with unrelated classes, where the first class checked is the first
-    specified in the subsubclass definition. If the ambiguity is undesired from
-    using a general super(), explicit superclass specification can be used as
-    MyParentClass.__init__(var1,...).
+    confusion as to which superclass is preferred. Preferencing in python can
+    be checked by a class's __mro__ property, which follows the python Method
+    Resolution Order (the order it searches classes).
 '''
 
 
