@@ -442,9 +442,9 @@ class AbstractExample2(ABC):
     types and why their input was invalid. Additionally, some different
     hardware types have different amounts of memory assigned to different
     variable types. This can be problematic if code is explicitly written to
-    only allow for example numbers of a certain size, but a python program can
-    instead allow a function to accept any size of the same variable and the
-    program interpreter abstracts the memory considerations away from the
+    only allow, for example, numbers of a certain size, but a python program
+    can instead allow a function to accept any size of the same variable and
+    the program interpreter abstracts the memory considerations away from the
     programmer.
 
     To ensure users are able to input valid inputs to a function, if variables
