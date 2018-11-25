@@ -234,9 +234,15 @@ class MyChildChild(MyChild):
     check up through the inheritance hierarchy until finding the first
     occurrence of it, or, if not at all present, raising an error. This is an
     important part of inheritance, since it allows superclass methods to be
-    reused within their redefinition in a subclass. Once a superclass method
-    has been called, however, all variables and methods referenced within it
-    are first checked for in the current instance, NOT the superclass.
+    reused within their redefinition in a subclass.
+
+    Once a superclass method has been called, all variables and methods
+    referenced within it are first checked for in the current instance, NOT the
+    superclass. For example, consider a superclass which implements methods
+    add_to_var, and update_var, where update_var calls add_to_var internally.
+    If a subclass reimplements add_to_var, the subclass version of add_to_var
+    will be used for any subclass object, even when calling
+    super().update_var().
 
     Care must be taken in multi-inheritance situations, particularly when
     defining the __init__ method. Ordinarily, super first checks through the
