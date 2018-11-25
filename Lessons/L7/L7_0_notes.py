@@ -132,7 +132,7 @@ class MyChild(MyParentClass):
         Constructor: MyChild(int, object)
 
         '''
-        super().__init__(var)
+        super().__init__(var) # super explained in note below
         self._var2 = var2
         self._var3 = var3
 
@@ -185,8 +185,8 @@ class MyChild(MyParentClass):
         return True
 
 class MyChildChild(MyChild):
-''' Another representative child class. Inherits from MyChild. '''
-def __init__(self, var, var2, var3):
+    ''' Another representative child class. Inherits from MyChild. '''
+    def __init__(self, var, var2, var3):
         ''' A class for displaying subsubclass behaviour.
 
         'var' must be an integer between 0 and 10.
@@ -196,16 +196,16 @@ def __init__(self, var, var2, var3):
         Constructor: MyChild(int, object)
 
         '''
+        super().__init__(var, var2, var3)
 
-def is_var2_valid(self):
+
+    def is_var2_valid(self):
         ''' Returns True if var2 is an instance of MyChild.
 
         MyChildChild.is_var2_valid() -> bool
 
         '''
-        if not isinstance(self._var2, MyChild):
-            return False
-        return True
+        return isinstance(self._var2, MyChild)
 
     def is_var3_valid(self):
         ''' Returns True if var3 is a boolean.
@@ -213,18 +213,16 @@ def is_var2_valid(self):
         MyChildChild.is_var3_valid() -> bool
 
         '''
-        if not isinstance(self._var3, bool):
-            return False
-        return True
+        return isinstance(self._var3, bool)
 
 
 # ----- NOTE: Implicit Definitions ----- #
 '''
     Note that each successive class does not explicitly reimplement aspects of
     its superclass if they do not require modification. This allows significant
-    efficiency improvements to creating classes without inheritance, since each
-    function need only be defined once within the inheritance chain to be used
-    by all subclasses of the defining class.
+    efficiency improvements to creating classes, since each function need only
+    be defined once within the inheritance chain to be used by all subclasses
+    of the defining class.
 '''
 
 # ----- NOTE: Method 'super' ----- #
