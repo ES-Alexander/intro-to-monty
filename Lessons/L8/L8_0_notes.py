@@ -83,22 +83,26 @@ def list_divide(num_list):
 
 # Error Excepting
 '''
-    Errors in python can also be 'caught' using the keywords 'try' and 'except'
-    as below. Once an error has been caught, dealing with it is known as
-    'handling'.
+    Errors (formally Exceptions) in python can also be 'caught' using the
+    keywords 'try' and 'except' as below. The following example tries to read a
+    file specified by the user, and print the file to the console. If an error
+    occurs in reading the file (in the 'try' block), it is caught in the
+    'except' block and allows the user to try a different file. Once an error
+    has been caught, dealing with it is known as 'handling'.
 '''
 
 file_input_incomplete = True
 while file_input_incomplete:
     filename = input('Input filename: ')
     try:
-        # code which may cause an exception
+        # try some code which may cause an exception (error)
         file = open(filename, 'r')
         for line in file:
             print(line)
         file_input_incomplete = False
     except Exception as e:
-        # code if any exception occurs
+        # run some code if an exception was caught
+        # ('Exception' catches every possible error - more options below)
         print('File input failed, please try again.')
         print('Reason: ', e)
 
@@ -131,7 +135,7 @@ try:
 except Exception:
     pass
 finally:
-    print('This happens irrespective of if there is or isn't an error')
+    print("This happens irrespective of if there is or isn't an error")
     f.close() # closing a file is commonly done in a 'finally' block.
 
 
