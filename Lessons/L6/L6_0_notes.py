@@ -79,8 +79,8 @@
     input-checking function if the object requires regular input, and so on and
     so forth.
 
-    All base-level classes in python are based off the 'Object' class, and to
-    start with all our classes will take the form of 'class ClassName(Object)'.
+    All base-level classes in python are based off the 'object' class, and to
+    start with all our classes will take the form of 'class ClassName(object)'.
     The ClassName is in upper-camel-case, with the start of each word
     capitalised. Take note of the comment structure, since this helps make
     classes understandable in terms of what they do, without necessarily
@@ -90,7 +90,7 @@
     how to create an instance of it.
 '''
 
-class ExampleClass(Object):
+class ExampleClass(object):
     ''' An example class. '''
     
     # Class variables go outside of initialisation code - global to class.

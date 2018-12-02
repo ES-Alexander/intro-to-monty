@@ -123,7 +123,7 @@ class MyParentClass(object):
 
 class MyChild(MyParentClass):
     ''' A representative child class. Inherits from MyParentClass. '''
-    def __init__(self, var, var2, var3):
+    def __init__(self, var, var2, var3, *args, **kwargs):
         ''' A class for displaying subclass behaviour.
 
         'var' must be an integer between 0 and 10, exclusive.
@@ -132,7 +132,10 @@ class MyChild(MyParentClass):
         Constructor: MyChild(int, object)
 
         '''
-        super().__init__(var) # super explained in note below
+        # super and use of *args/**kwargs explained in notes below
+        # Every class not inheriting directly from object should use super and
+        # both *args and **kwargs in its __init__ method
+        super().__init__(var, *args, **kwargs)
         self._var2 = var2
         self._var3 = var3
 
@@ -186,7 +189,7 @@ class MyChild(MyParentClass):
 
 class MyChildChild(MyChild):
     ''' Another representative child class. Inherits from MyChild. '''
-    def __init__(self, var, var2, var3):
+    def __init__(self, var, var2, var3, *args, **kwargs):
         ''' A class for displaying subsubclass behaviour.
 
         'var' must be an integer between 0 and 10.
@@ -196,7 +199,7 @@ class MyChildChild(MyChild):
         Constructor: MyChild(int, object)
 
         '''
-        super().__init__(var, var2, var3)
+        super().__init__(var, var2, var3, *args, **kwargs)
 
 
     def is_var2_valid(self):
@@ -228,13 +231,27 @@ class MyChildChild(MyChild):
 # ----- NOTE: Method 'super' ----- #
 '''
     The 'super' method is used by a class to refer to its superclass(es). It
-    informs python to not check the current instance for a specified method or
-    property, and instead checks at the next level up. More generally if a
-    function or property is not defined in the current instance, python will
-    check up through the inheritance hierarchy until finding the first
+    informs python to not check the current instance/class for a specified
+    method or property, and instead checks at the next level up. More generally
+    if a function or property is not defined in the current instance, python
+    will check up through the inheritance hierarchy until finding the first
     occurrence of it, or, if not at all present, raising an error. This is an
     important part of inheritance, since it allows superclass methods to be
-    reused within their redefinition in a subclass.
+    used within their redefinition in a subclass.
+
+    The 'super' method can also be used for class and static methods, using
+    additional parameters. Calling super(type).method(vars) checks for method
+    starting at the next class from type in the inheritance hierarchy. This is
+    an unbound call, which means it can be used for staticmethods, but can also
+    be used for instance methods or class methods if self or a class are passed
+    in as the first variable in vars. Using super(type, type2).method(vars)
+    allows for calling classmethods of type2 (or higher in the hierarchy), but
+    only works if type2 is a subclass of type. Finally, super(type,
+    obj).method() (often used as super(type, self).method()) allows for
+    checking instance methods but skipping to check from the specified class
+    type (e.g. checking starting from a grandparent instead of a direct
+    parent). In this case, obj must be an instance of type (or an instance of a
+    subclass of type).
 
     Once a superclass method has been called, all variables and methods
     referenced within it are first checked for in the current instance, NOT the
@@ -244,41 +261,163 @@ class MyChildChild(MyChild):
     will be used for any subclass object, even when calling
     super().update_var().
 
-    Care must be taken in multi-inheritance situations, particularly when
-    defining the __init__ method. Ordinarily, super first checks through the
-    first superclass in the subclass definition statement, before checking
-    subsequent classes. While using super is perfectly acceptable, and in fact
-    strongly encouraged in single-inheritance __init__ methods, how to access
-    the __init__ function of multiple superclasses, in multi-inheritance,
-    requires parent class __init__ methods which make use of *args and **kwargs
-    with no overlaps, or requires explicitly specifying which superclass is
-    desired (e.g. A.__init__(self, var1), B.__init__(self, var2, var3)).
+    Care must be taken in multi-inheritance situations, where a class has
+    multiple direct parents, as explained below.
 '''
 
-# ----- NOTE: Multi-Inheritance ----- #
+# ----- NOTE: Multi-Inheritance + Method Resolution Order (MRO) ----- #
 '''
-    As mentioned in the 'super' note above, multi-inheritance gives preference
-    in the inheritance hierarchy in the order parent classes are provided in
-    the definition of a subclass. Assuming proper subclass behaviour is
-    defined, inheriting from a class and one of its subclasses is unnecessary,
-    since the subclass will already fully implement the behaviour of its
-    superclass. Beyond this, inheriting both subclass and superclass leads to
-    some ambiguity as to which class's specification should be followed. More
-    generally, in any situation where two superclasses implement the same
-    method, a subclass inheriting from both should, for consistency, implement
-    both specifications. In cases where one specification is not fully
-    encompassed by the other, care must be taken to ensure the method of each
-    superclass is only used explicitly from that class, to avoid ambiguity.
+    Multi-inheritance calls to super give preference in the inheritance
+    hierarchy in the order parent classes are provided in the definition of a
+    subclass. Where superclasses share a parent, the shared parent will be
+    preferenced after the last parent class which has it as a parent (e.g. with
+    classes A(object), B(A), C(A), D(object), E(B,C,D), the search preferencing
+    order for a super call in E occurs as B,C,A,D,object). This is known as the
+    Method Resolution Order (MRO), and defines the 'next level up' from each
+    class, which technically forms the full inheritance hierarchy. Linking this
+    to the super note, calling super() specifies to skip to checking from the
+    next class in the MRO, and calling super(type) starts searching from the
+    first class AFTER type. The search order can be checked by a class's
+    __mro__ property, or in the Method Resolution Order section at the start of
+    help(ClassName). The recombination in a subsubclass, of two or more
+    subclasses inheriting from the same superclass can be visualised as a
+    diamond, and is known as the diamond problem.
 '''
 
-# ----- NOTE: Diamond Behaviour ----- #
+
+
+# MRO + super
 '''
-    The recombination in a subsubclass, of two or more subclasses inheriting
-    from the same superclass can be visualised as a diamond. This behaviour is
-    sometimes desirable within multi-inheritance, but can at times cause
-    confusion as to which superclass is preferred. Preferencing in python can
-    be checked by a class's __mro__ property, which follows the python Method
-    Resolution Order (the order it searches classes).
+    As with single-inheritance cases, if B or C override a method in their
+    parent A, the method used will be the overriding method, the first detected
+    in the MRO. If both B and C override the method in A, and also both call
+    super(), then the super call in B will run the function from C, and the
+    super call in C will run the function from A (following the MRO). This
+    means a chain of methods can be formed, if super is used in all of them. It
+    also means that if a method of the desired name is found, but does not call
+    super, the super chain ends there. In the case where C calls super but B
+    does not, the method in C will never be reached, and only the method found
+    in B will be run.
+
+    In the following example, for
+    method1:
+        E1 = E() [MRO = B,C,A,D]
+        -> E1.method1('v1','v2','v3','v4','v5')
+        -> super -> B.method1(v1,v2,v3,v4,v5) -> v3,v4,v5 = *args
+        -> super -> C.method1(v1,v3,v4,v5) -> v4,v5 = *args
+        -> super -> A.method1(v1,v4,v5) -> v4,v5 = *args
+        -> super -> D.method1(v4,v5)
+        -> 'D: v4 v5'
+        -> 'A: v1'
+        -> 'C: v3'
+        -> 'B: v2'
+    method2:
+        E1 = E() [MRO = B,C,A,D]
+        -> E1.method2('v1','v2','v3')
+        -> super -> B.method2(v1,v2,v3) -> v3 = *args
+        -> super(A,self) -> D.method2('v1','v3')
+        -> 'D: v1'
+        -> 'B: v2'
+
+    Note that *args is required for allowing additional arguments to be passed
+    to later methods in the MRO. Generally if a method is intended to be part
+    of a super chain, it should include *args and **kwargs to allow for other
+    methods to pass variables through it. Note also that if D had called
+    super(), errors would have occurred due to the object class not
+    implementing method1 or method2. This goes to show that super chains should
+    end before object, which can be problematic if it's unknown which classes
+    will be inherited from by a subclass. If E had not inherited from D, then
+    A's calls to super would cause errors. Given D happened to also have a
+    method1 and method2 though, the situation worked out. Generally, if a class
+    inherits from object it should not call super() as there is no guarantee
+    that another class will come after it in the MRO and also implement the
+    required method(s).
+'''
+
+class A(object):
+    def method1(self, var1, *args):
+        super().method1(*args)
+        print('A:', var1)
+    def method2(self, var1, *args):
+        super().method2(*args)
+        print('A:', var1)
+
+class B(A):
+    def method1(self, var1, var2, *args):
+        super().method1(var1, *args)
+        print('B:', var2)
+    def method2(self, var1, var2, *args):
+        super(A, self).method2(var1, *args)
+        print('B:', var2)
+
+class C(A):
+    def method1(self, var1, var2, *args):
+        super().method1(var1, *args)
+        print('C:', var2)
+    def method2(self, var1, *args):
+        super().method2(*args)
+        print(var1)
+
+class D(object):
+    def method1(self, var1, var2):
+        print('D:', var1, var2)
+    def method2(self, var1, *args):
+        print('D:', var1)
+
+class E(B,C,D):
+    def method1(self, var1, var2, var3, var4, var5):
+        super().method1(var1, var2, var3, var4, var5)
+    def method2(self, var1, var2, var3):
+        super().method2(var1, var2, var3)
+
+
+# ----- NOTE: Multi-Inheritance + Generations ----- #
+'''
+    Assuming proper subclass behaviour is defined, inheriting from a class and
+    one of its subclasses is unnecessary, since the subclass will already fully
+    implement the behaviour of its superclass. Beyond this, inheriting both
+    subclass and superclass leads to some ambiguity as to which class's
+    specification should be followed.
+'''
+
+
+
+# Specific Parents
+'''
+    In general, if two superclasses implement the same method, a subclass
+    inheriting from both should, for consistency, implement both
+    specifications. In cases where one specification is not fully encompassed
+    by the other (e.g. two separate classes with a method of the same name),
+    care must be taken to ensure the method of each superclass is only used
+    explicitly from that class, to avoid ambiguity. This can be done using
+    ClassName.method(self, vars). The class whose method has been used should
+    be specified in the docstring of the method in the subclass using it.
+'''
+
+class A(object):
+    def method1(self, var1):
+        print(var1)
+
+class B(object):
+    def method1(self, var1):
+        print(var1)
+        print(var1)
+
+class C(A,B):
+    def method1(self, var1):
+        ''' Implements class B's method1. '''
+        B.method1(self, var1)
+    def method2(self, var1):
+        ''' Implements class A's method1. '''
+        A.method1(self, var1)
+
+
+# ----- NOTE: Multi-Inheritance and __init__ ----- #
+'''
+    For ease of multi-inheritance, __init__ method for all classes not
+    inheriting from object should include *args and **kwargs as arguments,
+    passed on via super. This allows for easier use of __init__ in a super
+    chain, as discussed in the MRO + super example above.
 '''
 
 
@@ -459,5 +598,3 @@ class AbstractExample2(ABC):
     The docstring in a python function is the documentation/specification at
     the top, that comes directly after the line where it is named (between the
     triple quotation marks).
-
-    END

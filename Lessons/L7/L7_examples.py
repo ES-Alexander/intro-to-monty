@@ -89,3 +89,11 @@ class PhysicalObject(object):
         '''
         return 'Physical Object:\n\tname: {0}\n\tmass: {1}'.format(self._name,
                                                                    self._mass)
+
+class FlyingObject(PhysicalObject):
+    ''' A class for flying objects. '''
+    def __init__(self, name, mass, other_vars, *args, **kwargs):
+        ''' docstring here. '''
+        super().__init__(name, mass, *args, **kwargs)
+        pass # rest of the __init__ function here
+    

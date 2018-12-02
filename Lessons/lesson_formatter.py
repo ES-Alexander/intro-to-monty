@@ -290,4 +290,4 @@ def note_heading(title):
 
 
 if __name__ == '__main__':
-    make_lesson_notes_from_file('L8.txt')
+    make_lesson_notes_from_file('L7.txt')
