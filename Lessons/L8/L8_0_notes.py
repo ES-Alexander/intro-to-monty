@@ -93,7 +93,7 @@ while file_input_incomplete:
     filename = input('Input filename: ')
     try:
         # code which may cause an exception
-        file = open(filename)
+        file = open(filename, 'r')
         for line in file:
             print(line)
         file_input_incomplete = False
@@ -124,7 +124,7 @@ except UnicodeError as e2:
     raised can be placed in a 'finally' block, after a try-except block.
 '''
 
-f = open(filename)
+f = open(filename, 'r')
 try:
     # potentially exceptional code
     pass
@@ -149,11 +149,11 @@ finally:
 # 'filename' predefined variable
 try:
     # attempt to open provided filename 'as-is'
-    f = open(filename)
+    f = open(filename, 'r')
 except FileNotFoundError:
     try:
         # attempt to open filename as a .txt file
-        f = open(filename + '.txt')
+        f = open(filename + '.txt', 'r')
     except FileNotFoundError:
         # provide exception message about not finding either file option
         raise FileNotFoundError("No such file or directory: '" +
