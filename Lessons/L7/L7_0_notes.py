@@ -299,39 +299,44 @@ class MyChildChild(MyChild):
     does not, the method in C will never be reached, and only the method found
     in B will be run.
 
+    Note that *args is required for allowing additional arguments to be passed
+    to later methods in the MRO. Generally if a method is intended to be part
+    of a super chain, it should include *args and **kwargs to allow for other
+    methods to pass variables through it.
+
     In the following example, for
     method1:
         E1 = E() [MRO = B,C,A,D]
         -> E1.method1('v1','v2','v3','v4','v5')
-        -> super -> B.method1(v1,v2,v3,v4,v5) -> v3,v4,v5 = *args
-        -> super -> C.method1(v1,v3,v4,v5) -> v4,v5 = *args
-        -> super -> A.method1(v1,v4,v5) -> v4,v5 = *args
+        -> super -> B.method1(v1,v2,v3,v4,v5)
+            B takes 2 vars (v1, v2), and v3,v4,v5 are in *args
+        -> super -> C.method1(v1,v3,v4,v5)
+            C takes 2 vars (v1, v3), and v4,v5 are in *args
+        -> super -> A.method1(v1,v4,v5)
+            A takes 1 var (v1), and v4,v5 are in *args
         -> super -> D.method1(v4,v5)
-        -> 'D: v4 v5'
-        -> 'A: v1'
-        -> 'C: v3'
-        -> 'B: v2'
+        -> D prints: 'D: v4 v5'
+            super call complete, return to A
+        -> A prints: 'A: v1'
+            super call complete, return to C
+        -> C prints: 'C: v3'
+            super call complete, return to B
+        -> B prints 'B: v2'
+            super call complete, return to E
+        -> E1.method1 complete
+
     method2:
         E1 = E() [MRO = B,C,A,D]
         -> E1.method2('v1','v2','v3')
-        -> super -> B.method2(v1,v2,v3) -> v3 = *args
-        -> super(A,self) -> D.method2('v1','v3')
-        -> 'D: v1'
-        -> 'B: v2'
-
-    Note that *args is required for allowing additional arguments to be passed
-    to later methods in the MRO. Generally if a method is intended to be part
-    of a super chain, it should include *args and **kwargs to allow for other
-    methods to pass variables through it. Note also that if D had called
-    super(), errors would have occurred due to the object class not
-    implementing method1 or method2. This goes to show that super chains should
-    end before object, which can be problematic if it's unknown which classes
-    will be inherited from by a subclass. If E had not inherited from D, then
-    A's calls to super would cause errors. Given D happened to also have a
-    method1 and method2 though, the situation worked out. Generally, if a class
-    inherits from object it should not call super() as there is no guarantee
-    that another class will come after it in the MRO and also implement the
-    required method(s).
+        -> super -> B.method2(v1,v2,v3)
+            B takes two vars (v1, v2), v3 is in *args
+        -> super(A,self) -> D.method2(v1,v3)
+            D takes 1 var (v1), v3 is in *args (and ignored)
+        -> D prints: 'D: v1'
+            super call complete, return to B
+        -> B prints: 'B: v2'
+            super call complete, return to E
+        -> E1.method2 complete
 '''
 
 class A(object):
@@ -369,6 +374,20 @@ class E(B,C,D):
         super().method1(var1, var2, var3, var4, var5)
     def method2(self, var1, var2, var3):
         super().method2(var1, var2, var3)
+
+'''
+    Recall the above classes: A(object), B(A), C(A), D(object), and E(B,C,D).
+
+    Note that if D had called super(), errors would have occurred due to the
+    object class not implementing method1 or method2. This goes to show that
+    super chains should end before object, which can be problematic if it's
+    unknown which classes will be inherited from by a subclass. If E had not
+    inherited from D, then A's calls to super would cause errors. Given D
+    happened to also have a method1 and method2 though, the situation worked
+    out. Generally, if a class inherits from object it should not call super()
+    as there is no guarantee that another class will come after it in the MRO
+    and also implement the required method(s).
+'''
 
 
 # ----- NOTE: Multi-Inheritance + Generations ----- #
