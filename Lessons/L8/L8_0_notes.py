@@ -96,10 +96,11 @@ while file_input_incomplete:
     filename = input('Input filename: ')
     try:
         # try some code which may cause an exception (error)
-        file = open(filename, 'r')
-        for line in file:
-            print(line)
-        file_input_incomplete = False
+        with open(filename, 'r') as file:
+            # with __ as __ automatically closes file once with block is closed
+            for line in file:
+                print(line)
+            file_input_incomplete = False
     except Exception as e:
         # run some code if an exception was caught
         # ('Exception' catches every possible error - more options below)
@@ -122,21 +123,42 @@ except UnicodeError as e2:
     print('Unicode Error', e2)
 
 
+# Nothing Bad Happened
+'''
+    Exception blocks also accept the 'else' keyword, the same way it's used in
+    an if block, as below.
+'''
+
+try:
+    # potentially exceptional code
+    pass
+except Exception as e:
+    print(e)
+else
+    print('Woohoo! It worked! :-)')
+
+
 # Finally Blocks
 '''
     Additional code which is desired to be run irrespective of any errors
     raised can be placed in a 'finally' block, after a try-except block.
 '''
 
-f = open(filename, 'r')
+# 'filename' predefined variable
+f = open(filename, 'r') # assumes there are no errors when opening the file
 try:
     # potentially exceptional code
-    pass
+    file_data = f.read() # could be bad
+    output = int(file_data) # probably bad
+    second_output = 10/output # also could be bad
 except Exception:
-    pass
+    output = 1
+    second_output = 10
+else:
+    print('<does a happy dance>')
 finally:
     print("This happens irrespective of if there is or isn't an error")
-    f.close() # closing a file is commonly done in a 'finally' block.
+    f.close() # always close files if opened outside of a with statement.
 
 
 # Exception Raising

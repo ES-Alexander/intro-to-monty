@@ -23,5 +23,26 @@
 
 # Exception Handling/Raising
 '''
+    Write a function 'check_file' which takes a filename and attempts to open it
+    and check its validity. If the file opens successfully but is not valid, an
+    'InvalidFileError' should be raised, with a meaningful message. A valid file 
+    should exist, should be readable, and should have the same number of lines 
+    as letters per line (e.g. a file with five lines should have five letters 
+    per line). Note that lines can also contain an arbitrary number of non-
+    letter characters. Letters that should be counted are lowercase and 
+    uppercase letters of the English alphabet. If the file is valid, check_file 
+    should return True. Any errors raised after the file has opened should be
+    re-raised as InvalidFileErrors, with their messages intact. If no message is
+    present, use the string form of the exception as the message.
     
+    Write another function 'user_interface' which takes no arguments. It should
+    repeatedly prompt the user for a filename until one is provided which passes 
+    the check_file function. Any errors raised by check_file should be caught,
+    with any messages printed to the user before the re-prompt.
 '''
+
+class InvalidFileError(Exception):
+    ''' An error for invalid file format. '''
+    def __init__(self, message):
+        self.message = message
+        
