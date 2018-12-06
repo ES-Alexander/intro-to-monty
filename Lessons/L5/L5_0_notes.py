@@ -50,6 +50,24 @@ my_file = open('filename.txt', 'r')
 my_file.close()
 
 
+# Opening Files (the 'Pythonic' way)
+'''
+    The open-close method of opening files intuitively makes sense, but
+    forgetting to close a file can cause issues. Python also includes a method
+    of opening files using the 'with' and 'as' keywords, which automatically
+    closes the files for you. This is less intuitive to use, but is safer, so
+    where possible is the preferred method of reading files. In this case,
+    don't try to close the file afterwards - as soon as you exit the with
+    block, the file is automatically closed.
+'''
+
+with open('filename.txt', 'r') as my_file:
+    # the file is open while in this block
+    <code>
+
+# file is now closed
+
+
 # ----- NOTE: Program Robustness ----- #
 '''
     While it is possible, and often simpler, to create a program which simply
