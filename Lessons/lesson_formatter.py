@@ -1,6 +1,6 @@
 # Lesson formatter
 
-files = ['L5','L6'] # The files to make notes from this run
+files = ['L5'] # The files to make notes from this run
 
 
 HASHES = ''

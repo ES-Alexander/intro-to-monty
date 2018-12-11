@@ -228,8 +228,9 @@ dob = 1901
     files or direct user input, and can also be useful in stripping out
     unwanted characters or expressions, or determining what type of information
     a particular string contains. Unfortunately the syntax of regular
-    expressions is quite content-heavy, so it is left for the reader to search
-    for themselves.
+    expressions is quite extensive, so it is left for the reader to search for
+    themselves (https://docs.python.org/3/library/re.html provides a good
+    starting point).
 '''
 
 
