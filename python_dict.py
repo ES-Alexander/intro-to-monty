@@ -8,7 +8,7 @@
 ################################################################################
 
 
-# GENERAL
+# GENERAL SPECIFIER SYNTAX IN THIS DOCUMENT
 
 """
 {}  : User defined input
