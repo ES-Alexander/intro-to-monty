@@ -194,13 +194,21 @@ string_var = input('message_string')
     the simplest options are to leave them blank, in which case the format
     function must contain the same number of arguments as there are brace
     pairs, or to number them (starting at 0), which allows for specific
-    ordering of format parameters, and for doubling of inputted values.
+    ordering of format parameters, and for using each inputted value multiple
+    times.
 
     Inputs can be explicit strings or other datatypes, or pre-existing
     variables.
 '''
 dob = 1901
 'my name is {}, and I was born in {}.'.format('Name', dob)
+    # 'my name is Name, and I was born in 1901.'
+
+'my name is {1}, and I was born in {0}.'.format(dob, 'Name')
+    # 'my name is Name, and I was born in 1901.'
+
+'Hi! My name is {0}, and I was born in {1}. {1} was great!'.format('Name', dob)
+    # 'Hi! My name is Name, and I was born in 1901. 1901 was great!'
 
 
 

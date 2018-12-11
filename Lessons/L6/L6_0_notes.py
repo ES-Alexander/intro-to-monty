@@ -147,13 +147,19 @@ my_example_instance = ExampleClass('test', 3)
     methods, which can be accessed by simply entering an object into the
     console/IDLE, or printing it respectively.
 
+    As an extension the the string formatting presented in lesson 5, using !r
+    and !s as part of the format specifiers returns the __repr__ and __str__
+    method of each variable specified as such. These should always be used in
+    the __repr__ and __str__ methods you define, to make best use of existing
+    class behaviours.
+
     Examples of each of these methods is provided below. Note the indentation,
     since these methods are within a class definition.
 '''
     def __repr__(self):
         """ A formal representation of the class instance.
 
-        Executing the returned string from a repr function should return a
+        Evaluating the returned string from a repr function should return a
             copy of the current class instance.
 
         ClassName.__repr__() -> str
@@ -162,7 +168,7 @@ my_example_instance = ExampleClass('test', 3)
         # A descriptive and functional repr format (param1 and param2 are
         # representative of the names of the inputs the class takes when
         # creating a new instance).
-        return "ClassName(param1={0},param2={1})".format(
+        return "ClassName(param1={0!r},param2={1!r})".format(
                             self._param1, self._param2)
 
     def __repr__(self):
@@ -172,7 +178,7 @@ my_example_instance = ExampleClass('test', 3)
 
         """
         # A purely functional repr format
-        return "ClassName({0},{1})".format(self._param1, self._param2)
+        return "ClassName({0!r},{1!r})".format(self._param1, self._param2)
 
 
     def __str__(self):
@@ -181,7 +187,7 @@ my_example_instance = ExampleClass('test', 3)
         ClassName.__str__() -> str
 
         """
-        return "ClassName:\n\tParam 1: {0}\n\tParam 2: {1}".format(
+        return "ClassName:\n\tParam 1: {0!s}\n\tParam 2: {1!s}".format(
             self._param1, self._param2)
 
 

@@ -73,8 +73,8 @@ class PhysicalObject(object):
         PhysicalObject.__repr__() -> str
 
         '''
-        return 'PhysicalObject(name="{0}", mass={1})'.format(self._name,
-                                                             self._mass)
+        return 'PhysicalObject(name="{0!r}", mass={1!r})'.format(self._name,
+                                                                 self._mass)
 
     def __str__(self):
         ''' Returns a human readable representation of this PhysicalObject.
@@ -87,8 +87,8 @@ class PhysicalObject(object):
         PhysicalObject.__str__() -> str
 
         '''
-        return 'Physical Object:\n\tname: {0}\n\tmass: {1}'.format(self._name,
-                                                                   self._mass)
+        return 'Physical Object:\n\tname: {0!s}\n\tmass: {1!s}'.format(
+            self._name, self._mass)
 
 class FlyingObject(PhysicalObject):
     ''' A class for flying objects. '''

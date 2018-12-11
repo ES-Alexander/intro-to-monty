@@ -1,5 +1,7 @@
 # Lesson formatter
 
+files = ['L5','L6'] # The files to make notes from this run
+
 
 HASHES = ''
 BLANK = ' '
@@ -21,7 +23,10 @@ def make_lesson_notes_from_file(filename):
     make_lesson_notes_from_file(filename.txt) -> str
 
     '''
-    input_file = open(filename, 'r')
+    try:
+        input_file = open(filename+'.txt','r')
+    except Exception:
+        input_file = open(filename,'r')
     decoded_file = input_file
     lesson_number = int(decoded_file.readline()[1:-1])
     topics = decoded_file.readline().strip().split(', ')
@@ -290,4 +295,6 @@ def note_heading(title):
 
 
 if __name__ == '__main__':
-    make_lesson_notes_from_file('L5.txt')
+    for file in files:
+        make_lesson_notes_from_file(file)
+    
