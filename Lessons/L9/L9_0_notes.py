@@ -111,7 +111,10 @@
         content.
 
         Canvas: a storage widget for a collection of 2D graphical objects - can
-        include drawings, other widgets, images, and more.
+        include drawings, other widgets, images, and more. When placing images
+        in a canvas, they should be stored outside of the function they're
+        created in, so they don't disappear instantly when the original
+        variables they referred to are deleted.
 
     If a widget is assigned to a variable on creation, its unique ID is stored
     in that variable. This can be used later to modify the properties of the
@@ -137,21 +140,39 @@
     With an established set of elements, the remaining aspect of the display is
     to position each widget in a desired position. This is known as geometry
     management. Tkinter has inbuilt geometry management functionality using
-    either 'pack' or 'grid'. Pack allows you to specify the direction in which
-    widgets should be placed within a container widget (e.g. a Frame or
-    Canvas), with subsequent widgets positioned relative to the earlier
+    either 'pack', 'grid', or 'place'. Pack allows you to specify the direction
+    in which widgets should be placed within a container widget (e.g. a Frame
+    or Canvas), with subsequent widgets positioned relative to the earlier
     positioned widgets. Grid allows for position specification in a grid (i.e.
     simply and nicely lines things up), and remembers previous settings when
-    hiding widgets, so they can be easily restored.
+    hiding widgets, so they can be easily restored. Place allows you to specify
+    the pixel locations of widgets, but that also makes it incredibly
+    inflexible, and it's rarely used as a result.
 
-    Pack and grid should never be used within the same container, but within
-    separate containers either can be used, irrespective of the management used
-    for the parent container. Pack was established before grid, so many online
+    Pack and grid should never be used within the same window - they don't play
+    nice with each other. Pack was established before grid, so many online
     examples use pack, and you may find old code which uses it. Pack is
     generally considered easier to use for laying out widgets in a single
     column or row, but otherwise grid is suggested (tkdocs suggests using grid
     for most, if not all geometry management).
+
+    Widgets will not appear in the GUI until they have been put in place with a
+    geometry manager.
 '''
+
+
+# ----- NOTE: Widget Creation and Geometry Management ----- #
+'''
+    When creating widgets and putting them into place, it's generally best
+    practice to keep the creation separate from the layout. This helps to make
+    code much more readable, and easier to debug. If a widget is put in place
+    in the same line it's created, it is anonymous - assigning the result to a
+    variable just leaves None in that variable. Sometimes anonymous behaviour
+    is desired, particularly if you have no desire to access certain widgets
+    once they've been created, but only do so if you know what you're doing,
+    and generally for small numbers so debugging isn't made too difficult.
+'''
+
 
 
 # GUI Example

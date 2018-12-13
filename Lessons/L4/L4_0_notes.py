@@ -133,12 +133,12 @@
     function.
 
     Descriptive comments at the start of a function are known as the function's
-    documentation, and should describe what the function does, including any
-    inputs it takes and outputs it generates or changes it causes. It is
-    important not to describe the method by which a function works in its
-    documentation, because doing so restricts the programmer's potential to
-    reimplement a function with more efficient code at a later date, and can
-    also at times present security issues.
+    docstring (documentation), and should describe what the function does,
+    including any inputs it takes and outputs it generates or changes it
+    causes. It is important not to describe the method by which a function
+    works in its documentation, because doing so restricts the programmer's
+    potential to reimplement a function with more efficient code at a later
+    date, and can also at times present security issues.
 
     Functions also have what is known as a return value, which can be either
     nothing, represented by the 'None' type, or some relevant variable useful
@@ -160,6 +160,7 @@ def my_func_1():
 
     my_func_1(None) -> None
     (function_name(datatype of inputs) -> Return type/s)
+
     '''
 
     <relevant function code>
@@ -170,6 +171,7 @@ def my_func_2(input_var):
     ''' Returns something useful based on the specified input_var.
 
     my_func_2(str) -> bool
+
     '''
 
     <relevant function code>
@@ -228,6 +230,9 @@ def my_func_2(input_var):
     These should be placed after any standard inputs, so parameters entered by
     the user are not assumed to be the optional ones, thus leaving one or more
     required inputs empty.
+
+    Any optional inputs should be denoted by a preceding asterisk (*) in the
+    function calling code in the docstring.
 '''
 
 
@@ -236,7 +241,8 @@ def my_func_2(input_var):
 def my_func_3(input_var, optional_var=False):
     ''' Uses an optional input (default False), returns something cool.
 
-    my_func_3(str, bool) -> str
+    my_func_3(str, *bool) -> str
+
     '''
 
     <relevant function code>
@@ -267,6 +273,7 @@ def my_func_4(input_var, *args, **kwargs):
     ''' Prints out all provided inputs in a pretty-print format.
 
     my_func_4(str, *args, **kwargs) -> None
+
     '''
     print("Initial value:", input_var)
     # Prints a new-line, before printing the variables in *args

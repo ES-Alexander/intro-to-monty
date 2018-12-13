@@ -14,8 +14,7 @@ class Model(object):
         
         '''
         # initialise memory and points
-        self.clear_defining_points()
-        self.clear_stored_points()
+        self.clear_data()
 
     def set_defining_points(self, points_map):
         ''' Sets the defining points of the graph.
@@ -54,6 +53,15 @@ class Model(object):
         self._verify_point(pixel_point) # raises exception on failure
         self._stored_points[tuple(pixel_point)] = \
                 self.get_graph_point(pixel_point)
+
+    def clear_data(self):
+        ''' Clears the defining and stored points.
+
+        Model.clear_data(None) -> None
+
+        '''
+        self.clear_defining_points()
+        self.clear_stored_points()
 
     def clear_defining_points(self):
         ''' Clears the defining points.
@@ -172,6 +180,10 @@ class Model(object):
         ''' Determines an affine transformation between 2D planes.
 
         'points_map' should be a 2D point mapping dictionary for 3 point pairs.
+
+        An affine transform maintains parallel lines, but allows for
+            translation, rotation, scaling, skewing, and mirroring. It is
+            exactly defined by three point pair mappings.
 
         Model.get_affine_transform(dict{p1N:p2N}) -> np.matrix
 
