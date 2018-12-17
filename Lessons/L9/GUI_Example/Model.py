@@ -33,26 +33,63 @@ class Model(object):
         self._defining_points = dict(points_map) # deep copy
         self._affine_transform = self.get_affine_transform(
             self._defining_points)
+        self._update_stored_points()
 
     def add_stored_point(self, pixel_point):
-        ''' Adds a point to the set of stored points.
+        ''' Adds a point to the set of stored points, returns graph point.
 
         The inputted pixel_point is stored as both a pixel point and respective
             graph point. Defining points must be set to add a stored point.
 
-        Raises Exception on invalid point, or if defining points not set.
+        Raises Exception on invalid point, or if defining points not defined.
 
-        Model.add_stored_point(tuple/list[int,int]) -> None
+        Model.add_stored_point(tuple/list[int,int]) -> tuple(float,float)
 
         '''
-        # check if defining points are empty
-        if not self._defining_points:
-            raise Exception(
-                "Defining points must be set to add a stored point.")
+        self._verify_defined() # check if defining points defined
+        self._verify_point(pixel_point) # validate input
+
+        graph_point = self.get_graph_point(pixel_point)
+        self._stored_points[tuple(pixel_point)] = graph_point
+
+        return graph_point
+
+    def remove_stored_point(self, pixel_point, max_dist=10):
+        ''' Returns the removed graph point from the set of stored points.
+
+        If pixel_point is not stored, removes the closest point if
+            within 'max_dist' pixels distance.
+
+        If no point is removed, returns None.
+
+        Raises Exception if defining points not defined.
+
+        Model.remove_stored_point(tuple/list[int,int], *int) ->
+                tuple(float,float)/None
+
+        '''
+        self._verify_defined() # check if defining points defined
+
+        # try to remove the exact point
+        point_removed = self._stored_points.pop(pixel_point, None)
         
-        self._verify_point(pixel_point) # raises exception on failure
-        self._stored_points[tuple(pixel_point)] = \
-                self.get_graph_point(pixel_point)
+        if point_removed is None:
+            # pixel_point is not a key in stored points, find nearest
+            closest_point, dist = Model.get_closest(pixel_point,
+                    list(self._stored_points.keys()))
+            if dist < max_dist:
+                point_removed = self._stored_points.pop(closest_point)
+                
+        return point_removed
+
+    def _update_stored_points(self):
+        ''' Updates all stored points based off the current affine transform.
+
+        Model._update_stored_points() -> None
+
+        '''
+        for pixel_point in self._stored_points:
+            self.add_stored_point(pixel_point)
 
     def clear_data(self):
         ''' Clears the defining and stored points.
@@ -116,6 +153,17 @@ class Model(object):
         # write output to file, closes itself on completion
         with open(filename, 'w') as file:
             file.write(output)
+
+    def _verify_defined(self):
+        ''' Check if the defining points have been defined yet, else Exception.
+
+        Model._verify_defined() -> None
+
+        '''
+        # check if defining points are empty
+        if not self._defining_points:
+            raise Exception(
+                "Defining points must be set to add/remove a stored point.")
 
     @staticmethod
     def _verify_points_map(points_map):
@@ -191,3 +239,36 @@ class Model(object):
         pixel_points = np.float32(list(points_map.keys()))
         graph_points = np.float32(list(points_map.values()))
         return cv2.getAffineTransform(pixel_points, graph_points)
+
+    @staticmethod
+    def get_closest(check_point, search_points):
+        ''' Returns the closest point and the shortest distance to check_point.
+
+        Returns None if no search points are provided.
+
+        Search is performed in ND domain, but dimension of check_point must
+            match that of the search_points.
+
+        Model.get_closest(tuple(float), tuple(tuple(float))) ->
+                tuple(tuple(float),float)
+
+        '''
+        # check if any points exist
+        if len(search_points) == 0:
+            return (None, np.Inf)
+        # convert to numpy elements
+        cp = np.matrix(check_point)
+        sps = np.matrix(search_points)
+        diff = sps - cp
+        
+        # get a list of the distance between check_point and each search point
+        dists = [np.linalg.norm(i) for i in diff]
+        # 'zip' joins N iterables for the first m elements, where m is the
+        #   length of the shortest iterable
+        #   -> Iterator[(dist[i],search_point[i])]
+        # 'key' in 'min' specifies the values being searched over (in this case
+        #   the values of dists). Also available in 'max' function.
+        min_dist, closest_point = min(zip(dists,search_points),
+                                      key=lambda dist_sp: dist_sp[0])
+        
+        return (closest_point, min_dist)

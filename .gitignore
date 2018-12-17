@@ -1,7 +1,7 @@
 # things to ignore in repo
 
 *.txt
-__pycache__/*
+*__pycache__*
 */Template/*
 *.zip
 *.csv

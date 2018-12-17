@@ -9,7 +9,7 @@ class Controller(object):
 
         Users select an image of a graph, then identify three points with well-
             defined locations, then add as many points as desired to the graph.
-            Both the selected points and the resulting graph image are saveable.
+            The selected points are saveable in a csv format.
         
         Constructor: Controller.__init__(*str)
 
@@ -34,6 +34,8 @@ class Controller(object):
         self._view.add_binding_func('save_data', self._model.save_data)
         self._view.add_binding_func('clear_data',self._model.clear_data)
         self._view.add_binding_func('new_point', self._model.add_stored_point)
+        self._view.add_binding_func('del_point',
+                                    self._model.remove_stored_point)
         self._view.add_binding_func('clear_stored_pts',
                                     self._model.clear_stored_points)
         self._view.add_binding_func('set_def_pts',
