@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+# library imports
 import tkinter as tk # GUI library
 from tkinter import * # get package constants (e.g. YES, NW, etc)
 from tkinter import filedialog # nice file access for opening/saving
@@ -8,7 +11,9 @@ from PIL import Image, ImageGrab # resizeable images, screenshots
 class View(object):
     ''' A class for a graph-analysis GUI. '''
 
+    # cursor options for each internal mode
     CURSOR = {'define':'circle', 'add':'crosshair', 'delete':'draped_box'}
+    # the set of valid external bindings used in the class
     _external_bindings = ['save_data', 'clear_data', 'clear_stored_pts',
                           'set_def_pts', 'new_point', 'del_point']
     
@@ -97,7 +102,6 @@ class View(object):
         self._setup_graph()
         self._setup_controls()
         self._setup_menubar()
-        #self._master.update() # update the window to current properties
 
     def _setup_graph(self):
         ''' Initialises the graph canvas in its own frame.
@@ -168,7 +172,13 @@ class View(object):
             self._def_pt_controls[point_id].set_view_submit(self._def_pt_submit)
 
     def _def_pt_select(self, index):
-        ''' '''
+        ''' Set the defining point with given index as selected.
+
+        'index' can be 0, 1, or 2.
+
+        View._def_pt_select(int) -> None
+
+        '''
         # update view state
         self._change_mode_to('define')
         self._dpid = index
@@ -177,7 +187,13 @@ class View(object):
         self._def_pt_controls[index].select()
 
     def _def_pt_submit(self, index):
-        ''' '''
+        ''' Set the defining point with given index as submitted.
+
+        'index' can be 0, 1, or 2.
+
+        View._def_pt_submit(int) -> None
+
+        '''
         # check if valid time to submit this def point
         if not self._graph_canvas.find_withtag('dpid{}'.format(index)):
             self._errors.set('Please set a defining point location on the ' +
@@ -199,7 +215,13 @@ class View(object):
             self._def_pt_select(index)
 
     def _def_pts_submit_external(self):
-        ''' '''
+        ''' Submit the defining points to the external data (Model).
+
+        All 3 defining points need to be specified.
+
+        View._def_pts_submit_external() -> None
+
+        '''
         def_pts_mapping = {}
         for point in range(3):
             pid = self._graph_canvas.find_withtag('dpid{}'.format(point))[0]
@@ -222,7 +244,11 @@ class View(object):
         self._call_bind_func('set_def_pts', def_pts_mapping)
 
     def _reset_def_points(self):
-        ''' '''
+        ''' Reset the defining point controls, and 'select' the first.
+
+        View._reset_def_points() -> None
+
+        '''
         # reset controls
         for point in range(3):
             self._def_pt_controls[point].reset()
@@ -263,7 +289,6 @@ class View(object):
         tk.Label(master, textvariable=self._errors, fg='red',
                  wraplength=200).grid(pady=10)
         
-
     def _setup_menubar(self):
         ''' Initialises the menubar with the desired menus.
 
@@ -293,6 +318,7 @@ class View(object):
         filemenu.add_command(label="Select Graph", command=self._set_img)
         filemenu.add_separator() # add a separation line (denote sections)
         filemenu.add_command(label="Save Data", command=self._save_data)
+        filemenu.add_command(label="Save Graph", command=self._save_graph)
         
         # add to the menubar
         self._menubar.add_cascade(label="File", menu=filemenu)
@@ -341,19 +367,21 @@ class View(object):
             self._graph_canvas.create_image(0, 0, image=self._img, anchor=NW,
                                             tags='graph_image')
         
-        # new graph specified, so need to re-initialise data and view
-        self._reinitialise()
-
-    def _reinitialise(self):
-        ''' '''
+        # new graph specified, so re-initialise data and view
         self._clear_data()          # clear all data
         self._reset_def_points()    # reset defining points controls
 
     def _save_data(self, filename=None):
-        ''' '''
+        ''' Saves the graph points to a csv format.
+
+        Prompts the user for a filename if not provided.
+
+        View._save_data(*str) -> None
+
+        '''
         if not filename:
             filename = tk.filedialog.asksaveasfilename(title = "Save Data As",
-                filetypes = (("Comma-Separated Value (CSV)","*.csv"),
+                filetypes = (("Comma Separated Value","*.csv"),
                              ("All Files","*.*")))
         
         self._call_bind_func('save_data', filename)
@@ -454,6 +482,19 @@ class View(object):
             gc.delete(gc.find_enclosed(ppx-max_dist, ppy-max_dist,
                                        ppx+max_dist, ppy+max_dist))
 
+    def _save_graph(self):
+        ''' Saves the current view of the graph as an image.
+
+        User is internally requested to select a save location.
+
+        View._save_graph() -> None
+
+        '''
+        filename = tk.filedialog.asksaveasfilename(title="Save graph as",
+                filetypes=(("PNG image","*.png"),("All Files","*.*")))
+        self._master.update_idletasks() # update winfo values for snapshot
+        View.snapshot(self._graph_canvas, filename)
+
     def _add_event_bindings(self):
         ''' Adds the non-button event bindings.
 
@@ -488,11 +529,22 @@ class View(object):
 
         '''
         try:
-            self._errors.set('') # clear error display
-            return self._bindings[binding](*args) # run the function
+            self._errors.set('')                    # clear error display
+            return self._bindings[binding](*args)   # run the function
         except Exception as e:
-            self._errors.set(str(e))
+            self._errors.set(str(e))                # display error if occurs
             return None
+
+    def _display_instructions(self):
+        ''' Display usage instructions on startup.
+
+        View._display_instructions() -> None
+        
+        '''
+        instructions = 'Choose 3 defining points which specify the plane ' +\
+            'your graph is on. Then add additional points at the locations ' +\
+            'that you wish to export, before pressing File/Save Data to save.'
+        self._errors.set(instructions)
 
     def add_binding_func(self, binding, callback):
         ''' Adds the specified callback to the given binding, if valid.
@@ -539,11 +591,41 @@ class View(object):
         '''
         return cls._external_bindings[:]
 
+    @staticmethod
+    def snapshot(widget, filename, scale=2):
+        ''' Save a screen clipping of the specified widget to filename.
+
+        For some reason tkinter halves my screen resolution in its calculations,
+            so scaling is necessary. Reduce to 1 if your graph saving isn't
+            scaled correctly.
+
+        View.snapshot(tk.widget, str, *float) -> None
+
+        '''
+        # determine minimum bounds of widget
+        x_min = widget.winfo_rootx() * scale
+        y_min = widget.winfo_rooty() * scale
+        # determine maximum bounds of widget
+        x_max = x_min + widget.winfo_width() * scale
+        y_max = y_min + widget.winfo_height() * scale
+        # take screenshot, crop to widget extent, and save as filename
+        ImageGrab.grab(bbox=(x_min,y_min,x_max,y_max)).save(filename)
+
+
 class DefPointControl(object):
+    ''' A class for a defining point control in a View. '''
     def __init__(self, master, r):
-        ''' '''
+        ''' A class for the widgets to control a defining point in a View.
+
+        'r' is the row/point ID of the defining point being controlled.
+
+        Constructor: DefPointControl(tk.Tk/tk.Frame, int)
+
+        '''
         self._id = r
+        # initialise external functinos to do nothing until set externally
         self._view_submit = lambda: None
+        self._view_select = lambda: None
         
         # set up some variables to easily extract Entry values later
         xr = StringVar();           yr = StringVar()
@@ -569,15 +651,29 @@ class DefPointControl(object):
         self.entry_vals = [xr, yr]
 
     def set_view_submit(self, submit_func):
-        ''' '''
+        ''' Sets the external submit function for this defining point.
+
+        DefPointControl.set_view_submit(func) -> None
+
+        '''
         self._view_submit = submit_func
 
     def set_view_select(self, select_func):
-        ''' '''
+        ''' Sets the external select function for this defining point.
+
+        DefPointControl.set_view_select(func) -> None
+
+        '''
         self._view_select = select_func
 
     def select(self):
-        ''' '''
+        ''' The internal select function for this defining point.
+
+        Updates the relevant widgets to be in selected mode.
+
+        DefPointControl.select() -> None
+
+        '''
         # update button and entries to be in edit mode for this def pt
         self._button.config(text='Submit',
                             command=lambda: self._view_submit(self._id))
@@ -586,14 +682,26 @@ class DefPointControl(object):
         self._entries[0].focus() # set the focus to the first entry
 
     def submit(self):
-        ''' '''
+        ''' The internal submit function for this defining point.
+
+        Updates the relevant widgets to be in submitted mode.
+
+        DefPointControl.submit() -> None
+
+        '''
         self._button.config(text='Edit',
                             command=lambda: self._view_select(self._id))
         for entry in self._entries:
             entry.config(state='disabled')
             
     def reset(self):
-        ''' '''
+        ''' The internal reset function for this defining point.
+
+        Updates the relevant widgets to be in default mode.
+
+        DefPointControl.reset() -> None
+
+        '''
         self._button.config(text='Def Pt {}'.format(self._id),
                             command=lambda: self._view_select(self._id))
         xy = ['x','y']

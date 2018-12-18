@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import cv2 # opencv (open computer vision) library
 import numpy as np # numerical python library
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from Model import Model
 from View import View
 import tkinter as tk
@@ -9,7 +11,13 @@ class Controller(object):
 
         Users select an image of a graph, then identify three points with well-
             defined locations, then add as many points as desired to the graph.
-            The selected points are saveable in a csv format.
+            The selected points are saveable in a csv format, and the graph
+            image is saveable as a PNG image.
+
+        Could be expanded to include zooming, logarithmix axis scaling,
+            automatic line detection, saving of state (to reopen where you left
+            off), or full automation with automatic axis detection and line
+            detection combined.
         
         Constructor: Controller.__init__(*str)
 
