@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import traceback # controlled printing of tracebacks (from caught Exceptions)
-import multiprocessing # used for timeouts
+import multiprocessing # used for automatic timeouts
+import time # used for measuring user-generated timeouts
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -28,7 +29,11 @@ class TestRun(object):
                     assert 1 == 2, '1 is not equal to 2'
 
         'timeout' is the default number of seconds after which a test is
-            terminated as 'timed out'.
+            terminated as 'timed out'. Due to processing issues with interactive
+            debuggers, AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a
+            test stalls while running from IDLE (or more generally), pressing
+            CTRL+C to trigger a KeyboardInterrupt is treated as a TIMEOUT of
+            that test, and the remaining tests are run.
             
         Constructor: TestRun()
 
@@ -53,11 +58,8 @@ class TestRun(object):
 
         'timeout' is the number of seconds after which a test is terminated as
             'timed out'. If left as None, it is set to the instance default
-            timeout value. Due to processing issues with interactive debuggers,
-            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
-            while running from IDLE (or more generally), pressing CTRL+C to
-            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
-            and the remaining tests are run.
+            timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
+            (see __init__ docs).
 
         TestRun.run_tests(*list, *str, *bool, *int) -> None
         
@@ -105,11 +107,8 @@ class TestRun(object):
 
         'timeout' is the number of seconds after which a test is terminated as
             'timed out'. If left as None, it is set to the instance default
-            timeout value. Due to processing issues with interactive debuggers,
-            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
-            while running from IDLE (or more generally), pressing CTRL+C to
-            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
-            and the remaining tests are run.
+            timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
+            (see __init__ docs).
 
         TestRun.run_failed_tests(*int) -> None
 
@@ -131,52 +130,62 @@ class TestRun(object):
 
         'timeout' is the number of seconds after which a test is terminated as
             'timed out'. If left as None, it is set to the instance default
-            timeout value. Due to processing issues with interactive debuggers,
-            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
-            while running from IDLE (or more generally), pressing CTRL+C to
-            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
-            and the remaining tests are run.
+            timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
+            (see __init__ docs).
 
         TestRun.run_test(str, *bool, *int) -> int
 
         '''
         if not timeout:
             timeout = self._timeout
-        
+
+        start = time.time()
         try:
             if self._TP.mode == 'TERM':
                 # only auto-check for timeout if not in IDLE
                 p = multiprocessing.Process(name = test_name,
                     target = self.timeout_check, args=(test_name,))
-                p.start()
-                p.join(timeout)
+                p.start(); p.join(timeout)  # check for timeout
                 if p.is_alive():
-                    p.terminate()
-                    p.join()
+                    p.terminate(); p.join() # automatic timeout has occurred
                     self._TP.test_timeout(test_name)
+                    if verbose:
+                        print('    Automatic timeout after {}'.format(timeout),
+                              'seconds\n')
                     return TestRun.TIMEOUT
-            exec('self.{}()'.format(test_name))
-            self._TP.test_success(test_name)
+            exec('self.{}()'.format(test_name)) # run the function normally
+            self._TP.test_success(test_name)    # test succeeded if no errors
+            if verbose: print()                 # add a line between tests
             return TestRun.PASS
         except AssertionError as e:
-            self._TP.test_failure(test_name)
+            self._TP.test_failure(test_name)    # test failed
             if verbose:
-                print('    Test failed because:', str(e))
+                print('    Test failed because: ' + str(e) + '\n')
             return TestRun.FAIL
         except KeyboardInterrupt:
-            # User-specified timeout of test
+            # User-specified timeout of test occurred
+            duration = time.time() - start
             self._TP.test_timeout(test_name)
+            if verbose:
+                print('    User-generated timeout after',
+                      '{:.2f} seconds\n'.format(duration))
             return TestRun.TIMEOUT
         except Exception as e:
-            self._TP.test_error(test_name)
+            self._TP.test_error(test_name)      # unknown error occurred
             if verbose:
                 traceback.print_tb(e.__traceback__)
-                print('    {}: {}'.format(type(e).__name__, str(e)))
+                print('    {}: {}'.format(type(e).__name__, str(e)) + '\n')
             return TestRun.ERROR
+        
     def timeout_check(self, test_name):
+        ''' Run the given method without any exceptions, for timing.
+
+        TestRun.timeout_check(str) -> None
+
+        '''
         try:
             exec('self.{}()'.format(test_name))
-        except Exception:
+        except BaseException:
             return
                 
 
