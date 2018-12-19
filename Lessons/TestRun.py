@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import traceback # controlled printing of tracebacks (from caught Exceptions)
+import multiprocessing # used for timeouts
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -8,8 +9,9 @@ class TestRun(object):
     PASS = 1
     FAIL = 0
     ERROR = -1
+    TIMEOUT = -2
     
-    def __init__(self):
+    def __init__(self, timeout=5):
         ''' A class for running tests and printing relevant output.
 
         Tests should be in a class which inherits from TestRun, and can be run
@@ -19,19 +21,23 @@ class TestRun(object):
             has an argument 'methods' which allows specifying a set of desired
             test methods to run (defaults to all).
 
-        Test methods should be instancemethods of the class, and should begin
+        Test methods should be instance methods of the class, and should begin
             with 'test_'. The test component should be an assert statement,
             preferably with failure reasoning provided as the second argument,
             e.g.:
                     assert 1 == 2, '1 is not equal to 2'
+
+        'timeout' is the default number of seconds after which a test is
+            terminated as 'timed out'.
             
         Constructor: TestRun()
 
         '''
         self._TP = TestPrint()
+        self._timeout = timeout
         self._last_failed = []
 
-    def run_tests(self, methods=[], section='', verbose=False):
+    def run_tests(self, methods=[], section='', verbose=False, timeout=None):
         ''' Runs the specified methods at the given verbosity.
 
         'methods' is a list of the test methods to run. If left empty all the
@@ -45,7 +51,15 @@ class TestRun(object):
             second argument of the assert statement (assert bool, str)), and
             any tests which raise exceptions will print their traceback.
 
-        TestRun.run_tests(*list, *str, *bool) -> None
+        'timeout' is the number of seconds after which a test is terminated as
+            'timed out'. If left as None, it is set to the instance default
+            timeout value. Due to processing issues with interactive debuggers,
+            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
+            while running from IDLE (or more generally), pressing CTRL+C to
+            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
+            and the remaining tests are run.
+
+        TestRun.run_tests(*list, *str, *bool, *int) -> None
         
         '''
         if not section:
@@ -60,11 +74,11 @@ class TestRun(object):
         
         # initialise counts
         num_tests = len(methods)
-        passes = 0; failures = 0; errors = 0
+        passes = 0; failures = 0; errors = 0; timeouts = 0
 
         # run the specified methods
         for method in methods:
-            result = self.run_test(method, verbose) # run the test
+            result = self.run_test(method, verbose, timeout) # run the test
             # increment the relevant count
             if result == TestRun.PASS:
                 passes += 1
@@ -74,11 +88,14 @@ class TestRun(object):
             elif result == TestRun.ERROR:
                 self._last_failed += [method]
                 errors += 1
+            elif result == TestRun.TIMEOUT:
+                self._last_failed += [method]
+                timeouts += 1
 
         # print an output specifying results and the end of the section
-        self._TP.section_end(num_tests, passes, failures, errors)
+        self._TP.section_end(num_tests, passes, failures, errors, timeouts)
 
-    def run_failed_tests(self):
+    def run_failed_tests(self, timeout=None):
         ''' Runs all tests from the last test run which did not pass.
 
         Tests are run in verbose mode to display reasoning.
@@ -86,12 +103,20 @@ class TestRun(object):
         If no tests were failed in the last run, or there have been no previous
             runs, all tests are run.
 
-        TestRun.run_failed_tests() -> None
+        'timeout' is the number of seconds after which a test is terminated as
+            'timed out'. If left as None, it is set to the instance default
+            timeout value. Due to processing issues with interactive debuggers,
+            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
+            while running from IDLE (or more generally), pressing CTRL+C to
+            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
+            and the remaining tests are run.
+
+        TestRun.run_failed_tests(*int) -> None
 
         '''
-        self.run_tests(self._last_failed, 'Last Failed Tests', True)
+        self.run_tests(self._last_failed, 'Last Failed Tests', True, timeout)
 
-    def run_test(self, test_name, verbose=True):
+    def run_test(self, test_name, verbose=True, timeout=None):
         ''' Returns the success state of running test_name.
 
         Return values are within the set [TestRun.PASS, TestRun.FAIL,
@@ -104,11 +129,33 @@ class TestRun(object):
             second argument of the assert statement (assert bool, str)), and
             a test which raises an exception will print its traceback.
 
-        TestRun.run_test(str, *bool) -> int
+        'timeout' is the number of seconds after which a test is terminated as
+            'timed out'. If left as None, it is set to the instance default
+            timeout value. Due to processing issues with interactive debuggers,
+            AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE. If a test stalls
+            while running from IDLE (or more generally), pressing CTRL+C to
+            trigger a KeyboardInterrupt is treated as a TIMEOUT of that test,
+            and the remaining tests are run.
+
+        TestRun.run_test(str, *bool, *int) -> int
 
         '''
+        if not timeout:
+            timeout = self._timeout
+        
         try:
-            exec('ss=self.{}()'.format(test_name))
+            if self._TP.mode == 'TERM':
+                # only auto-check for timeout if not in IDLE
+                p = multiprocessing.Process(name = test_name,
+                    target = self.timeout_check, args=(test_name,))
+                p.start()
+                p.join(timeout)
+                if p.is_alive():
+                    p.terminate()
+                    p.join()
+                    self._TP.test_timeout(test_name)
+                    return TestRun.TIMEOUT
+            exec('self.{}()'.format(test_name))
             self._TP.test_success(test_name)
             return TestRun.PASS
         except AssertionError as e:
@@ -116,22 +163,31 @@ class TestRun(object):
             if verbose:
                 print('    Test failed because:', str(e))
             return TestRun.FAIL
+        except KeyboardInterrupt:
+            # User-specified timeout of test
+            self._TP.test_timeout(test_name)
+            return TestRun.TIMEOUT
         except Exception as e:
             self._TP.test_error(test_name)
             if verbose:
                 traceback.print_tb(e.__traceback__)
                 print('    {}: {}'.format(type(e).__name__, str(e)))
             return TestRun.ERROR
+    def timeout_check(self, test_name):
+        try:
+            exec('self.{}()'.format(test_name))
+        except Exception:
+            return
                 
 
 class TestPrint(object):
     ''' A class for printing test success states. '''
     # Terminal/IDLE colour specifier
     ColourMap = {'TERM':
-                 {'ERROR':33, 'PASS':32, 'FAIL':31, 'STD':0},
+                 {'ERROR':35, 'TIMEOUT':34, 'PASS':32, 'FAIL':31, 'STD':0},
                  'IDLE':
-                 {'ERROR':'KEYWORD', 'PASS':'STRING', 'FAIL':'COMMENT',
-                  'STD':'stdout'}
+                 {'ERROR':'BUILTIN', 'TIMEOUT':'DEFINITION', 'PASS':'STRING',
+                  'FAIL':'COMMENT', 'STD':'stdout'}
                 }
     
     def __init__(self):
@@ -146,10 +202,10 @@ class TestPrint(object):
             # assume the user is using IDLE
             import sys
             self._color = sys.stdout.shell
-            self._mode = 'IDLE'
+            self.mode = 'IDLE'
         except AttributeError:
             # using a standard terminal, not IDLE
-            self._mode = 'TERM'
+            self.mode = 'TERM'
 
     def test_success(self, test_name):
         ''' Prints test_name with a coloured PASS qualifier.
@@ -175,14 +231,22 @@ class TestPrint(object):
         '''
         self.test_eval(test_name, 'ERROR')
 
+    def test_timeout(self, test_name):
+        ''' Prints test_name with a coloured TIMEOUT qualifier.
+
+        TestPrint.test_timeout(str) -> None
+
+        '''
+        self.test_eval(test_name, 'TIMEOUT')
+
     def test_eval(self, test_name, success_state):
         ''' Prints test_name and success state in a standardised format.
 
         success_state 
 
         '''
-        ss = TestPrint.ColourMap[self._mode][success_state]
-        if self._mode == 'TERM':
+        ss = TestPrint.ColourMap[self.mode][success_state]
+        if self.mode == 'TERM':
             # use ANSI escape codes to print desired colour
             print('  {0:<45}\033[0;{1};40m{2}\033[0;32;0m'.format(test_name, ss,
                     success_state))
@@ -210,10 +274,10 @@ class TestPrint(object):
         print('\n#' + before + section + after + '#\n')
 
     @staticmethod
-    def section_end(num_tests, passes, failures, errors):
+    def section_end(num_tests, passes, failures, errors, timeouts):
         ''' Prints a section summary and ending for the given results.
 
-        TestPrint.section_end(int, int, int, int) -> None
+        TestPrint.section_end(int, int, int, int, int) -> None
 
         '''
         # correct print output for single cases
@@ -223,9 +287,11 @@ class TestPrint(object):
         else: fs = 'failures'
         if errors == 1: es = 'error'
         else: es = 'errors'
+        if timeouts == 1: ts = 'timeout'
+        else: ts = 'timeouts'
 
-        print('\nRan {} tests, with {} {}, {} {}, and {} {}.'.format(
-            num_tests, passes, ps, failures, fs, errors, es))
+        print('\nRan {} tests, with {} {}, {} {}, {} {}, and {} {}.'.format(
+            num_tests, passes, ps, failures, fs, errors, es, timeouts, ts))
         print('#' + '-'*78 + '#\n')
 
                 
@@ -258,6 +324,15 @@ if __name__ == '__main__':
 
             '''
             assert type(a) is int, "'a' is supposed to be an integer"
+
+        def test_timeout(self):
+            ''' Testing timeout behaviour of test module.
+
+            MyTests.run_test('test_timeout') -> None
+
+            '''
+            while True:
+                continue
 
     # run tests
     Tests = MyTests()
