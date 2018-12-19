@@ -109,11 +109,11 @@ def center_string(string, length, symbol):
     output = ' ' + string + ' '
     symbols = length - len(output)
     if symbols % 2 == 0:
-        symbol_string = gen_symbol_string(symbols // 2, symbol)
+        symbol_string = symbol * (symbols // 2)
         return symbol_string + output + symbol_string
     else:
-        before_string = gen_symbol_string((symbols // 2) + 1, symbol)
-        after_string = gen_symbol_string(symbols // 2, symbol)
+        before_string = symbol * ((symbols // 2) + 1)
+        after_string = symbol * (symbols // 2)
         return before_string + output + after_string
 
 def hash_border_list(info_list):
@@ -143,17 +143,6 @@ def hash_border_list(info_list):
         # run again for remainder of the list, until entire list is formatted
         line += hash_border_list(info_list[(index - 1):])
         return line
-
-def gen_symbol_string(num_symbols, symbol):
-    ''' Returns a string of symbols with length 'num_symbols'.
-
-    gen_symbol_string(int) -> str
-
-    '''
-    symbol_string = ''
-    for i in range(num_symbols):
-        symbol_string += symbol
-    return symbol_string
 
 def format_notes(notes):
     ''' Returns a string of formatted notes, within 80 characters wide.
