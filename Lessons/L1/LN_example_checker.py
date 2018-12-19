@@ -5,9 +5,7 @@
 
 # imports all the variables from LN_1_examples
 from LN_1_examples import *
-import sys
-sys.path.append('..')
-from TestRun import TestRun
+from ...TestRun import TestRun
 
 class LNTests(TestRun):
     def test_thing():

@@ -5,34 +5,20 @@
 
 # imports all the variables from LN_1_examples
 from LN_1_examples import *
+import sys
+sys.path.append('..')
+from TestRun import TestRun
 
-def run_tests():
-    """ Prints the results of checking the examples from LN_examples.py
+class LNTests(TestRun):
+    def test_thing():
+        ''' Testing a thing. '''
+        a = 2
+        assert a == 1, "a = {} != 1".format(a)
 
-    tests(None) -> None
-    """
-    sub_test()
-    <test sub-functions>
-
-
-#----------------------------------- Tests ------------------------------------#
-
-def sub_test():
-    ''' Testing sub thing. '''
-    
-    print('Sub thing test: sub thing specific')
-    invalid_int = 'Please define an integer called "my_int".'
-    #Relevant comments
-    <test code>
-    print()
-
-
-#------------------------------ Helper Functions ------------------------------#
-
-def helper(var):
-    ''' Returns something useful. '''
-    <code>
-    return useful_value
+    def helper(var):
+        ''' Returns something useful. '''
+        # code acting on var
+        return var
 
 
 #------------------------------ Example Solutions -----------------------------#

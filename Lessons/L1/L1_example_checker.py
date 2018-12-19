@@ -6,6 +6,9 @@
 
 # imports all the variables from L1_examples
 from L1_2_examples import *
+import sys
+sys.path.append('..')
+from TestRun import TestRun
 
 def run_tests():
     """ Prints the results of checking the variables from L1_examples.py

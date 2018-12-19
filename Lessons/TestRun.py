@@ -19,13 +19,12 @@ class TestRun(object):
             has an argument 'methods' which allows specifying a set of desired
             test methods to run (defaults to all).
 
-        Test methods should be staticmethods of the class (they do not have to
-            be tagged as such), and should begin with 'test_'. The test
-            component should be an assert statement, preferably with failure
-            reasoning provided as the second argument (e.g.
+        Test methods should be instancemethods of the class, and should begin
+            with 'test_'. The test component should be an assert statement,
+            preferably with failure reasoning provided as the second argument,
+            e.g.:
                     assert 1 == 2, '1 is not equal to 2'
-            )
-
+            
         Constructor: TestRun()
 
         '''
@@ -80,7 +79,7 @@ class TestRun(object):
         Return values are within the set [TestRun.PASS, TestRun.FAIL,
             TestRun.ERROR].
 
-        'test_name' should be a staticmethod of the running class.
+        'test_name' should be an instance method of the running class.
 
         'verbose' is a boolean specifying verbosity. If True, a failing test
             will print its failure reason (the string provided as the
@@ -91,7 +90,7 @@ class TestRun(object):
 
         '''
         try:
-            exec('ss={}.{}()'.format(type(self).__name__, test_name))
+            exec('ss=self.{}()'.format(test_name))
             self._TP.test_success(test_name)
             return TestRun.PASS
         except AssertionError as e:
@@ -214,12 +213,12 @@ class TestPrint(object):
                 
 if __name__ == '__main__':
     # test running tests
-        class TestRun2(TestRun):
-        def test_1():
+    class TestRun2(TestRun):
+        def test_1(self):
             assert 1 == 1, "1 != 1" # should PASS
-        def test_2():
+        def test_2(self):
             assert 1 == 2, "1 != 2" # should FAIL
-        def test_3():
+        def test_3(self):
             assert 1/0 == 1, "1/0 != 1" # should ERROR (ZeroDivisionError)
 
     TestRun2().run_tests(verbose=True)
