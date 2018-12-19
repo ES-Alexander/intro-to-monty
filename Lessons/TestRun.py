@@ -29,6 +29,7 @@ class TestRun(object):
 
         '''
         self._TP = TestPrint()
+        self._last_failed = []
 
     def run_tests(self, methods=[], section='', verbose=False):
         ''' Runs the specified methods at the given verbosity.
@@ -50,6 +51,8 @@ class TestRun(object):
         if not section:
             section = type(self).__name__
         self._TP.print_section(section)
+
+        self._last_failed = []
         
         if not methods:
             # default to run all methods
@@ -66,12 +69,27 @@ class TestRun(object):
             if result == TestRun.PASS:
                 passes += 1
             elif result == TestRun.FAIL:
+                self._last_failed += [method]
                 failures += 1
             elif result == TestRun.ERROR:
+                self._last_failed += [method]
                 errors += 1
 
         # print an output specifying results and the end of the section
         self._TP.section_end(num_tests, passes, failures, errors)
+
+    def run_failed_tests(self):
+        ''' Runs all tests from the last test run which did not pass.
+
+        Tests are run in verbose mode to display reasoning.
+
+        If no tests were failed in the last run, or there have been no previous
+            runs, all tests are run.
+
+        TestRun.run_failed_tests() -> None
+
+        '''
+        self.run_tests(self._last_failed, 'Last Failed Tests', True)
 
     def run_test(self, test_name, verbose=True):
         ''' Returns the success state of running test_name.
@@ -189,7 +207,7 @@ class TestPrint(object):
             after = '-' * (symbols // 2)
         else:
             before = after = '-' * (symbols // 2)
-        print('#' + before + section + after + '#\n')
+        print('\n#' + before + section + after + '#\n')
 
     @staticmethod
     def section_end(num_tests, passes, failures, errors):
@@ -208,18 +226,43 @@ class TestPrint(object):
 
         print('\nRan {} tests, with {} {}, {} {}, and {} {}.'.format(
             num_tests, passes, ps, failures, fs, errors, es))
-        print('#' + '-'*78 + '#')
+        print('#' + '-'*78 + '#\n')
 
                 
 if __name__ == '__main__':
-    # test running tests
-    class TestRun2(TestRun):
-        def test_1(self):
-            assert 1 == 1, "1 != 1" # should PASS
-        def test_2(self):
-            assert 1 == 2, "1 != 2" # should FAIL
-        def test_3(self):
-            assert 1/0 == 1, "1/0 != 1" # should ERROR (ZeroDivisionError)
+    # initial definitions
+    a = 2
 
-    TestRun2().run_tests(verbose=True)
+    # test definitions
+    class MyTests(TestRun):
+        def test_a_value(self):
+            ''' Testing if a is 1.
+
+            MyTests.run_test('test_a') -> None
+
+            '''
+            assert a == 1, "'a' should have been 1, but was {}".format(a)
+
+        def test_b_type(self):
+            ''' Testing if 'b' is a dictionary.
+
+            MyTests.run_test('test_b_type') -> None
+
+            '''
+            assert type(b) is dict, "'b' is supposed to be a dictionary"
+
+        def test_a_type(self):
+            ''' Testing if 'a' is an integer.
+
+            MyTests.run_test('test_a_type') -> None
+
+            '''
+            assert type(a) is int, "'a' is supposed to be an integer"
+
+    # run tests
+    Tests = MyTests()
+    Tests.run_tests()
+
+    # run failed tests again with explanation
+    Tests.run_failed_tests()
     
