@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
 # Lesson formatter
 
-files = ['L9'] # The files to make notes from this run
+files = [] # The files to make notes from this run
+for i in range(4,10):
+    files += ['L{0}/L{0}'.format(i)]
 
 
 HASHES = ''
@@ -51,6 +54,7 @@ def format_lesson_notes(lesson_number, topics, notes):
 
     '''
     output = open('L{0}_0_notes.py'.format(lesson_number), 'w')
+    output.write('#!/usr/bin/env python3\n') # add shebang to run from terminals
     output.write(lesson_header(lesson_number, topics))
     output.write(format_notes(notes))
     output.close()

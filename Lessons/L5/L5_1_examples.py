@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 '''
     Write a function which opens and reads a text file of questions, as well as
     opens and writes to a log file, also of txt format, recording the questions

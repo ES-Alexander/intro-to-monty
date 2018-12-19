@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Helper functions for checking files
 
 def is_defined(var_name):

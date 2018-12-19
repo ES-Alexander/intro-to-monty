@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ################################################################################
 # As practice, please fill out the following examples below the appropriate    #
 # comment, and click run when complete, using either the menu-bar at the top,  #

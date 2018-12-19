@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ################################################################################
 # This file contains a function used to test the L1_examples file, checking    #
 # that the correct variables are defined, and as the correct types and values. #

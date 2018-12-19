@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 light_on = (False, 'off')
 
 

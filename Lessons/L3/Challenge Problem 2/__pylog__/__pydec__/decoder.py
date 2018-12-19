@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Decoder File
 from coded.__pydec__.processor import swap, increment
 

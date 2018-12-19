@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # L6 Questions
 
 #1
