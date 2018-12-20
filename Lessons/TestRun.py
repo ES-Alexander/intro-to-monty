@@ -12,7 +12,7 @@ class TestRun(object):
     ERROR = -1
     TIMEOUT = -2
     
-    def __init__(self, timeout=5):
+    def __init__(self, timeout=5, *args, **kwargs):
         ''' A class for running tests and printing relevant output.
 
         Tests should be in a class which inherits from TestRun, and can be run
@@ -35,7 +35,7 @@ class TestRun(object):
             CTRL+C to trigger a KeyboardInterrupt is treated as a TIMEOUT of
             that test, and the remaining tests are run.
             
-        Constructor: TestRun()
+        Constructor: TestRun(*int)
 
         '''
         self._TP = TestPrint()
@@ -178,7 +178,7 @@ class TestRun(object):
             return TestRun.ERROR
         
     def timeout_check(self, test_name):
-        ''' Run the given method without any exceptions, for timing.
+        ''' Run the given method without no consequences, for runtime testing.
 
         TestRun.timeout_check(str) -> None
 
@@ -305,6 +305,8 @@ class TestPrint(object):
 
                 
 if __name__ == '__main__':
+    # test a basic testing suite
+    
     # initial definitions
     a = 2
 
