@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 import traceback # controlled printing of tracebacks (from caught Exceptions)
-import multiprocessing # used for automatic timeouts
-import time # used for measuring user-generated timeouts
+import multiprocessing # used for automatic timeouts (not available in IDLE)
+import time # used for measuring test times and user-generated timeouts
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -38,9 +38,28 @@ class TestRun(object):
         Constructor: TestRun(*int)
 
         '''
+        # initialise instance variables
         self._TP = TestPrint()
         self._timeout = timeout
         self._last_failed = []
+
+        # update test method docstrings with run information
+        class_name = type(self).__name__
+        for method_name in self.get_test_methods():
+            method = eval('self.' + method_name)
+            method.__func__.__doc__ += \
+                    '\n\n{}.run_test({!r}) -> None\n\n'.format(class_name,
+                                                               method_name)
+
+    def get_test_methods(self):
+        ''' Returns the available test methods in this class.
+
+        Test methods should begin with 'test_', and return None.
+
+        TestRun.get_test_methods() -> list[str]
+
+        '''
+        return [m for m in dir(self) if m.startswith('test_')]
 
     def run_tests(self, methods=[], section='', verbose=False, timeout=None):
         ''' Runs the specified methods at the given verbosity.
@@ -67,16 +86,19 @@ class TestRun(object):
         if not section:
             section = type(self).__name__
         self._TP.print_section(section)
-
+        self._print_IDLE_warning() # timeout warning for IDLE users
+            
         self._last_failed = []
         
         if not methods:
             # default to run all methods
-            methods = [m for m in dir(self) if m.startswith('test_')]
+            methods = self.get_test_methods()
         
         # initialise counts
         num_tests = len(methods)
         passes = 0; failures = 0; errors = 0; timeouts = 0
+
+        start = time.time()
 
         # run the specified methods
         for method in methods:
@@ -94,8 +116,10 @@ class TestRun(object):
                 self._last_failed += [method]
                 timeouts += 1
 
+        duration = time.time() - start
         # print an output specifying results and the end of the section
-        self._TP.section_end(num_tests, passes, failures, errors, timeouts)
+        self._TP.section_end(num_tests, duration, passes, failures, errors,
+                             timeouts)
 
     def run_failed_tests(self, timeout=None):
         ''' Runs all tests from the last test run which did not pass.
@@ -155,7 +179,7 @@ class TestRun(object):
                     return TestRun.TIMEOUT
             exec('self.{}()'.format(test_name)) # run the function normally
             self._TP.test_success(test_name)    # test succeeded if no errors
-            if verbose: print()                 # add a line between tests
+            #if verbose: print()                 # add a line between tests
             return TestRun.PASS
         except AssertionError as e:
             self._TP.test_failure(test_name)    # test failed
@@ -185,8 +209,24 @@ class TestRun(object):
         '''
         try:
             exec('self.{}()'.format(test_name))
-        except BaseException:
+        except (Exception, KeyboardInterrupt):
             return
+
+    def _print_IDLE_warning(self):
+        ''' Prints a warning about disabled timeouts to IDLE users.
+
+        TestRun._print_IDLE_warning() -> None
+
+        '''
+        if self._TP.mode == 'IDLE':
+            c_print = self._TP._colour.write # colour write function for IDLE
+            c_print('Tests running in IDLE:\n', 'ERROR')
+            c_print('  ->', 'stdout')
+            c_print(' Automatic timeouts DISABLED\n', 'DEFINITION')
+            c_print('  -> Use ', 'stdout')
+            c_print('CTRL+C', 'BUILTIN')
+            c_print(' to cause user-generated timeouts when tests are taking '+\
+                    'too long.\n\n', 'stdout')
                 
 
 class TestPrint(object):
@@ -210,7 +250,7 @@ class TestPrint(object):
         try:
             # assume the user is using IDLE
             import sys
-            self._color = sys.stdout.shell
+            self._colour = sys.stdout.shell
             self.mode = 'IDLE'
         except AttributeError:
             # using a standard terminal, not IDLE
@@ -261,8 +301,8 @@ class TestPrint(object):
                     success_state))
         else:
             # mode must be IDLE, use sys.stdout.shell to write standard colours
-            a = self._color.write('  {0:<45}'.format(test_name), 'stdout')
-            a = self._color.write(success_state+'\n', ss)
+            a = self._colour.write('  {0:<45}'.format(test_name), 'stdout')
+            a = self._colour.write(success_state+'\n', ss)
 
     @staticmethod
     def print_section(section):
@@ -283,10 +323,10 @@ class TestPrint(object):
         print('\n#' + before + section + after + '#\n')
 
     @staticmethod
-    def section_end(num_tests, passes, failures, errors, timeouts):
+    def section_end(num_tests, duration, passes, failures, errors, timeouts):
         ''' Prints a section summary and ending for the given results.
 
-        TestPrint.section_end(int, int, int, int, int) -> None
+        TestPrint.section_end(int, float, int, int, int, int) -> None
 
         '''
         # correct print output for single cases
@@ -301,6 +341,7 @@ class TestPrint(object):
 
         print('\nRan {} tests, with {} {}, {} {}, {} {}, and {} {}.'.format(
             num_tests, passes, ps, failures, fs, errors, es, timeouts, ts))
+        print('Testing took {:.3f}s'.format(duration))
         print('#' + '-'*78 + '#\n')
 
                 
@@ -313,35 +354,19 @@ if __name__ == '__main__':
     # test definitions
     class MyTests(TestRun):
         def test_a_value(self):
-            ''' Testing if a is 1.
-
-            MyTests.run_test('test_a') -> None
-
-            '''
+            ''' Testing if a is 1. '''
             assert a == 1, "'a' should have been 1, but was {}".format(a)
 
         def test_b_type(self):
-            ''' Testing if 'b' is a dictionary.
-
-            MyTests.run_test('test_b_type') -> None
-
-            '''
+            ''' Testing if 'b' is a dictionary. '''
             assert type(b) is dict, "'b' is supposed to be a dictionary"
 
         def test_a_type(self):
-            ''' Testing if 'a' is an integer.
-
-            MyTests.run_test('test_a_type') -> None
-
-            '''
+            ''' Testing if 'a' is an integer. '''
             assert type(a) is int, "'a' is supposed to be an integer"
 
         def test_timeout(self):
-            ''' Testing timeout behaviour of test module.
-
-            MyTests.run_test('test_timeout') -> None
-
-            '''
+            ''' Testing timeout behaviour of test module. '''
             while True:
                 continue
 
@@ -351,4 +376,8 @@ if __name__ == '__main__':
 
     # run failed tests again with explanation
     Tests.run_failed_tests()
+
+    if Tests._TP.mode == 'IDLE':
+        print("\nExample 'help' output from auto-set docstring:")
+        help(Tests.test_a_value)
     
