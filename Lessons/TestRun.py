@@ -1,5 +1,24 @@
 #!/usr/bin/env python3
 
+################################################################################
+#                                                                              #
+#                               Testing Module                                 #
+#                                                                              #
+###--------------------------------------------------------------------------###
+#                                                                              #
+# Author: ES Alexander                                                         #
+# Released: 2018-12-26                                                         #
+#                                                                              #
+# Feel free to use and modify as you wish, but keep this header and add a note #
+#   specifying how it has been modified from the original, the last date it    #
+#   was modified, and who modified it.                                         #
+#                                                                              #
+# Do not attempt to sell this testing module. If planning to use commercially, #
+#   or sell tests derived from the module, please contact the original author  #
+#   at 'sandman.esalexander@gmail.com'.                                        #
+#                                                                              #
+################################################################################
+
 import traceback # controlled printing of tracebacks (from caught Exceptions)
 import multiprocessing # used for automatic timeouts (not available in IDLE)
 import time # used for measuring test times and user-generated timeouts
