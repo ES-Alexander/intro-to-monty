@@ -371,7 +371,8 @@ if __name__ == '__main__':
     a = 2
 
     # test definitions
-    class MyTests(TestRun):
+    class ExampleTests(TestRun):
+        ''' A class of tests used for displaying the test module behaviour. ''' 
         def test_a_value(self):
             ''' Testing if a is 1. '''
             assert a == 1, "'a' should have been 1, but was {}".format(a)
@@ -390,7 +391,7 @@ if __name__ == '__main__':
                 continue
 
     # run tests
-    Tests = MyTests()
+    Tests = ExampleTests()
     Tests.run_tests()
 
     # run failed tests again with explanation
