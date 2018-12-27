@@ -72,7 +72,7 @@ if __name__ == '__main__':
             self._entry = tk.StringVar()
             self._entry.set('User Input')
             entry = tk.Entry(io_frame, textvariable=self._entry)
-            button = tk.Button(text='My Button',
+            button = tk.Button(io_frame, text='My Button',
                                command=lambda: \
                                self._label.config('text', self._entry.get()))
 
@@ -86,7 +86,8 @@ if __name__ == '__main__':
             # creation
             canvas_frame = tk.Frame(self._master)
             self._canvas = tk.Canvas(canvas_frame)
-            button = tk.Button(text='Canvas Button', command=self._create_circ)
+            button = tk.Button(canvas_frame, text='Canvas Button',
+                               command=self._create_circ)
 
             # geometry management
             canvas_frame.grid(row=0,column=0)
@@ -114,4 +115,3 @@ if __name__ == '__main__':
     root = tk.Tk()
     GUI = MyGUI(root)
     root.mainloop()
-            
