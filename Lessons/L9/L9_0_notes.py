@@ -191,6 +191,11 @@
     3). If you have pip (python package installer), open a terminal/command
     prompt and run the command:
         python3 -m pip install numpy opencv-python Pillow
+    If you don't have pip, look online for how to install it and get it up and
+    running. Windows users should have pip installed by default with their
+    python installation, but you need to make sure that python3 (or just
+    python) is recognised as a command (for help with googling solutions, it
+    should to be part of your PATH variable).
 '''
 
 
@@ -295,25 +300,26 @@ def user_run_func(valid_funcs):
 
     # run the desired function
     if func in valid_funcs.keys():
-        persistent_type = None
+        star_args_type = None # initialise to not in *args yet
         executable = True
-        for ind, var in enumerate(func_inputs):
+        for var_index, var in enumerate(func_inputs):
             # check if type is valid, and add to valid_inputs, else error
             try:
-                if persistent_type:
-                    persistent_type(var) # check if type is valid
+                if star_args_type:
+                    # now in *args variables, which should all be the same type
+                    star_args_type(var) # check if this *args var type is valid
                     continue # already checked, don't try to check again
                     
-                input_type = valid_funcs[func][ind]
+                input_type = valid_funcs[func][var_index]
                 if type(input_type) is str and input_type in \
-                ['int','str','float','bool']:
+                        ['int','str','float','bool']:
                     # check type validity - don't store result
                     eval('{}(var)'.format(input_type))
                 elif type(input_type) is list:
                     # remaining inputs are all of specified type,
                     # only convert to type (from string) once, and store result
-                    persistent_type = eval(input_type[0])
-                    persistent_type(var) # check if type is valid
+                    star_args_type = eval(input_type[0])
+                    star_args_type(var) # check if type is valid
                 # use a regular expression to check for modifier accessing,
                 # without disabling floats in container objects
                 elif re.search(r"\.[a-zA-Z_]", var) is None:
@@ -340,6 +346,7 @@ def user_run_func(valid_funcs):
         print("Invalid function '{0}'. Functions must be one of {1}".format(
             func, list(valid_funcs.keys())))
 
+# some basic functions for use as 'valid_funcs' in user_run_test (above)
 def test(a,b,c):
     ''' test(int, int, str) -> None '''
     print(c + str(a+b/2))
