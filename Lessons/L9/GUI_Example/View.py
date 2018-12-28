@@ -7,6 +7,8 @@ from tkinter import filedialog # nice file access for opening/saving
 # Python Image Library (Pillow)
 from PIL.ImageTk import PhotoImage # more image format support (jpg,png,...)
 from PIL import Image, ImageGrab # resizeable images, screenshots
+# platform dependence
+from os import sys
 
 class View(object):
     ''' A class for a graph-analysis GUI. '''
@@ -286,7 +288,7 @@ class View(object):
         '''
         self._errors = StringVar() # variable to set the text
         self._errors.set('')
-        tk.Label(master, textvariable=self._errors, fg='red',
+        tk.Label(master, textvariable=self._errors, fg='red', justify=tk.LEFT,
                  wraplength=200).grid(pady=10)
         
     def _setup_menubar(self):
@@ -301,6 +303,7 @@ class View(object):
         # create some dropdown menus
         self._setup_filemenu()
         self._setup_editmenu()
+        self._setup_helpmenu()
 
         # display the full menubar
         self._master.config(menu=self._menubar)
@@ -335,6 +338,20 @@ class View(object):
         editmenu.add_command(label="Clear Data", command=self._clear_data)
         # add to the menubar
         self._menubar.add_cascade(label="Edit", menu=editmenu)
+
+    def _setup_helpmenu(self):
+        ''' Initialises the dropdown Help menu.
+
+        Adds the option to re-display the initial instructions.
+
+        View._setup_helpmenu() -> None
+
+        '''
+        helpmenu = tk.Menu(self._menubar, tearoff=0)
+        helpmenu.add_command(label="Display Instructions",
+                             command=self._display_instructions)
+        # add to the menubar
+        self._menubar.add_cascade(label="Help", menu=helpmenu)
 
     def _set_img(self, graph_img=None):
         ''' Sets the current graph image.
@@ -542,8 +559,10 @@ class View(object):
         
         '''
         instructions = 'Choose 3 defining points which specify the plane ' +\
-            'your graph is on. Then add additional points at the locations ' +\
-            'that you wish to export, before pressing File/Save Data to save.'
+            'your graph is on (click to select point location, then specify ' +\
+            'where the point is before pressing submit). Then add additional' +\
+            ' points at the locations that you wish to export, before ' +\
+            'pressing File/Save Data or File/Save Graph to save.'
         self._errors.set(instructions)
 
     def add_binding_func(self, binding, callback):
@@ -592,16 +611,23 @@ class View(object):
         return cls._external_bindings[:]
 
     @staticmethod
-    def snapshot(widget, filename, scale=2):
+    def snapshot(widget, filename, scale=None):
         ''' Save a screen clipping of the specified widget to filename.
 
         For some reason tkinter halves my screen resolution in its calculations,
-            so scaling is necessary. Reduce to 1 if your graph saving isn't
-            scaled correctly.
+            so scaling is necessary. Modify if your graph saving isn't scaled
+            correctly.
 
         View.snapshot(tk.widget, str, *float) -> None
 
         '''
+        if scale is None:
+            platform = sys.platform
+            if platform == 'darwin':
+                scale = 2 # computer is a mac
+            else:
+                scale = 1 # assume everything is fine
+                
         # determine minimum bounds of widget
         x_min = widget.winfo_rootx() * scale
         y_min = widget.winfo_rooty() * scale
@@ -609,8 +635,13 @@ class View(object):
         x_max = x_min + widget.winfo_width() * scale
         y_max = y_min + widget.winfo_height() * scale
         # take screenshot, crop to widget extent, and save as filename
-        ImageGrab.grab(bbox=(x_min,y_min,x_max,y_max)).save(filename)
+        save_image = ImageGrab.grab(bbox=(x_min,y_min,x_max,y_max))
 
+        try:
+            save_image.save(filename)
+        except Exception:
+            save_image.save(filename + '.png')
+            
 
 class DefPointControl(object):
     ''' A class for a defining point control in a View. '''

@@ -14,7 +14,7 @@ class Controller(object):
             The selected points are saveable in a csv format, and the graph
             image is saveable as a PNG image.
 
-        Could be expanded to include zooming, logarithmix axis scaling,
+        Could be expanded to include zooming, logarithmic axis scaling,
             automatic line detection, saving of state (to reopen where you left
             off), or full automation with automatic axis detection and line
             detection combined.
