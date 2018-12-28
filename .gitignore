@@ -1,9 +1,12 @@
-# things to ignore in repo
+# Do not track the following:
 
+# file types: (text, zip, comma-separated value, excel spreadsheet)
 *.txt
-*__pycache__*
-*__donotinclude__*
-*/Template/*
 *.zip
 *.csv
 *.xlsx
+
+# directories: (compiled python caches, course creation folders)
+__pycache__/
+__donotinclude__/
+Template/
