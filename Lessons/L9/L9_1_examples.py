@@ -10,51 +10,54 @@ import tkinter as tk
 '''
     Implement the GUI below. The desired functionality is:
 
-    canvas, draw rectangle, select scaling point, scale entry, button to apply
-        scale (scale based off original drawn shape), model stores shape info
-        and calculates new info when scaling applied, label for scale entry,
-        filemenu for clear canvas to redraw rectangle and clear scale entry.
-        Extension -> Add rotation entry/label/functionality about scale point.
-        
+    Shape on a Canvas:
+        Set this up with the method 'self._setup_canvas()'.
+        Create a Frame widget for storing this section. Use the grid geometry
+            manager to place it on the right hand side of the master window. The
+            following widgets should be put into a grid as you desire, inside
+            this outer frame.
+        Create a Canvas widget. Clicking on the blank canvas should add the
+            first point of a polygon. Subsequent clicks should add the remainder
+            of the polygon, until the user double-clicks, at which point the
+            last clicked point should be joined to the first point. Double-
+            clicking before there are three points should print an error (see
+            Controls), and add no point. Once the polygon is completed, the
+            canvas should change to scale-point selecting mode for the next
+            click - which defines the point about which the polygon should be
+            scaled.
+        Create a Button widget with text "Select Scale Point". Clicking this
+            should only work when a polygon is in the canvas, and should allow
+            the user to change the scaling point.
 
-    Output user input:
-        Set this up with the method 'self._setup_io()'
+    Controls:
+        Set this up with the method 'self._setup_controls()'.
         Create a Frame widget for storing this section. Use the grid geometry
             manager to place it on the left hand side of the master window. The
             following widgets should be put into a grid as you desire, inside
             this outer frame.
-        Create a Label widget for display purposes.
-        Create an Entry widget which allows a user to type an arbitrary input.
-        Create a Button widget, which, when pressed, sets the Label's text to
-            the current value in the Entry widget. The button text can be
-            anything you want.
-            
-    Shapes on a Canvas:
-        Set this up with the method 'self._setup_canvas()'
-        Create a Frame widget for storing this section. Use grid to place the
-            frame on the right hand side of the master window. The following
-            widgets should be put into place as you desire, inside this outer
-            frame.
-        Create a Canvas widget which allows you to create a red rectangle by
-            clicking and dragging the mouse to signify the start (on mouse
-            press) and end (on mouse release) corners of the rectangle. Further
-            clicks are reserved for the circle (see Button below), until the
-            Canvas is reset/cleared (see Menubar).
-        Create a Button widget which, when pressed, creates a blue circle of
-            random size, at a random position inside the Canvas, such that the
-            circle would fit within the red rectangle but does not touch the
-            rectangle. Clicking on the canvas should make the circle move
-            to a random position within the rectangle. Clicking the button
-            after its first click should move the circle to a new position
-            outside the rectangle. You will need to import the random module
-            for this section.
-        
+        Create a Label widget with the text "Scale Controls".
+        Create an Entry widget and a Button widget below the Scale Controls
+            Label. The Entry should have no contents, and the Button should have
+            the text "Scale", and be used to apply the scale value in the Entry
+            widget to the polygon in the canvas, about the selected scaling
+            point. If no polygon exists, or no scaling point is selected, or the
+            specified scale value would cause the shape to leave the canvas, an
+            appropriate error message should be printed (see below). The scale
+            value in the Entry is with respect to the current shape. Clicking
+            the Scale Button multiple times should result in multiple scales.
+        Create a Label widget for displaying errors and instructions to the
+            user. This should be below the scale controls, and should display
+            usage instructions on startup.
+
     Menubar:
-        Set this up with the method 'self._setup_menubar()'
+        Set this up with the method 'self._setup_menubar()'.
         Create a menubar with a drop-down File menu. This menu should contain
-            at least a button with label 'Clear All', which should set the Label
-            text to '', the Entry text to 'User Input', and reset the Canvas to
-            contain no shapes, with the user able to create a new rectangle.
+            at least a button with label 'Clear All', which should set the Entry
+            text to '', and reset the Canvas to be blank, and ready to draw a
+            new polygon.
+
+    The Model class should store the relevant information for the polygon, and
+        should perform the scaling calculations.
 
     The following resources may be useful, along with their main websites:
         https://tkdocs.com/tutorial/canvas.html
@@ -73,7 +76,6 @@ class View(object):
 
 class Controller(object):
     
-
 
 
 
