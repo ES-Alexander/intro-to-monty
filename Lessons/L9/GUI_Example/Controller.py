@@ -6,7 +6,7 @@ import tkinter as tk
 
 class Controller(object):
     ''' A class for controlling a graph-analyser. '''
-    def __init__(self, graph_img=None):
+    def __init__(self, master, graph_img=None):
         ''' A class for managing a GUI graph-analyser.
 
         Users select an image of a graph, then identify three points with well-
@@ -19,19 +19,16 @@ class Controller(object):
             off), or full automation with automatic axis detection and line
             detection combined.
         
-        Constructor: Controller.__init__(*str)
+        Constructor: Controller.__init__(tk.Tk, *str)
 
         '''
         # initialise data storage
         self._model = Model()
 
         # initialise display and event bindings
-        self._root = tk.Tk() # overarching 'main' window for the application
+        self._root = master # overarching 'main' window for the application
         self._view = View(self._root, graph_img)
         self._add_bind_functions()
-
-        # turn over the code to event-driven, waiting for user input/actions
-        self._root.mainloop() 
 
     def _add_bind_functions(self):
         ''' Add event binding functions to the View.
@@ -50,4 +47,7 @@ class Controller(object):
                                     self._model.set_defining_points)
 
 if __name__ == '__main__':
-    C1 = Controller()
+    root = tk.Tk()
+    C1 = Controller(root)
+    # turn over the code to event-driven, waiting for user input/actions
+    root.mainloop()

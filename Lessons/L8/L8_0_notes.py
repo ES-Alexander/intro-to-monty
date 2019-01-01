@@ -112,7 +112,8 @@ while file_input_incomplete:
 # Multiple Exceptions
 '''
     It is possible to catch multiple exceptions related to the same 'try'
-    block, by using multiple 'except' blocks.
+    block, by using multiple 'except' blocks, or, to deal with different
+    exceptions the same way, by using a tuple of exceptions.
 '''
 
 try:
@@ -120,8 +121,8 @@ try:
     pass
 except FileNotFoundError as e1:
     print('File Not Found: ', e1)
-except UnicodeError as e2:
-    print('Unicode Error', e2)
+except (UnicodeError, KeyboardInterrupt) as e2:
+    print('Something bad happened: ', e2)
 
 
 # Nothing Bad Happened
@@ -185,6 +186,7 @@ except FileNotFoundError:
         # provide exception message about not finding either file option
         raise FileNotFoundError("No such file or directory: '" +
                                 filename + "', '" + filename + ".txt'")
+f.close()
 
 
 
@@ -283,9 +285,9 @@ except FileNotFoundError:
     Be aware that in cases where an algorithm has multiple self-references at
     different stages (see third example), recursive implementations will
     generally be much less efficient than for- or while-loops. This is because
-    recursion can't re-use the previously calculated result, so a recursive
-    function might have to make the same low-level call multiple times, while a
-    traditional loop can calculate it once and re-use the result.
+    recursion can't directly re-use the previously calculated result, so a
+    recursive function might have to make the same low-level call multiple
+    times, while a traditional loop can calculate it once and re-use the result.
 '''
 
 
@@ -298,18 +300,22 @@ except FileNotFoundError:
     * (n-1)!. Additionally, 0! = 1.
 
     In this case, the terminating cases are if n is 0 or 1, and if n is
-    negative or not and integer the input is invalid.
+    negative, above 2/3 of the system's recursion limit, or not an integer, the
+    input is considered invalid.
 '''
 
 def factorial(n):
     ''' Returns the factorial of n (n!) if n is valid, else returns -1.
     
-    'n' must be a non-negative integer
+    'n' must be a non-negative integer to be valid.
+
+    Works up to at least n = 500.
 
     factorial(int) -> int
 
     '''
-    if n < 0 or type(n) is not int:
+    import sys # used for checking maximum number of recursive calls
+    if not isinstance(n, int) or n < 0 or n > (sys.getrecursionlimit()*2)//3:
         # invalid input
         return -1
     elif n == 0 or n == 1:
@@ -343,8 +349,8 @@ def list_deep_copy(old_list):
 
     '''
     # check if old_list is immutable
-    if type(old_list) == str or type(old_list) == int or \
-    type(old_list) == float:
+    if isinstance(old_list, str) or isinstance(old_list, int) or \
+            isinstance(old_list, float):
         return old_list
 
     # old_list must be a list (by specification)
@@ -382,7 +388,7 @@ def inefficient_fibonacci(n):
     inefficient_fibonacci(int) -> int
 
     '''
-    if n < 0 or type(n) is not int:
+    if not isinstance(n, int) or n < 0:
         return -1
     if n == 0 or n == 1:
         return n
@@ -390,10 +396,12 @@ def inefficient_fibonacci(n):
 
 '''
     The solution to the inefficiency here is to store the results as they're
-    calculated, and only calculate each result once. The following class uses
-    the __call__ method to be callable like a function, and sets up the memory
-    storage to be hidden from the user. A dictionary is used for storing the
-    memory, because it has faster access times as it gets longer.
+    calculated, and only calculate each result once. To achieve this, the
+    results must be stored externally to the function calls. The following
+    class uses the __call__ method to be callable like a function, and sets up
+    the memory storage to be hidden from the user. A dictionary is used for
+    storing the memory, because it has faster access times (relative to a list)
+    as more values are stored.
 '''
 
 class Fibonacci(object):
@@ -417,7 +425,7 @@ class Fibonacci(object):
         Fibonacci(self, int) -> int
 
         '''
-        if n < 0 or type(n) is not int:
+        if not isinstance(n, int) or n < 0:
             return -1
         if n not in self._memory:
             self._memory[n] = self.__call__(n-1) + self.__call__(n-2)
@@ -444,7 +452,7 @@ def fibonacci_loop(n):
     fibonacci_loop(int) -> int
 
     '''
-    if n < 0 or type(n) is not int:
+    if not isinstance(n, int) or n < 0:
         return -1
     if n == 0 or n == 1:
         return n
@@ -472,7 +480,7 @@ class FibonacciLoop(object):
         FibonacciLoop(self, int) -> int
         
         '''
-        if n < 0 or type(n) is not int:
+        if not isinstance(n, int) or n < 0:
             return -1
         if n not in self._memory:
             # calculate additional required values
@@ -483,3 +491,4 @@ class FibonacciLoop(object):
                 self._memory[self._nMax] = new
         return self._memory[n]
                 
+

@@ -17,18 +17,20 @@ import tkinter as tk
             following widgets should be put into a grid as you desire, inside
             this outer frame.
         Create a Canvas widget. Clicking on the blank canvas should add the
-            first point of a polygon. Subsequent clicks should add the remainder
-            of the polygon, until the user double-clicks, at which point the
-            last clicked point should be joined to the first point. Double-
-            clicking before there are three points should print an error (see
-            Controls), and add no point. Once the polygon is completed, the
-            canvas should change to reference-point selecting mode for the next
-            click - which defines the point about which the polygon should be
-            scaled.
-        Create a Button widget with text "Select Reference Point". Clicking this
-            should only work when a polygon is in the canvas, and should allow
-            the user to change the point about which the polygon should be
-            scaled.
+            first point of a polygon (a red circle). Subsequent clicks should
+            add the remaining points of the polygon (also red circles), until
+            the user double-clicks, at which point a full polygon should be
+            drawn on the canvas, with the last clicked point joined to the first
+            point. The original circle points should maintain their position as
+            the polygon is scaled - this shows the original defining points as
+            the polygon moves and changes. Double-clicking before there are
+            three points should print an error (see Controls), and add no point.
+            Once the polygon is completed, the canvas should change to
+            reference-point selecting mode for the next click - which defines
+            the point about which the polygon should be scaled. This point
+            should be displayed as a blue cross. This mode is maintained until
+            the canvas is cleared (see Menubar), and the blue cross should
+            continually move to the most recently clicked position.
 
     Controls:
         Set this up with the method 'View._setup_controls()'.
@@ -57,10 +59,15 @@ import tkinter as tk
             text to '', and reset the Canvas to be blank, and ready to draw a
             new polygon.
 
+    The View class should initialise the external bindings to do nothing, using
+        the method 'View._init_bindings()'. The main window should have the
+        title 'Parametric Polygon'.
+
     The Model class should store the relevant information for the polygon, and
         should perform the scaling calculations.
 
-    The Controller class should initialise the GUI internally.
+    The Controller class should set up the bindings between the model and the
+        view, using the method 'Controller._add_bindings'.
 
     The following resources may be useful, along with their main websites:
         https://tkdocs.com/tutorial/canvas.html
@@ -101,4 +108,8 @@ class Controller(object):
 if __name__ == '__main__':
     from L9_example_checker import L9Tests
     L9Tests().run_tests()   # run tests before running GUI
-    C1 = Controller()       # run the GUI
+
+    # run the GUI
+    root = tk.Tk()
+    C1 = Controller(root)
+    root.mainloop()

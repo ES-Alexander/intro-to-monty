@@ -2,13 +2,12 @@
 
 # library imports
 import tkinter as tk # GUI library
-from tkinter import * # get package constants (e.g. YES, NW, etc)
 from tkinter import filedialog # nice file access for opening/saving
 # Python Image Library (Pillow)
 from PIL.ImageTk import PhotoImage # more image format support (jpg,png,...)
 from PIL import Image, ImageGrab # resizeable images, screenshots
 # platform dependence
-from os import sys
+import sys
 
 class View(object):
     ''' A class for a graph-analysis GUI. '''
