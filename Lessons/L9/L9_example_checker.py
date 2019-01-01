@@ -10,16 +10,11 @@ sys.path.append('..')
 from TestRun import TestRun
 
 import tkinter as tk
-from tkinter import *
 
 class L9Tests(TestRun):
     # class existence
     def test_class_exists(self):
-        ''' Testing for existence of class MyGUI.
-
-        L9Tests.run_test('test_class_exists') -> None
-        
-        '''
+        ''' Testing for existence of class MyGUI. '''
         try:
             test = MyGUI
         except NameError:
@@ -27,29 +22,17 @@ class L9Tests(TestRun):
 
     # required setup methods
     def test_setup_io(self):
-        ''' Testing for existence of _setup_io in MyGUI.
-
-        L9Tests.run_test('test_setup_io') -> None
-        
-        '''
+        ''' Testing for existence of _setup_io in MyGUI. '''
         assert '_setup_io' in dir(MyGUI), 'User I/O not set up with ' +\
                '_setup_io method.'
 
     def test_setup_canvas(self):
-        ''' Testing for existence of _setup_canvas in MyGUI.
-
-        L9Tests.run_test('test_setup_canvas') -> None
-
-        '''
+        ''' Testing for existence of _setup_canvas in MyGUI. '''
         assert '_setup_canvas' in dir(MyGUI), 'Canvas not set up with ' +\
                '_setup_canvas method.'
 
     def test_setup_menubar(self):
-        ''' Testing for existence of _setup_menubar in MyGUI.
-
-        L9Tests.run_test('test_setup_menubar') -> None
-
-        '''
+        ''' Testing for existence of _setup_menubar in MyGUI. '''
         assert '_setup_menubar' in dir(MyGUI), 'Menubar not set up with ' +\
                '_setup_menubar method.'
 

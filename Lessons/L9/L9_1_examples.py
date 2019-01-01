@@ -6,10 +6,16 @@
 ################################################################################
 
 import tkinter as tk
-from tkinter import *
 # Getting Started
 '''
-    Implement the class MyGUI below. The desired functionality is:
+    Implement the GUI below. The desired functionality is:
+
+    canvas, draw rectangle, select scaling point, scale entry, button to apply
+        scale (scale based off original drawn shape), model stores shape info
+        and calculates new info when scaling applied, label for scale entry,
+        filemenu for clear canvas to redraw rectangle and clear scale entry.
+        Extension -> Add rotation entry/label/functionality about scale point.
+        
 
     Output user input:
         Set this up with the method 'self._setup_io()'
@@ -61,12 +67,12 @@ from tkinter import *
         reference resource for this and future GUI creation.
 '''
 
-class MyGUI(object):
-    ''' A basic GUI '''
-    def __init__(self, master):
-        ''' '''
-        # setup code here
-    # add required methods and any additional helper methods
+class Model(object):
+
+class View(object):
+
+class Controller(object):
+    
 
 
 
