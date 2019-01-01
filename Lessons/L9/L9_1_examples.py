@@ -59,6 +59,8 @@ import tkinter as tk
     The Model class should store the relevant information for the polygon, and
         should perform the scaling calculations.
 
+    The Controller class should initialise the GUI internally.
+
     The following resources may be useful, along with their main websites:
         https://tkdocs.com/tutorial/canvas.html
         http://effbot.org/tkinterbook/tkinter-events-and-bindings.htm
@@ -92,7 +94,4 @@ class Controller(object):
 if __name__ == '__main__':
     from L9_example_checker import L9Tests
     L9Tests().run_tests()   # run tests before running GUI
-
-    root = tk.Tk()          # initialise main window
-    GUI = MyGUI(root)       # set up GUI
-    root.mainloop()         # run the GUI (turn over to event handler)
+    C1 = Controller()       # run the GUI
