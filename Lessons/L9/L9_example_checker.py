@@ -13,27 +13,28 @@ import tkinter as tk
 
 class L9Tests(TestRun):
     # class existence
-    def test_class_exists(self):
-        ''' Testing for existence of class MyGUI. '''
-        try:
-            test = MyGUI
-        except NameError:
-            assert False, "Class 'MyGUI' does not exist"
+    def test_classes_exist(self):
+        ''' Testing for existence of relevant classes. '''
+        for class_name in ['Model','View','Controller']:
+            try:
+                test = eval('{}()'.format(class_name))
+            except NameError:
+                assert False, "Class {} does not exist".format(class_name)
 
     # required setup methods
-    def test_setup_io(self):
+    def test_setup_controls(self):
         ''' Testing for existence of _setup_io in MyGUI. '''
-        assert '_setup_io' in dir(MyGUI), 'User I/O not set up with ' +\
-               '_setup_io method.'
+        assert '_setup_controls' in dir(View), 'Controls not set up with ' +\
+               '_setup_controls method.'
 
     def test_setup_canvas(self):
         ''' Testing for existence of _setup_canvas in MyGUI. '''
-        assert '_setup_canvas' in dir(MyGUI), 'Canvas not set up with ' +\
+        assert '_setup_canvas' in dir(View), 'Canvas not set up with ' +\
                '_setup_canvas method.'
 
     def test_setup_menubar(self):
         ''' Testing for existence of _setup_menubar in MyGUI. '''
-        assert '_setup_menubar' in dir(MyGUI), 'Menubar not set up with ' +\
+        assert '_setup_menubar' in dir(View), 'Menubar not set up with ' +\
                '_setup_menubar method.'
 
 
@@ -41,26 +42,28 @@ class L9Tests(TestRun):
 
 if __name__ == '__main__':
     import random
-    class MyGUI(object):
+    class View(object):
+        # class variables
+        SELECT_SCALE_POINT = 'ssp'
+        
         def __init__(self, master):
             self._master = master
-            self._setup_io()
+            self._setup_controls()
             self._setup_canvas()
             self._setup_menubar()
             
-        def _setup_io(self):
+        def _setup_controls(self):
             # creation
-            io_frame = tk.Frame(self._master)
-            self._label = tk.Label(io_frame, text='')
+            control_frame = tk.Frame(self._master)
+            self._label = tk.Label(control_frame, text='Scale Controls')
             self._entry = tk.StringVar()
-            self._entry.set('User Input')
-            entry = tk.Entry(io_frame, textvariable=self._entry)
-            button = tk.Button(io_frame, text='My Button',
-                               command=lambda: \
-                               self._label.config('text', self._entry.get()))
+            self._entry.set('Scale Value')
+            entry = tk.Entry(control_frame, textvariable=self._entry)
+            button = tk.Button(control_frame, text='Scale',
+                               command=self._scale_binding)
 
             # geometry management
-            io_frame.grid(row=0, column=1)
+            control_frame.grid(row=0, column=1)
             self._label.grid()
             entry.grid()
             button.grid()
@@ -69,16 +72,18 @@ if __name__ == '__main__':
             # creation
             canvas_frame = tk.Frame(self._master)
             self._canvas = tk.Canvas(canvas_frame)
-            button = tk.Button(canvas_frame, text='Canvas Button',
-                               command=self._create_circ)
+            button = tk.Button(canvas_frame, text='Select Scale Point',
+                               command=lambda: self._change_mode(
+                                   View.SELECT_SCALE_POINT))
 
             # geometry management
             canvas_frame.grid(row=0,column=0)
             self._canvas.grid()
             button.grid()
 
-        def _create_circ(self):
-            pass
+        def _scale_point(self):
+            ''' '''
+                               
 
         def _setup_menubar(self):
             # creation

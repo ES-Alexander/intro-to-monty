@@ -11,7 +11,7 @@ import tkinter as tk
     Implement the GUI below. The desired functionality is:
 
     Shape on a Canvas:
-        Set this up with the method 'self._setup_canvas()'.
+        Set this up with the method 'View._setup_canvas()'.
         Create a Frame widget for storing this section. Use the grid geometry
             manager to place it on the right hand side of the master window. The
             following widgets should be put into a grid as you desire, inside
@@ -22,15 +22,16 @@ import tkinter as tk
             last clicked point should be joined to the first point. Double-
             clicking before there are three points should print an error (see
             Controls), and add no point. Once the polygon is completed, the
-            canvas should change to scale-point selecting mode for the next
+            canvas should change to reference-point selecting mode for the next
             click - which defines the point about which the polygon should be
             scaled.
-        Create a Button widget with text "Select Scale Point". Clicking this
+        Create a Button widget with text "Select Reference Point". Clicking this
             should only work when a polygon is in the canvas, and should allow
-            the user to change the scaling point.
+            the user to change the point about which the polygon should be
+            scaled.
 
     Controls:
-        Set this up with the method 'self._setup_controls()'.
+        Set this up with the method 'View._setup_controls()'.
         Create a Frame widget for storing this section. Use the grid geometry
             manager to place it on the left hand side of the master window. The
             following widgets should be put into a grid as you desire, inside
@@ -50,7 +51,7 @@ import tkinter as tk
             usage instructions on startup.
 
     Menubar:
-        Set this up with the method 'self._setup_menubar()'.
+        Set this up with the method 'View._setup_menubar()'.
         Create a menubar with a drop-down File menu. This menu should contain
             at least a button with label 'Clear All', which should set the Entry
             text to '', and reset the Canvas to be blank, and ready to draw a
@@ -70,13 +71,19 @@ import tkinter as tk
     The GUI Example provided with this course also provides examples of using
         all the specified widgets (in the View class), and is suggested as a
         reference resource for this and future GUI creation.
+
+    As an extension, consider adding rotation controls, to enable rotating the
+        polygon about the reference point as well as scaling.
 '''
 
 class Model(object):
+    pass
 
 class View(object):
+    pass
 
 class Controller(object):
+    pass
     
 
 
