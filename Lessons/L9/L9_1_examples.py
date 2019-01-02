@@ -64,7 +64,10 @@ import tkinter as tk
         title 'Parametric Polygon'.
 
     The Model class should store the relevant information for the polygon, and
-        should perform the scaling calculations.
+        should perform the scaling calculations. Note that Canvas widgets
+        already have a 'scale' method inbuilt. You can use this to guide your
+        calculations, but do not use the inbuilt method - implement your own in
+        the Model.
 
     The Controller class should set up the bindings between the model and the
         view, using the method 'Controller._add_bindings'.
@@ -84,13 +87,22 @@ import tkinter as tk
 '''
 
 class Model(object):
-    pass
+    ''' '''
+    def __init__(self):
+        ''' '''
+        pass
 
 class View(object):
-    pass
+    ''' '''
+    def __init__(self, master):
+        ''' '''
+        pass
 
 class Controller(object):
-    pass
+    ''' '''
+    def __init__(self, master):
+        ''' '''
+        pass
     
 
 
@@ -107,7 +119,7 @@ class Controller(object):
 
 if __name__ == '__main__':
     from L9_example_checker import L9Tests
-    L9Tests().run_tests()   # run tests before running GUI
+    L9Tests().run_tests(verbose=True)   # run tests before running GUI
 
     # run the GUI
     root = tk.Tk()
