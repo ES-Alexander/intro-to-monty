@@ -201,7 +201,7 @@ class TestRun(object):
         except AssertionError as e:
             self._TP.test_failure(test_name)    # test failed
             if verbose:
-                print('    Test failed because: ' + str(e) + '\n')
+                print('    ' + str(e) + '\n')
             return TestRun.FAIL
         except KeyboardInterrupt:
             # User-specified timeout of test occurred
