@@ -15,7 +15,12 @@ class L9Tests(TestRun):
     def run_tests(self, *args, **kwargs):
         ''' Wraps running tests with a GUI creation/deletion protocol. '''
         self._root = tk.Tk()
-        self._controller = Controller(self._root)
+        try:
+            self._controller = Controller(self._root)
+        except Exception as e:
+            print('Controller setup failed, due to:\n', e)
+            self._controller = View(self._root)
+            
         self._widgets = L9Tests.get_children(self._root)
                 
         super().run_tests(*args, **kwargs)
