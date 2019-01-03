@@ -28,7 +28,7 @@ import tkinter as tk
             Once the polygon is completed, the canvas should change to
             reference-point selecting mode for the next click - which defines
             the point about which the polygon should be scaled. This point
-            should be displayed as a blue cross. This mode is maintained until
+            should be displayed as a blue circle. This mode is maintained until
             the canvas is cleared (see Menubar), and the blue cross should
             continually move to the most recently clicked position.
 
