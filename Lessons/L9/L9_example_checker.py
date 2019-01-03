@@ -306,7 +306,10 @@ if __name__ == '__main__':
             self._master.title('Parametric Polygon')
 
             self._master.geometry("{}x{}".format(500,300))
+            # set GUI to take up full window height
             self._master.rowconfigure(0, weight=1)
+            # set canvas cell to take up extra width
+            self._master.columnconfigure(1, weight=1)
             
             self._setup_controls()
             self._setup_canvas()
@@ -395,12 +398,16 @@ if __name__ == '__main__':
             '''
             # creation
             canvas_frame = tk.Frame(self._master)
-            self._canvas = tk.Canvas(canvas_frame, bg='gray', width=300,
-                                     height=290)
+            # set canvas_frame to take up any extra available space
+            canvas_frame.rowconfigure(0, weight=1)
+            canvas_frame.columnconfigure(0, weight=1)
+            self._canvas = tk.Canvas(canvas_frame, bg='gray')
 
-            # geometry management (RHS, stick to the top)
-            canvas_frame.grid(row=0,column=1, sticky=tk.N)
-            self._canvas.grid(sticky=tk.N)
+            # geometry management (RHS, stick to all sides)
+            canvas_frame.grid(row=0,column=1, sticky='nsew')
+            self._canvas.grid(sticky='nsew')
+
+            self._startup_state() # set to initial state for startup
 
         def _startup_state(self):
             ''' Sets the data state to that at startup.
@@ -508,8 +515,8 @@ if __name__ == '__main__':
 
             '''
             ppx, ppy = pixel_point
-            x_max = int(self._canvas.cget('width'))
-            y_max = int(self._canvas.cget('height'))
+            x_max = self._canvas.winfo_width()
+            y_max = self._canvas.winfo_height()
             
             if 0 < ppx < x_max and 0 < ppy < y_max:
                 return True

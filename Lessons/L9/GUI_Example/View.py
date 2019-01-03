@@ -119,6 +119,8 @@ class View(object):
         '''
         # create a frame for the graph canvas, in the master window
         graph_frame = tk.Frame(self._master)
+        # set the graph grid cell to expand preferentially
+        #   (takes up free space in the GUI)
         self._master.columnconfigure(0, weight=1)
         graph_frame.rowconfigure(0, weight=1)
         graph_frame.columnconfigure(0, weight=1)
