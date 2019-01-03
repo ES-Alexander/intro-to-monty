@@ -17,11 +17,19 @@
 #   or sell tests derived from the module, please contact the original author  #
 #   at 'sandman.esalexander@gmail.com'.                                        #
 #                                                                              #
+###--------------------------------------------------------------------------###
+#                                                                              #
+# Modified: 2019-03-01                                                         #
+# Author: ES Alexander                                                         #
+#                                                                              #
+# Added stream redirection (and logging) functionality for filestreams.        #
+#                                                                              #
 ################################################################################
 
 import traceback # controlled printing of tracebacks (from caught Exceptions)
 import multiprocessing # used for automatic timeouts (not available in IDLE)
 import time # used for measuring test times and user-generated timeouts
+import sys # used for shell io functionality
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -31,7 +39,7 @@ class TestRun(object):
     ERROR = -1
     TIMEOUT = -2
     
-    def __init__(self, timeout=5):
+    def __init__(self, timeout=5, log_func=None):
         ''' A class for running tests and printing relevant output.
 
         Tests should be in a class which inherits from TestRun, and can be run
@@ -53,12 +61,15 @@ class TestRun(object):
             test stalls while running from IDLE (or more generally), pressing
             CTRL+C to trigger a KeyboardInterrupt is treated as a TIMEOUT of
             that test, and the remaining tests are run.
+
+        'log_func' is a logging function used as an override for shell.write
+            when running in IDLE. Leave as None if not running in IDLE.
             
         Constructor: TestRun(*int)
 
         '''
         # initialise instance variables
-        self._TP = TestPrint()
+        self._TP = TestPrint(log_func)
         self._timeout = timeout
         self._last_failed = []
 
@@ -256,17 +267,28 @@ class TestPrint(object):
                   'FAIL':'COMMENT', 'STD':'stdout'}
                 }
     
-    def __init__(self):
+    def __init__(self, cprint=None):
         ''' A class for printing coloured, formatted test success states.
 
         Implements behaviour for both IDLE and a standard terminal.
 
-        Constructor: TestPrint()
+        'cprint' is an override function for shell.write in IDLE. Can be used
+            for logging purposes.
+
+        Constructor: TestPrint(func)
 
         '''
+        if cprint is not None:
+            class Colour(object):
+                def __init__(self, func):
+                    self.write = func
+            
+            self._colour = Colour(cprint)
+            self.mode = 'IDLE'
+            return
+        
         try:
             # assume the user is using IDLE
-            import sys
             self._colour = sys.stdout.shell
             self.mode = 'IDLE'
         except AttributeError:
@@ -360,10 +382,138 @@ class TestPrint(object):
             num_tests, passes, ps, failures, fs, errors, es, timeouts, ts))
         print('Testing took {:.3f}s'.format(duration))
         print('#' + '-'*78 + '#\n')
+        
 
+class Redirect(object):
+    ''' Redirect a stream to one or more places. '''
+    # Inspiration: https://stackoverflow.com/q/616645
+    def __init__(self, in_stream, *out_streams, maintain=True):
+        ''' Mimic the functionality of the Unix 'Tee' command.
+
+        Reads data from in_stream and writes it to all streams in out_streams.
+            By default, out_streams includes in_stream unless 'maintain' is
+            set to False.
+
+        Constructor: Redirect(stream, *streams, **bool)
+
+        '''
+        # store 'maintain' state internally
+        self._maintain = maintain
+        
+        self.in_stream = in_stream
+        self.__dict__.update(in_stream.__dict__)
+
+        # determine appropriate state
+        self.state = None
+        if in_stream is sys.stdout:
+            sys.stdout = self
+            self.state = 'stdout'
+        elif in_stream is sys.stderr:
+            sys.stderr = self
+            self.state = 'stderr'
+
+        # attempt to redirect IDLE direct shell writes
+        try:
+            self._shell_write = self.in_stream.shell.write
+            self.in_stream.write = self.shell_write
+        except AttributeError:
+            # not using IDLE
+            self._shell_write = self.shell_write = None
+
+        # determine the lists of output streams
+        self._out_streams = list(out_streams)
+        self.ext_streams = len(self._out_streams)
+        if maintain:
+            self._out_streams += [self.in_stream]
+            if self.state is None:
+                self.ext_streams += 1
+
+    def __del__(self):
+        ''' Clean up the streams in use. '''
+        self.close()
+
+    def __enter__(self):
+        ''' Initialisation functionality for usage in 'with' statements.
+
+        Only works if in_stream is stdout/stderr.
+
+        '''
+        pass
+
+    def __exit__(self, *args):
+        ''' Cleanup functionality for usage in 'with' statements.
+
+        Only works if in_stream is stdout/stderr.
+
+        '''
+        self.close()
+
+    def write(self, message):
+        ''' Wrapper function for 'write', to output to all desired streams. '''
+        if self._shell_write is None:
+            for stream in self._get_open_streams():
+                stream.write(message)
+        else:
+            self.shell_write(message, self.state)
+
+    def shell_write(self, message, *args, **kwargs):
+        ''' Wrapper function for IDLE's shell.write. '''
+        for stream_id in range(self.ext_streams):
+            stream = self._out_streams[stream_id]
+            if stream is not None:
+                stream.write(message)
+
+        self._shell_write(message, *args, **kwargs)
+
+    def flush(self):
+        ''' Wrapper for stream flush - flush all streams. '''
+        for stream in self._get_open_streams():
+            stream.flush()
+            #os.fsync(stream.fileno()) # unsure if necessary
+
+    def _get_open_streams(self):
+        ''' Get the currently open streams. '''
+        return [stream for stream in self._out_streams if stream is not None]
+
+    def replace_stream(self, stream_id, stream):
+        ''' Replace the stream at 'stream_id' with stream.
+
+        Can be used to re-open a closed stream by opening the same file in
+            append mode, and inputting that stream.
+
+        '''
+        if stream_id < self._ext_streams:
+            self._out_streams[stream_id] = stream
+
+    def close(self, *streams):
+        ''' Close all streams, or the streams specified by *streams indices. '''
+        if streams:
+            for stream_id in streams:
+                if stream_id < self._ext_streams:
+                    stream = self._out_streams[stream_id]
+                    if stream is not None:
+                        stream.close()
+                        self._out_streams[stream_id] = None
+            return
+
+        # streams unspecifed - clean up all streams and close as necessary
+        # restore stdout/stderr where possible
+        if self.state is not None:
+            if self.state == 'stdout':
+                sys.stdout = self.in_stream
+            elif self.state == 'stderr':
+                sys.stderr = self.in_stream
+            self.in_stream = None
+
+        for index in range(self.ext_streams):
+            stream = self._out_streams[index]
+            if stream is not None:
+                stream.close()
+                self._out_streams[index] = None
                 
 if __name__ == '__main__':
     # test a basic testing suite
+    import sys, os
     
     # initial definitions
     a = 2
@@ -388,8 +538,11 @@ if __name__ == '__main__':
             while True:
                 continue
 
+    log_file = open('log.txt','w')
+    Log = Redirect(sys.stdout, log_file)
+
     # run tests
-    Tests = ExampleTests()
+    Tests = ExampleTests(log_func=Log.shell_write)
     Tests.run_tests()
 
     # run failed tests again with explanation
@@ -398,4 +551,12 @@ if __name__ == '__main__':
     if Tests._TP.mode == 'IDLE':
         print("\nExample 'help' output from auto-set docstring:")
         help(Tests.test_a_value)
+
+    Log.close() # stop logging stdout
     
+    # print the logged output
+    print('Logging stored the following:\n')
+    
+    with open('log.txt','r') as f:
+        print(f.read())
+    os.remove('log.txt') # delete the log file
