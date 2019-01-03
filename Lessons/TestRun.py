@@ -513,7 +513,6 @@ class Redirect(object):
                 
 if __name__ == '__main__':
     # test a basic testing suite
-    import sys, os
     
     # initial definitions
     a = 2
@@ -559,4 +558,5 @@ if __name__ == '__main__':
     
     with open('log.txt','r') as f:
         print(f.read())
+    import os
     os.remove('log.txt') # delete the log file
