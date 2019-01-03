@@ -12,7 +12,7 @@ class Model(object):
             plane. The Model stores the mapping, and converts additional pixel-
             point values to graph-points.
         
-        Constructor: Model.__init__()
+        Constructor: Model()
         
         '''
         # initialise memory and points
@@ -28,7 +28,7 @@ class Model(object):
 
         Raises Exception on invalid points map input.
 
-        Model.set_defining_points(dict{(int,int):(float,float),...}) -> None
+        self.set_defining_points(dict{(int,int):(float,float),...}) -> None
 
         '''
         self._verify_points_map(points_map) # raises exception on failure
@@ -45,7 +45,7 @@ class Model(object):
 
         Raises Exception on invalid point, or if defining points not defined.
 
-        Model.add_stored_point(tuple/list[int,int]) -> tuple(float,float)
+        self.add_stored_point(tuple/list[int,int]) -> tuple(float,float)
 
         '''
         self._verify_defined() # check if defining points defined
@@ -66,7 +66,7 @@ class Model(object):
 
         Raises Exception if defining points not defined.
 
-        Model.remove_stored_point(tuple/list[int,int], *int) ->
+        self.remove_stored_point(tuple/list[int,int], *int) ->
                 tuple(float,float)/None
 
         '''
@@ -87,7 +87,7 @@ class Model(object):
     def _update_stored_points(self):
         ''' Updates all stored points based off the current affine transform.
 
-        Model._update_stored_points() -> None
+        self._update_stored_points() -> None
 
         '''
         for pixel_point in self._stored_points:
@@ -96,7 +96,7 @@ class Model(object):
     def clear_data(self):
         ''' Clears the defining and stored points.
 
-        Model.clear_data(None) -> None
+        self.clear_data(None) -> None
 
         '''
         self.clear_defining_points()
@@ -105,7 +105,7 @@ class Model(object):
     def clear_defining_points(self):
         ''' Clears the defining points.
 
-        Model.clear_defining_points(None) -> None
+        self.clear_defining_points(None) -> None
 
         '''
         self._defining_points = {}
@@ -113,7 +113,7 @@ class Model(object):
     def clear_stored_points(self):
         ''' Clears the stored points.
 
-        Model.clear_stored_points(None) -> None
+        self.clear_stored_points(None) -> None
 
         '''
         self._stored_points = {}
@@ -123,7 +123,7 @@ class Model(object):
 
         Relation determined by the pre-specified defining points.
 
-        Model.get_graph_point(tuple(int,int)) -> tuple(float,float)
+        self.get_graph_point(tuple(int,int)) -> tuple(float,float)
 
         '''
         # [xg, yg]' = A_T * [xp, yp, 1]'
@@ -138,7 +138,7 @@ class Model(object):
         'pixel_point' is a boolean specifying if the pixel points are also saved
             with their corresponding graph points
 
-        Model.save_data(str.csv, *bool) -> None
+        self.save_data(str.csv, *bool) -> None
 
         '''
         if pixel_point:
@@ -159,7 +159,7 @@ class Model(object):
     def _verify_defined(self):
         ''' Check if the defining points have been defined yet, else Exception.
 
-        Model._verify_defined() -> None
+        self._verify_defined() -> None
 
         '''
         # check if defining points are empty

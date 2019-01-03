@@ -37,7 +37,7 @@ class PhysicalObject(object):
     def get_name(self):
         ''' Returns the name of this.
 
-        PhysicalObject.get_name() -> str
+        self.get_name() -> str
 
         '''
         return self._name
@@ -45,7 +45,7 @@ class PhysicalObject(object):
     def get_mass(self):
         ''' Returns the mass of this.
 
-        PhysicalObject.get_mass() -> float
+        self.get_mass() -> float
 
         '''
         return self._mass
@@ -53,7 +53,7 @@ class PhysicalObject(object):
     def set_name(self, new_name):
         ''' Sets the name of this to the specified 'new_name'.
 
-        PhysicalObject.set_name(str) -> None
+        self.set_name(str) -> None
 
         '''
         self._name = new_name
@@ -61,7 +61,7 @@ class PhysicalObject(object):
     def set_mass(self, new_mass):
         ''' Sets the mass of this to the specified 'new_mass'.
 
-        PhysicalObject.set_mass(float) -> None
+        self.set_mass(float) -> None
 
         '''
         self._mass = new_mass
@@ -71,7 +71,7 @@ class PhysicalObject(object):
 
         Output is of the form 'PhysicalObject(name="str", mass=float)'.
 
-        PhysicalObject.__repr__() -> str
+        self.__repr__() -> str
 
         '''
         return 'PhysicalObject(name="{0!r}", mass={1!r})'.format(self._name,
@@ -85,7 +85,7 @@ class PhysicalObject(object):
                 name: str
                 mass: float'
 
-        PhysicalObject.__str__() -> str
+        self.__str__() -> str
 
         '''
         return 'Physical Object:\n\tname: {0!s}\n\tmass: {1!s}'.format(

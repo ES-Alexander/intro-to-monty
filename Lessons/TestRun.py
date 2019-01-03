@@ -31,7 +31,7 @@ class TestRun(object):
     ERROR = -1
     TIMEOUT = -2
     
-    def __init__(self, timeout=5, *args, **kwargs):
+    def __init__(self, timeout=5):
         ''' A class for running tests and printing relevant output.
 
         Tests should be in a class which inherits from TestRun, and can be run
@@ -63,19 +63,17 @@ class TestRun(object):
         self._last_failed = []
 
         # update test method docstrings with run information
-        class_name = type(self).__name__
         for method_name in self.get_test_methods():
             method = eval('self.' + method_name)
             method.__func__.__doc__ += \
-                    '\n\n{}.run_test({!r}) -> None\n\n'.format(class_name,
-                                                               method_name)
+                    '\n\nself.run_test({!r}) -> None\n\n'.format(method_name)
 
     def get_test_methods(self):
         ''' Returns the available test methods in this class.
 
         Test methods should begin with 'test_', and return None.
 
-        TestRun.get_test_methods() -> list[str]
+        self.get_test_methods() -> list[str]
 
         '''
         return [m for m in dir(self) if m.startswith('test_')]
@@ -84,7 +82,7 @@ class TestRun(object):
         ''' Runs the specified methods at the given verbosity.
 
         'methods' is a list of the test methods to run. If left empty all the
-            tests in the class are run.
+            tests in the class are run (in sorted order, not defining order).
 
         'section' is the name of the section currently being tested. If left
             empty defaults to the name of the testing class.
@@ -99,7 +97,7 @@ class TestRun(object):
             timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
             (see __init__ docs).
 
-        TestRun.run_tests(*list, *str, *bool, *int) -> None
+        self.run_tests(*list, *str, *bool, *int) -> None
         
         '''
         if not section:
@@ -153,7 +151,7 @@ class TestRun(object):
             timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
             (see __init__ docs).
 
-        TestRun.run_failed_tests(*int) -> None
+        self.run_failed_tests(*int) -> None
 
         '''
         self.run_tests(self._last_failed, 'Last Failed Tests', True, timeout)
@@ -176,7 +174,7 @@ class TestRun(object):
             timeout value. AUTOMATIC TIMEOUTS CANNOT BE IMPLEMENTED IN IDLE
             (see __init__ docs).
 
-        TestRun.run_test(str, *bool, *int) -> int
+        self.run_test(str, *bool, *int) -> int
 
         '''
         if not timeout:
@@ -223,7 +221,7 @@ class TestRun(object):
     def timeout_check(self, test_name):
         ''' Run the given method without no consequences, for runtime testing.
 
-        TestRun.timeout_check(str) -> None
+        self.timeout_check(str) -> None
 
         '''
         try:
@@ -234,7 +232,7 @@ class TestRun(object):
     def _print_IDLE_warning(self):
         ''' Prints a warning about disabled timeouts to IDLE users.
 
-        TestRun._print_IDLE_warning() -> None
+        self._print_IDLE_warning() -> None
 
         '''
         if self._TP.mode == 'IDLE':
@@ -278,7 +276,7 @@ class TestPrint(object):
     def test_success(self, test_name):
         ''' Prints test_name with a coloured PASS qualifier.
 
-        TestPrint.test_success(str) -> None
+        self.test_success(str) -> None
 
         '''
         self.test_eval(test_name, 'PASS')
@@ -286,7 +284,7 @@ class TestPrint(object):
     def test_failure(self, test_name):
         ''' Prints test_name with a coloured FAIL qualifier.
 
-        TestPrint.test_failure(str) -> None
+        self.test_failure(str) -> None
 
         '''
         self.test_eval(test_name, 'FAIL')
@@ -294,7 +292,7 @@ class TestPrint(object):
     def test_error(self, test_name):
         ''' Prints test_name with a coloured ERROR qualifier.
 
-        TestPrint.test_error(str) -> None
+        self.test_error(str) -> None
 
         '''
         self.test_eval(test_name, 'ERROR')
@@ -302,7 +300,7 @@ class TestPrint(object):
     def test_timeout(self, test_name):
         ''' Prints test_name with a coloured TIMEOUT qualifier.
 
-        TestPrint.test_timeout(str) -> None
+        self.test_timeout(str) -> None
 
         '''
         self.test_eval(test_name, 'TIMEOUT')

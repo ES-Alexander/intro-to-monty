@@ -33,9 +33,11 @@
     number of non-letter characters. Letters that should be counted are
     lowercase and uppercase letters of the English alphabet*. If the file is
     valid, check_file should return True. Any errors raised after the file has
-    opened should be re-raised as InvalidFileErrors, with their messages intact.
-    If no message is present, use the string form of the exception as the
-    message.
+    opened should be re-raised as InvalidFileErrors, with their error message
+    intact. This can be accomplished by:
+
+    except ExceptionName as e:
+        raise InvalidFileError(e)
     
     Write another function 'user_interface' which takes no arguments. It should
     repeatedly prompt the user for a filename until one is provided which passes 
@@ -47,7 +49,9 @@
 '''
 
 class InvalidFileError(Exception):
-    ''' An error for invalid file format. '''
-    def __init__(self, message):
-        self.message = message
-        
+    ''' An error for invalid file format.
+
+    raise InvalidFileError(str'message'/Exception)
+    
+    '''
+    

@@ -19,7 +19,7 @@ class Controller(object):
             off), or full automation with automatic axis detection and line
             detection combined.
         
-        Constructor: Controller.__init__(tk.Tk, *str)
+        Constructor: Controller(tk.Tk, *str)
 
         '''
         # initialise data storage
@@ -31,9 +31,9 @@ class Controller(object):
         self._add_bind_functions()
 
     def _add_bind_functions(self):
-        ''' Add event binding functions to the View.
+        ''' Link the Model functionality to View binding functions.
 
-        Controller._add_bind_functions(None) -> None
+        self._add_bind_functions() -> None
 
         '''
         self._view.add_binding_func('save_data', self._model.save_data)
