@@ -99,9 +99,13 @@ class L9Tests(TestRun):
         file_cascade = None
         for menu in menubar:
             menu_type = menu.type(0)
-            if  menu_type != 'cascade':
+            if  menu_type == 'cascade':
+                label = menu.entrycget(0, 'label')
+            elif menu_type == 'tearoff':
+                label = menu.entrycget(1, 'label')
+            else:
                 continue
-            label = menu.entrycget(0, 'label')
+            
             if label == 'File':
                 file_cascade = menu
         assert file_cascade is not None, "Menubar should include a 'File' menu."
@@ -433,7 +437,7 @@ if __name__ == '__main__':
             '''
             # creation
             menubar = tk.Menu(self._master)
-            filemenu = tk.Menu(menubar, tearoff=0)
+            filemenu = tk.Menu(menubar, tearoff=False)
             filemenu.add_command(label="Clear All", command=self._clear_all)
 
             # add to the menubar
