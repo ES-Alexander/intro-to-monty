@@ -537,11 +537,12 @@ if __name__ == '__main__':
             while True:
                 continue
 
+    # log printed output
     log_file = open('log.txt','w')
     Log = Redirect(sys.stdout, log_file)
 
     # run tests
-    Tests = ExampleTests(log_func=Log.shell_write)
+    Tests = ExampleTests(log_func=Log.shell_write) # log test outputs too
     Tests.run_tests()
 
     # run failed tests again with explanation
