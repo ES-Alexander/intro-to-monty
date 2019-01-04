@@ -340,7 +340,7 @@ if __name__ == '__main__':
                                    fg='red', wraplength=130, justify=tk.LEFT)
 
             # geometry management
-            control_frame.grid(row=0, column=0, padx=20, sticky='n')
+            control_frame.grid(row=0, column=0, padx=20, pady=5, sticky='n')
             self._label.grid(columnspan=2)
             entry.grid(row=1,column=0)
             button.grid(row=1,column=1)
@@ -405,10 +405,10 @@ if __name__ == '__main__':
             # set canvas_frame to take up any extra available space
             canvas_frame.rowconfigure(0, weight=1)
             canvas_frame.columnconfigure(0, weight=1)
-            self._canvas = tk.Canvas(canvas_frame, bg='gray')
+            self._canvas = tk.Canvas(canvas_frame, bg='snow3')
 
-            # geometry management (RHS, stick to all sides)
-            canvas_frame.grid(row=0,column=1, sticky='nsew')
+            # geometry management (RHS, stick to all sides, 2 pixel padding)
+            canvas_frame.grid(row=0, column=1, padx=2, pady=2, sticky='nsew')
             self._canvas.grid(sticky='nsew')
 
             self._startup_state() # set to initial state for startup
@@ -582,7 +582,9 @@ if __name__ == '__main__':
             self._startup_state()
 
             self._canvas.delete('all')
+            self._scale.set('')
             self._call_bind_func('clear_data')
+            self._display_instructions()
 
         def _display_instructions(self):
             ''' Display usage instructions on startup.
@@ -638,13 +640,14 @@ if __name__ == '__main__':
                 Once a reference is selected, the polygon can be scaled about
                 it by a user-specified scaling factor. The reference point can
                 be changed between scales, and a File menu provides the option
-                to Clear All and reset the GUI.
+                to Clear All and reset the GUI. Scaling by a negative factor
+                flips the polygon about the reference point. Scaling by 0 turns
+                the polygon into the point of no return.
 
             Could be expanded to include other transformations of the polygon,
-                including rotations, skewing, inverting, or modifying sides
-                and the defining points. Could also include saving/exporting,
-                multiple polygons, multiple shapes, and other more complex
-                functionality.
+                including rotations, skewing, or modifying sides and the
+                defining points. Could also include saving/exporting, multiple
+                polygons, multiple shapes, and other more complex functionality.
 
             Constructor: Controller(tk.Tk)
 
