@@ -99,10 +99,11 @@ class L9Tests(TestRun):
         file_cascade = None
         for menu in menubar:
             menu_type = menu.type(0)
-            if  menu_type == 'cascade':
-                label = menu.entrycget(0, 'label')
-                if label == 'File':
-                    file_cascade = menu
+            if  menu_type != 'cascade':
+                continue
+            label = menu.entrycget(0, 'label')
+            if label == 'File':
+                file_cascade = menu
         assert file_cascade is not None, "Menubar should include a 'File' menu."
 
         # check 'Clear All' command exists in 'File' menu
@@ -110,10 +111,11 @@ class L9Tests(TestRun):
         filemenu = L9Tests.get_children(file_cascade)['Menu']
         for menu_item in filemenu:
             item_type = menu_item.type(0)
-            if item_type == 'command':
-                label = menu_item.entrycget(0, 'label')
-                if label == 'Clear All':
-                    clear_command = menu_item
+            if item_type != 'command':
+                continue
+            label = menu_item.entrycget(0, 'label')
+            if label == 'Clear All':
+                clear_command = menu_item
         assert clear_command is not None, \
                "'File' menu should include a 'Clear All' command."
 
