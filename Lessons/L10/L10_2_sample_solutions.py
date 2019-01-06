@@ -91,11 +91,11 @@ def func_to_test(a,b,c,n):
 
 class FunctionTestsBB(TestRun):
     ''' A test suite of black-box tests for func_to_test. '''
-    def __init__(self):
+    def __init__(self, range_magnitude=10000, num_trials=100):
         ''' Initialise relevant testing variables. '''
         super().__init__()
-        self.range_mag = 10000 # magnitude of positive/negative integers
-        self.num_trials = 100   # number of trials per test
+        self.range_mag = range_magnitude # magnitude of integer extremes
+        self.num_trials = num_trials     # number of trials per test
 
     def _general_test(self, correct, a_range, b_range, c_range, n_range):
         ''' A generic test for func_to_test.
