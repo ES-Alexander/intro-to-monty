@@ -133,16 +133,15 @@ def factorial(n):
     the maximum working value, -1 should be returned. From this we can build up
     a set of representative test cases to test the specification, as below:
 
-    INPUT     EXPECTED OUTPUT      REASON FOR TEST
-     n=0       1                    Edge case (min valid int)
-     n=1       1                    Edge case (min valid int with non-explicit 
+    N         EXPECTED OUTPUT      REASON FOR TEST
+     0         1                    Edge case (min valid int)
+     1         1                    Edge case (min valid int with non-explicit 
                                                result)
-     n=500     500!                 Edge case (max guaranteed valid int)
-     n=5       5!=120               General case (valid int)
-     n=-1      -1                   Edge case (max invalid int below 0)
-     n=-50     -1                   General case (invalid int below 0)
-     n=1.3     -1                   General case (invalid type, float)
-     n='1'     -1                   General case (invalid type, string)
+     500       500!                 Edge case (max guaranteed valid int)
+     >1        n!                   General case (valid int)
+     -1        -1                   Edge case (max invalid int below 0)
+     <-1       -1                   General case (invalid int below 0)
+     not int   -1                   General case (invalid type, not int)
     
     It may also be beneficial to find the largest valid input, and to check
     that any inputs above this value do indeed return -1. This can be done as
@@ -274,30 +273,33 @@ def factorial(n):
     From here, we build another table of test-cases:
 
     BRANCH 0 (invalidity)
-    INPUT       EXPECTED OUTPUT      REASON FOR TEST
-     n=''        -1                   General case (not an integer (str))
-     n=-1        -1                   Edge case (max invalid int below 0)
-     n=-50       -1                   General case (invalid int below 0)
-     n=max+1     -1                   Edge case (min invalid int above max)
-     n=max+50    -1                   General case (invalid int above max)
+    N           EXPECTED OUTPUT      REASON FOR TEST
+     not int     -1                   General case (not an integer)
+     -1          -1                   Edge case (max invalid int below 0)
+     <-1         -1                   General case (invalid int below 0)
+     max+1       -1                   Edge case (min invalid int above max)
+     max+(+ve)   -1                   General case (invalid int above max)
     BRANCH 1 (explicit input value)
-    INPUT       EXPECTED OUTPUT      REASON FOR TEST
-     n=0         1                    Edge case (min valid int, explicit result)
-     n=1         1                    Edge case (max valid int, explicit result)
+    N           EXPECTED OUTPUT      REASON FOR TEST
+     0           1                    Edge case (min valid int, explicit result)
+     1           1                    Edge case (max valid int, explicit result)
     BRANCH 2 (loop)
-    INPUT       EXPECTED OUTPUT      REASON FOR TEST
-     n=2         2                    Edge case (1 loop iteration)
-     n=3         6                    Edge case (2 loop iterations)
-     n=max       max!                 Edge case (max loop iterations)
+    N           EXPECTED OUTPUT      REASON FOR TEST
+     2           2                    Edge case (1 loop iteration)
+     3           6                    Edge case (2 loop iterations)
+     max         max!                 Edge case (max loop iterations)
 
     We find here that our black box tests are almost fully encompassed by our
-    white box tests. Exceptions are only where the black box tests have now
-    been noted as redundant, or if max < 500. This still provides one necessary
-    black box testing case that isn't guaranteed by white box testing, so in
-    general, take care to make sure you're covering all test cases. If you are
-    unsure if you should be using one or more of your black box tests,
-    implement any you are unsure about, unless doing so would be prohibitively
-    expensive or time consuming.
+    white box tests. The only exceptions are where the black box tests have now
+    been noted as redundant (for this implementation), and if max < 500. This
+    still provides one necessary black box testing case that isn't guaranteed
+    by white box testing, so in general, take care to make sure you're covering
+    all test cases. If you are unsure if you should be using one or more of
+    your black box tests, implement any you are unsure about, unless doing so
+    would be prohibitively expensive or time consuming. This is particularly
+    useful if the implementation is likely to change, as you have a number of
+    test-cases in place to guarantee the new implementation still matches the
+    specification.
 '''
 
 
@@ -333,11 +335,19 @@ def factorial(n):
     individual tests has this set to True by default, whereas running a set of
     tests has it set to False, since this provides the cleanest output for the
     first run of tests. If run_tests is run without any arguments, it looks for
-    and runs all methods of the class beginning with 'test_'. Automatic
-    timeouts are available when not using IDLE, but if a test is taking too
-    long you can manually cause a timeout by pressing CTRL+C to raise a
-    KeyboardInterrupt. This is particularly useful for if a part of your
-    program gets stuck in an infinite loop.
+    and runs all methods of the class beginning with 'test_'.
+
+    Automatic timeouts are available when not using IDLE, but if a test is
+    taking too long you can manually cause a timeout by pressing CTRL+C to
+    raise a KeyboardInterrupt. This is particularly useful for if a part of
+    your program gets stuck in an infinite loop.
+
+    The module also allows for logging of print and error statements printed to
+    the terminal (in both IDLE and other terminals). For a full demonstration
+    of all the module's features, look at and run the example at the bottom of
+    the TestRun.py file. Below is a more basic example, covering the
+    implementation of the test cases discussed in the white-box and black-box
+    testing sections.
 
     * python treats the file being run as the top-level file in any hierarchy.
     As such, even if the file is a low-level file within a module, the module
@@ -354,7 +364,9 @@ def factorial(n):
     The following test cases should all pass, because the function correctly
     implements its specification. For an example of possible failure results
     from the testing module, look at the bottom of TestRun.py, and run the file
-    to see the outputs. Remember if you're
+    to see the outputs. Remember if you're using IDLE there are no automatic
+    timeouts, so you'll need to use KeyboardInterrupts (CTRL+C) to cause
+    user-generated timeouts where necessary.
 '''
 
 # add the parent folder to path because TestRun.py is in Lesson, not L9
@@ -379,122 +391,76 @@ class FactorialTests(TestRun):
 
     # BRANCH 0
     def test_invalid_type(self):
-        ''' Testing if factorial(str) returns -1.
+        ''' Testing if factorial(not int) returns -1.
 
-        General case (not an integer (str)).
-
-        '''
-        ret = factorial('')
-        assert ret == -1, "should return -1 on invalid type input, but " +\
-                        "returned {}".format(ret)
-
-    def test_invalid_int_1(self):
-        ''' Testing if factorial(-1) returns -1.
-
-        Edge case (max invalid int below 0).
+        General case (not an integer (float, str, tuple, list, dict)).
 
         '''
+        for item in [1.3, '', (1), [1], {1:1}]:
+            ret = factorial(item)
+            assert ret == -1, "should return -1 on invalid type input, but " +\
+                            "returned {}".format(ret)
+
+    def test_invalid_int_negative(self):
+        ''' Testing if factorial(-ve) returns -1 (invalid int < 0). '''
+        # test edge case, max invalid int below 0
         ret = factorial(-1)
-        assert ret == -1, "should return -1 on invalid int input, but " +\
+        assert ret == -1, "should return -1 on invalid int below 0, but " +\
                         "returned {}".format(ret)
 
-    def test_invalid_int_2(self):
-        ''' Testing if factorial(-ve int) returns -1.
-
-        General case (invalid int below 0).
-
-        '''
+        # test general case
         for i in range(500):
             ret = factorial(randint(-10000,-2))
-            assert ret == -1, "should return -1 on invalid int input, " +\
+            assert ret == -1, "should return -1 on invalid int below 0, " +\
                             "but returned {}".format(ret)
 
-    def test_invalid_int_3(self):
-        ''' Testing if factorial(max+1) returns -1.
-
-        Edge case (min invalid int above max).
-
-        '''
+    def test_invalid_int_positive(self):
+        ''' Testing if factorial(max+(+ve)) returns -1 (invalid int > max). '''
+        # test edge case, min int > max
         ret = factorial(self.max + 1)
-        assert ret == -1, "should return -1 on invalid int input, but " +\
+        assert ret == -1, "should return -1 on invalid int above max, but " +\
                         "returned {}".format(ret)
 
-    def test_invalid_int_4(self):
-        ''' Testing if factorial(max+(+ve int)) returns -1.
-
-        General case (invalid int above max).
-
-        '''
+        # test general case
         for i in range(500):
             ret = factorial(self.max + randint(2,10000))
-            assert ret == -1, "should return -1 on invalid int input, " +\
+            assert ret == -1, "should return -1 on invalid int above max, " +\
                             "but returned {}".format(ret)
 
     # BRANCH 1
-    def test_explicit_valid_1(self):
-        ''' Testing if factorial(0) returns 0! = 1.
-
-        Edge case (min valid int, explicit result).
-
-        '''
+    def test_explicits_valid(self):
+        ''' Testing if factorial(0/1) returns 0! = 1! = 1 (explicit result). '''
+        # test edge case, min valid int with explicit result
         ret = factorial(0)
         assert ret == 1, "0! = 1, not {}".format(ret)
 
-    def test_explicit_valid_1(self):
-        ''' Testing if factorial(1) returns 1! = 1.
-
-        Edge case (max valid int, explicit result).
-
-        '''
+        # test edge case, max valid int with explicit result
         ret = factorial(1)
         assert ret == 1, "1! = 1, not {}".format(ret)
 
     # BRANCH 2
-    def test_loop_iterations_1(self):
-        ''' Testing if factorial(2) returns 2! = 2.
-
-        Edge case (1 loop iteration).
-        
-        '''
+    def test_loop_iterations(self):
+        ''' Testing if factorial(>1) returns n! (n loop iterations). '''
+        # test edge case, 1 loop iteration
         ret = factorial(2)
         assert ret == 2, "2! = 2, not {}".format(ret)
-    
-    def test_loop_iterations_2(self):
-        ''' Testing if factorial(3) returns 3! = 6.
 
-        Edge case (2 loop iterations).
-        
-        '''
+        # test edge case, 2 loop iterations
         ret = factorial(3)
-        assert ret == 6, "3! = 6, not {}".format(ret)
+        assert ret == 3, "3! = 6, not {}".format(ret)
 
-    def test_loop_iterations_3(self):
-        ''' Testing if factorial(+ve valid int n) returns n!.
-
-        General case (n loop iterations).
-        
-        '''
-        # check white box test-case random valid ints
-        for i in range(50):
+        # test general case (not strictly necessary, since proven valid)
+        for i in range(100):
             n = randint(4, self.max)
             ret = factorial(n); n_fact = math.factorial(n)
             assert ret == n_fact, "{}! = {}, not {}".format(n, n_fact, ret)
-
-    def test_loop_iterations_4(self):
-        ''' Testing if factorial(max) returns max!.
-
-        Edge case (max loop iterations).
-
-        '''
+        
+        # test edge case, max loop iterations
         ret = factorial(self.max); n_fact = math.factorial(self.max)
         assert ret == n_fact, "{}! = {}, not {}".format(self.max, n_fact, ret)
 
     def test_max_guaranteed_valid(self):
-        ''' Testing if factorial(500) returns 500!.
-
-        Edge case (max guaranteed valid int).
-
-        '''
+        ''' Testing if factorial(500) returns 500! (max guaranteed valid). '''
         ret = factorial(500); n_fact = math.factorial(500)
         assert ret == n_fact, "500! = {}, not {}".format(n_fact, ret)
 
