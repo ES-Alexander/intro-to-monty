@@ -202,10 +202,11 @@ def factorial(n):
     branch points inside them. Instead, effort should be made to do an
     inductive proof along the lines of 'if one input works correctly, and two
     inputs work correctly, then n inputs should also work correctly.' If such a
-    statement can be made with proof, then only the one and two input cases
-    need to be tested to effectively check the 'n-inputs' case. Even so, it is
-    easy to see how white box testing can create large numbers of test cases,
-    even for relatively simple programs.
+    statement can be made with proof, then only the one and two input cases are
+    required to be tested to effectively check the 'n-inputs' case. Additional
+    tests can still be performed in the 'n-loops' region, but these are just
+    for peace of mind. Even for relatively simple programs, it is easy to see
+    how white box testing can create large numbers of test cases.
 '''
 
 
@@ -265,10 +266,10 @@ def factorial(n):
     assumed that the next iteration should also be correct when following the
     same pattern. This in turn implies that all further valid inputs should be
     correct, so testing n=2 and n=3 is representative of testing every possible
-    input to the loop. As a general case, we can test the specification maximum
-    of n=500, from the black box test-cases. To test the maximum, we should
-    check n=max. We can use the inbuilt math library's factorial to test these
-    two cases, as the numbers are too large to conveniently calculate by hand.
+    input to the loop. To test the maximum, we should check n=max. As a general
+    case, we can test a random value between n=3 and n=max. We can use the
+    inbuilt math library's factorial to test these two cases, as the numbers
+    are too large to conveniently calculate by hand.
 
     From here, we build another table of test-cases:
 
@@ -290,16 +291,23 @@ def factorial(n):
      max         max!                 Edge case (max loop iterations)
 
     We find here that our black box tests are almost fully encompassed by our
-    white box tests. The only exceptions are where the black box tests have now
-    been noted as redundant (for this implementation), and if max < 500. This
-    still provides one necessary black box testing case that isn't guaranteed
-    by white box testing, so in general, take care to make sure you're covering
-    all test cases. If you are unsure if you should be using one or more of
-    your black box tests, implement any you are unsure about, unless doing so
-    would be prohibitively expensive or time consuming. This is particularly
-    useful if the implementation is likely to change, as you have a number of
-    test-cases in place to guarantee the new implementation still matches the
+    white box tests. The only exception is if max < 500. This still provides
+    one necessary black box testing case that isn't guaranteed by white box
+    testing, so in general, take care to make sure you're covering all test
+    cases. If you are unsure if you should be using one or more of your black
+    box tests, implement any you are unsure about, unless doing so would be
+    prohibitively expensive or time consuming. This is particularly useful if
+    the implementation is likely to change, as you have a number of test-cases
+    in place to guarantee the new implementation still matches the
     specification.
+
+    As a positive, our implementation no longer requires testing the general
+    case of n>1, and instead can be tested effectively with just n=2 and n=3.
+    Often several random tests are performed when testing general regions, but
+    loops that have been proven to work have certainty with only a few select
+    cases. One or more additional random checks may still be worthwhile for
+    peace of mind, but this can be significantly fewer than for a general
+    region - particularly if its implementation is unknown.
 '''
 
 
@@ -369,7 +377,7 @@ def factorial(n):
     user-generated timeouts where necessary.
 '''
 
-# add the parent folder to path because TestRun.py is in Lesson, not L9
+# add the parent folder to path because TestRun.py is in Lesson, not L10
 import sys
 sys.path.append('..')
 from TestRun import TestRun
@@ -396,7 +404,7 @@ class FactorialTests(TestRun):
         General case (not an integer (float, str, tuple, list, dict)).
 
         '''
-        for item in [1.3, '', (1), [1], {1:1}]:
+        for item in [1.3, '', tuple([1]), [1], {1:1}]:
             ret = factorial(item)
             assert ret == -1, "should return -1 on invalid type input, but " +\
                             "returned {}".format(ret)
@@ -447,7 +455,7 @@ class FactorialTests(TestRun):
 
         # test edge case, 2 loop iterations
         ret = factorial(3)
-        assert ret == 3, "3! = 6, not {}".format(ret)
+        assert ret == 6, "3! = 6, not {}".format(ret)
 
         # test general case (not strictly necessary, since proven valid)
         for i in range(100):
