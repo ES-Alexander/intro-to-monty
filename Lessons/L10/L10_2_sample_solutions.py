@@ -65,9 +65,12 @@ def func_to_test(a,b,c,n):
     The second return output type requires a < 0 or a > c. As such, a = -1 and
     a = c + 1 are edge cases, checking for c as a general integer (as below).
 
-    No restriction is placed on b or n, so it is assumed they are equally valid
+    Since the output depends on b relative to c, b should be tested in each
+    test as less than and greater than c. When they are equal, max=min=b=c.
+
+    No restriction is placed on n, so it is assumed it is equally valid
     anywhere within the set of integers. Without tighter specification, we test
-    for 0, positive, and negative for each other test.
+    for positive and negative for each other test.
     
     A      C       EXPECTED OUTPUT     REASON FOR TEST
      0      0       -min(b,c)           Edge case (opt1, min a, min c, [a=c=0])
@@ -132,7 +135,10 @@ class FunctionTestsBB(TestRun):
     def _format_input_shortcut(self, input_range_str):
         ''' Returns formatted input if input in a shortcut format.
 
-        Valid shortcuts are 'int', or a single value.
+        If no shortcut is specified, returns input_range_str.
+
+        Valid shortcuts are 'int', '+ve', '-ve', a single value, or a tilde
+            preceding a variable name to test around that variable.
 
         FunctionTestsBB._format_input_shortcut(str) -> str
     
@@ -144,6 +150,9 @@ class FunctionTestsBB(TestRun):
             return '1,{}'.format(self.range_mag)    # positive integers
         elif input_range_str == '-ve':
             return '-{},-1'.format(self.range_mag)  # negative integers
+        elif input_range_str.startswith('~'):
+            # test about variable specified after tilde (~var)
+            return '{0}-{1},{0}+{1}'.format(input_range_str[1:], self.range_mag)
         elif ',' not in input_range_str:
             return '{0},{0}'.format(input_range_str) # '-c' -> '-c,-c'
         else:
@@ -152,38 +161,38 @@ class FunctionTestsBB(TestRun):
     # Option 1 -> (n*a) - min(b,c)
     def test_option1_1(self):
         ''' Testing edge case (opt1, min a, min c, [a=c=0]) -> 0. '''
-        self._general_test('-min(b,c)','0','int','0','int')
+        self._general_test('-min(b,c)','0','~c','0','int')
 
     def test_option1_2(self):
         ''' Testing edge case (opt1, min a, general c, [a=0]) -> -min(b,c). '''
-        self._general_test('-min(b,c)','0','int','+ve','int')
+        self._general_test('-min(b,c)','0','~c','+ve','int')
 
     def test_option1_3(self):
         ''' Testing edge case (opt1, max a, general c, [a=c]) -> opt1. '''
-        self._general_test('(n*a)-min(b,c)','c','int','+ve','int')
+        self._general_test('(n*a)-min(b,c)','c','~c','+ve','int')
 
     def test_option1_4(self):
         ''' Testing general case (opt1, [0<a<c, c>1]) -> opt1. '''
-        self._general_test('(n*a)-min(b,c)','1,c-1','int',
+        self._general_test('(n*a)-min(b,c)','1,c-1','~c',
                       '2,{}'.format(self.range_mag),'int')
 
     # Option 2 -> (n*a) + max(b,c)
     def test_option2_1(self):
         ''' Testing edge case (opt2, max a < 0, [a=-1]) -> opt2. '''
-        self._general_test('(n*a)+max(b,c)','-1','int','int','int')
+        self._general_test('(n*a)+max(b,c)','-1','~c','int','int')
 
     def test_option2_2(self):
         ''' Testing edge case (opt2, min a < c, [a=c+1]) -> opt2. '''
         # THIS TEST FAILS (func_to_test uses wrong equation)
-        self._general_test('(n*a)+max(b,c)','c+1','int','int','int')
+        self._general_test('(n*a)+max(b,c)','c+1','~c','int','int')
 
     def test_option2_3(self):
         ''' Testing general case (opt2, general c, [a<0]) -> opt2. '''
-        self._general_test('(n*a)+max(b,c)','-ve','int','int','int')
+        self._general_test('(n*a)+max(b,c)','-ve','~c','int','int')
 
     def test_option2_4(self):
         ''' Testing general case (opt2, general a, [c<0]) -> opt2. '''
-        self._general_test('(n*a)+max(b,c)','int','int','-ve','int')
+        self._general_test('(n*a)+max(b,c)','int','~c','-ve','int')
 
 
 # run the black-box tests on the original (incorrect) func to test
