@@ -97,7 +97,7 @@ class MyParentClass(object):
     def get_var(self):
         ''' Returns the 'var' parameter of this.
         
-        MyParentClass.get_var() -> int
+        self() -> int
 
         '''
         return var
@@ -105,15 +105,15 @@ class MyParentClass(object):
     def is_var_valid(self):
         ''' Returns True if self._var is an integer greater than 0.
 
-        MyParentClass.is_var_valid() -> bool
+        self.is_var_valid() -> bool
 
         '''
-        return (isinstance(self._var, int) and self._var > 0)
+        return isinstance(self._var, int) and self._var > 0
 
     def __eq__(self, obj):
         ''' Returns True if obj is equal to this.
 
-        MyParentClass.__eq__(obj) -> bool
+        self.__eq__(object) -> bool
 
         '''
         if not isinstance(obj, type(self)):
@@ -130,7 +130,7 @@ class MyChild(MyParentClass):
         'var' must be an integer between 0 and 10, exclusive.
         'var2' must be an instance of MyParentClass.
         
-        Constructor: MyChild(int, object)
+        Constructor: MyChild(int, MyParentClass, object)
 
         '''
         # super and use of *args/**kwargs explained in notes below
@@ -143,7 +143,7 @@ class MyChild(MyParentClass):
     def get_var2(self):
         ''' Returns the 'var2' parameter of this.
 
-        MyChild.get_var2() -> object
+        self.get_var2() -> object
 
         '''
         return var2
@@ -151,7 +151,7 @@ class MyChild(MyParentClass):
     def get_var3(self):
         ''' Returns the 'var3' parameter of this.
 
-        MyChild.get_var3() -> object
+        self.get_var3() -> object
 
         '''
         return var3
@@ -159,15 +159,15 @@ class MyChild(MyParentClass):
     def is_var_valid(self):
         ''' Returns True if var is an integer between 0 and 10, exclusive.
 
-        MyChild.is_var_valid() -> bool
+        self.is_var_valid() -> bool
 
         '''
-        return (super().is_var_valid() and self._var < 10)
+        return super().is_var_valid() and self._var < 10
 
     def is_var2_valid(self):
         ''' Returns True if var2 is an instance of MyParentClass.
 
-        MyChild.is_var2_valid() -> bool
+        self.is_var2_valid() -> bool
 
         '''
         return isinstance(var2, MyParentClass)
@@ -175,7 +175,7 @@ class MyChild(MyParentClass):
     def __eq__(self, obj):
         ''' Returns True if obj is equal to this.
 
-        MyChild.__eq__(obj) -> bool
+        self.__eq__(object) -> bool
 
         '''
         if not isinstance(obj, type(self)):
@@ -197,7 +197,7 @@ class MyChildChild(MyChild):
         'var2' must be an instance of MyChild.
         'var3' must be a boolean.
         
-        Constructor: MyChild(int, object)
+        Constructor: MyChildChild(int, MyChild, bool)
 
         '''
         super().__init__(var, var2, var3, *args, **kwargs)
@@ -206,15 +206,15 @@ class MyChildChild(MyChild):
     def is_var2_valid(self):
         ''' Returns True if var2 is an instance of MyChild.
 
-        MyChildChild.is_var2_valid() -> bool
+        self.is_var2_valid() -> bool
 
         '''
-        return isinstance(self._var2, MyChild)
+        return super().is_var2_valid() and isinstance(self._var2, MyChild)
 
     def is_var3_valid(self):
         ''' Returns True if var3 is a boolean.
 
-        MyChildChild.is_var3_valid() -> bool
+        self.is_var3_valid() -> bool
 
         '''
         return isinstance(self._var3, bool)
@@ -485,7 +485,7 @@ class AbstractExample(object):
 
         (Abstract method is specified but not implemented here)
 
-        AbstractExample.method_1(int) -> int
+        self.method_1(int) -> int
 
         '''
         pass
@@ -510,7 +510,7 @@ class AbstractExample2(ABC):
 
         (Abstract method is specified but not implemented here)
 
-        AbstractExample2.method_1(int) -> int
+        self.method_1(int) -> int
 
         '''
         pass
@@ -618,3 +618,4 @@ class AbstractExample2(ABC):
     The docstring in a python function is the documentation/specification at
     the top, that comes directly after the line where it is named (between the
     triple quotation marks).
+'''

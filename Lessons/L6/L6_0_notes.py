@@ -87,15 +87,12 @@
     classes understandable in terms of what they do, without necessarily
     needing to read or understand how they are actually implemented.
 
-    The example below provides the instantiation code for an example class, and
-    how to create an instance of it.
+    The example below provides the instantiation code for a simple example
+    class, and how to create an instance of it.
 '''
 
-class ExampleClass(object):
+class Example(object):
     ''' An example class. '''
-    
-    # Class variables go outside of initialisation code - global to class.
-    class_variable_1 = 'I am a class variable.'
     
     def __init__(self, param1, param2, etc):
         ''' The class used for providing an example of a class.
@@ -105,8 +102,10 @@ class ExampleClass(object):
         Constructor: ExampleClass(str, int, etc)
             
         '''
-        self._param1 = param1
+        self._param1 = param1 # instance variables (use inside instance methods)
         self._param2 = param2
+        var1 = 1 # local variables (only accessible in this function)
+        print(var1)
 
 
 my_example_instance = ExampleClass('test', 3)
@@ -122,14 +121,14 @@ my_example_instance = ExampleClass('test', 3)
 # ----- NOTE: 'self' Parameter ----- #
 '''
     The 'self' parameter enables a class to have class-specific instance
-    variables, where an instance of a class knows that it is itself, and as
-    such has access to any properties that are part of itself. This means these
-    properties can be accessed in methods outside the initialisation method, as
-    long as the 'self' parameter is also included in those methods. Beyond
-    this, if a class initialisation requires certain variables to not be
-    accessible outside the initialisation, they can simply be named as normal
-    variables, with the 'self' left off. This results in a locally-defined
-    variable only defined within the initialisation function.
+    variables and methods, where an instance of a class knows that it is
+    itself, and as such has access to any properties that are part of itself.
+    Instance methods (those that have 'self' as the first argument of their
+    definition) can then have access to all other instance methods and
+    properties. Beyond this, if a class initialisation requires certain
+    variables to not be accessible outside the initialisation, they can simply
+    be named as normal variables, with the 'self' left off. This results in a
+    locally-defined variable only defined within the initialisation function.
 '''
 
 
@@ -163,19 +162,19 @@ my_example_instance = ExampleClass('test', 3)
         Evaluating the returned string from a repr function should return a
             copy of the current class instance.
 
-        ClassName.__repr__() -> str
+        self.__repr__() -> str
 
         """
         # A descriptive and functional repr format (param1 and param2 are
         # representative of the names of the inputs the class takes when
         # creating a new instance).
-        return "ClassName(param1={0!r},param2={1!r})".format(
-                            self._param1, self._param2)
+        return "ClassName(param1={0!r},param2={1!r})".format(self._param1,
+                                                            self._param2)
 
     def __repr__(self):
         """ A formal representation of the class instance.
 
-        ClassName.__repr__() -> str
+        self.__repr__() -> str
 
         """
         # A purely functional repr format
@@ -185,7 +184,7 @@ my_example_instance = ExampleClass('test', 3)
     def __str__(self):
         """ A human-readable representation of the class.
 
-        ClassName.__str__() -> str
+        self.__str__() -> str
 
         """
         return "ClassName:\n\tParam 1: {0!s}\n\tParam 2: {1!s}".format(
@@ -222,15 +221,13 @@ my_example_instance = ExampleClass('test', 3)
     discussed in the next lesson, the two equality functions can have different
     results, in which case it is generally preferable to be certain if the
     objects are not equal, rather than assuming they are if just one of the
-    equality functions returns true. If this is not the desired behaviour, it
-    is possible (although ill advised) to directly call the __eq__ method of
-    this, accepting obj as its input parameter.
+    equality functions returns true.
 '''
 
     def __eq__(self, obj):
         """ Returns True if this is equal to obj.
 
-        ClassName.__eq__(object) -> bool
+        self.__eq__(object) -> bool
 
         """
         if not instance(obj, type(self)):
@@ -249,8 +246,8 @@ my_example_instance = ExampleClass('test', 3)
 # ----- NOTE: Not Equal ----- #
 '''
     The specified function for the 'not equals' operator (!=) is __ne__, and is
-    most commonly defined to return 'not self.__eq__(obj)', for both simplicity
-    and consistency of definition.
+    most commonly defined to return 'not self == obj', for both simplicity and
+    consistency of definition.
 '''
 
 
@@ -277,43 +274,77 @@ my_example_instance = ExampleClass('test', 3)
     and methods, and this hiding method relies solely on users understanding
     they're not intended to be directly accessed. The syntax in python to
     actually hide something is a double underscore '__' prefix, as in the
-    standard methods mentioned earlier. Standard methods used by python are
-    denoted with both a prefix and suffix of double underscores, and these
-    methods are inaccessible without using the appropriate calling method (e.g.
-    == for the __equals__ method, and len(obj) for the __len__ method).
+    standard methods mentioned earlier. Standard (builtin) methods used by
+    python are denoted with both a prefix and suffix of double underscores, and
+    these methods are inaccessible without using the appropriate calling method
+    (e.g. == for the __eq__ method, and len(obj) for the __len__ method).
 
     As a security note, while double underscore prefixing hides variables and
     methods from users, technically they are still accessible at run-time,
     they're just internally renamed within the code (with a leading underscore
     followed by the class name). As such, using double underscore prefixing is
     insufficient to ensure actual data access restriction, and more
-    sophisticated methods need to be employed.
+    sophisticated methods need to be employed in cases where security is
+    required.
 '''
 
 
 
-# Class Private and Public Methods and Variables
+# Privacy of Methods and Variables (in a Class)
 
-    self.__private_var = 0 # Private instance variable
-    self._implementation_var = 'me' # Instance implementation variable
-    self.user_var = True # User accessible variable (uncommon)
-    
-    def __private_func():
-        """ A private function. """
-        pass
+class Example(object):
+    ''' An example class. '''
 
-    def _implementation_func():
-        """ An implementation function. """
-        pass
+    def __init__(self):
+        ''' The class used for providing an example of a class.
 
-    def user_accessible_function():
-        """ A normal instance function, intended for outside access. """
-        pass
+        Extra detail here.
+
+        Constructor: ExampleClass(str, int, etc)
+            
+        '''
+        # Instance variables (specific to this instance)
+        # Access using self.var_name from inside instance methods of the
+        # class, and obj.var_name from outside the class, where obj is an
+        # instance of the class.
+        self.instance_var_1 = 'externally accessible instance variable'
+        self._instance_var_2 = 'implementation instance variable'
+        self.__instance_var_3 = 'private instance variable'
+
+        local_var = 'local variable' # only exists within this function
+        print(local_var)
+
+    def func_1(self):
+        ''' An externally accessible instance method.
+
+        Access externally with obj.func_1(), where obj is an instance of
+            Example.
+
+        self.func_1() -> None
+
+        '''
+        return
+
+    def _func_2(self):
+        ''' An implementation instance method.
+
+        self._func_2() -> None
+
+        '''
+        return
+
+    def __func_3(self):
+        ''' A private instance method.
+
+        self.__func_3() -> None
+
+        '''
+        return
 
 
 
 
-#-------------------------- CLASS AND STATIC METHODS --------------------------#
+#--------------- CLASS AND STATIC METHODS (AND CLASS VARIABLES) ---------------#
 '''
     Inevitably, grouping data and/or functions isn't always best performed
     using instances. Classes also allow for grouping data as library modules,
@@ -332,6 +363,18 @@ my_example_instance = ExampleClass('test', 3)
     class. As such, they take no implicit arguments such as 'self' or 'cls',
     and perform as a normal function, just called using the class (or an
     instance thereof).
+
+    Class variables are just like instance variables, but with their values
+    shared across all instances of the class. If a class variable is mutable,
+    modifying it in one instance will modify it for all other instances.
+    Usually this is not desirable behaviour, in which case you should use
+    immutable values for your class variables, but at times it can be useful.
+
+    The privacy and accessibility notes about underscores in naming (from
+    above) also apply to class methods and variables, and static methods. It is
+    worth noting that usually these methods and variables are intended to be
+    user-accessible, so generally won't have preceding underscores in their
+    names.
 '''
 
 
@@ -339,11 +382,22 @@ my_example_instance = ExampleClass('test', 3)
 # Defining Methods
 class MyClass(object):
     ''' An example class with static and class methods. '''
+
+    # Class variables (same for whole class/all instances).
+    # Access with self.var_name from inside instance methods of the class,
+    # cls.var_name from inside class methods of the class, and
+    # ClassName.var_name from static methods or from outside the class.
+    # Outside the class can also access with obj.var_name, where obj is an
+    # instance of the class (if it's instantiable).
+    class_var_1 = 'externally accessible class variable'
+    _class_var_2 = 'implementation class variable'
+    __class_var_3 = 'private class variable'
+
     @classmethod
     def my_class_method(cls, param1, param2, etc):
         ''' Returns something useful, potentially from the class.
 
-        MyClass.my_class_method(param1_type, param2_type, etc) -> type
+        cls.my_class_method(param1_type, param2_type, etc) -> type
 
         '''
         pass
@@ -362,7 +416,8 @@ class MyClass(object):
 '''
     A class with all class and static methods is, by implication,
     non-instantiable, and as a result requires no __init__ method, which in
-    turn implies no other default python class methods should be defined.
+    turn implies no other default python class methods should be defined (e.g.
+    __eq__, __repr__, __str__).
 '''
 
 # ----- NOTE: Calling Methods ----- #
@@ -390,4 +445,40 @@ class_method_result_2 = MyClass.class_method('test')
 
 static_method_result_1 = MyInstance.static_method('test')
 static_method_result_2 = MyClass.static_method('test')
+
+
+# ----- NOTE: Class Variable Reassignment ----- #
+'''
+    Reassigning a class variable for a particular instance will not modify that
+    variable for other instances - it will instead create an instance variable
+    by the same name as the class variable, which makes the class variable no
+    longer accessible to that instance without directly invoking the class
+    name. This is explored in the following example.
+'''
+
+
+
+# Class Variable Modification vs Reassignment
+class MyClass2(object):
+    class_var = [1,2,3]
+    def __init__(self, instance_var):
+        self._instance_var = instance_var
+    def print_current(self):
+        print(self._instance_var, self.class_var, MyClass2.class_var)
+
+M1 = MyClass2('M1')
+M2 = MyClass2('M2')
+M3 = MyClass2('M3')
+
+M1.print_current() # prints M1 [1,2,3] [1,2,3]
+M2.print_current() # prints M2 [1,2,3] [1,2,3]
+M3.print_current() # prints M3 [1,2,3] [1,2,3]
+
+M1.class_var[0] = 2
+M3.class_var = [4,5,6]
+
+M1.print_current() # prints M1 [2,2,3] [2,2,3]
+M2.print_current() # prints M2 [2,2,3] [2,2,3]
+M3.print_current() # prints M3 [4,5,6] [2,2,3]
+
 

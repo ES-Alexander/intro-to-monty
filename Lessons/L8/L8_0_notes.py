@@ -422,7 +422,7 @@ class Fibonacci(object):
 
         'n' must be a non-negative integer, else -1 is returned.
 
-        Fibonacci(self, int) -> int
+        self(int) -> int
 
         '''
         if not isinstance(n, int) or n < 0:
@@ -477,7 +477,7 @@ class FibonacciLoop(object):
 
         'n' must be a non-negative integer, else -1 is returned.
 
-        FibonacciLoop(self, int) -> int
+        self(int) -> int
         
         '''
         if not isinstance(n, int) or n < 0:
