@@ -314,7 +314,8 @@ class FunctionTestsWB(FunctionTestsBB):
         cor_a_b = [('-n+b','-1','c+1'), ('n*a+b','c+1','c+1'),
                    ('-n+c','-1','c'), ('n*a+c','c+1','c')]
         for inputs in cor_a_b:
-            self._general_test(inputs[0],inputs[1],inputs[2],'int','int')
+            cor, a, b = inputs
+            self._general_test(cor,a,b,'int','int')
 
     def test_option2_wb_2(self):
         ''' Test option 2 general cases.
