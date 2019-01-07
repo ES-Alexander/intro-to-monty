@@ -31,6 +31,9 @@ from random import randint
     Once you've found and fixed the bug (only edit the required line), determine
     the relevant white box test cases and add any additional ones to your test
     suite.
+
+    Finally, try to implement the full function correctly in a single line, and
+    test that with your tests as well.
 '''
 
 def func_to_test(a,b,c,n):
@@ -116,6 +119,12 @@ class FunctionTestsWB(FunctionTestsBB):
 Tests2 = FunctionTestsWB()
 Tests2.run_tests(verbose=True) # display reasoning for any failed tests
 
+
+
+# single-line definition
+func_to_test = None
+
+#Tests2.run_tests() # run the tests on the new definition (once defined)
 
 
 # Repositories

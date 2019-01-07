@@ -355,3 +355,8 @@ Tests2.run_tests(verbose=True) # display reasoning for any failed tests
 
 
 
+# single-line definition
+func_to_test = lambda a,b,c,n: n*a-min(b,c) if 0<=a<=c else n*a+max(b,c)
+
+Tests2.run_tests() # run the tests on the new definition
+
