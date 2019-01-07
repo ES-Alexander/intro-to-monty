@@ -149,9 +149,9 @@ class FunctionTestsBB(TestRun):
             # full integer range (+ve,0,-ve)
             return '-{0},{0}'.format(self.range_mag)
         elif input_range_str == '+ve':
-            return '1,{}'.format(self.range_mag)    # positive integers
+            return '1,self.range_mag'   # positive integers
         elif input_range_str == '-ve':
-            return '-{},-1'.format(self.range_mag)  # negative integers
+            return '-self.range_mag,-1' # negative integers
         elif input_range_str.startswith('~'):
             # test about variable specified after tilde (~var)
             return '{0}-{1},{0}+{1}'.format(input_range_str[1:], self.range_mag)
@@ -176,7 +176,7 @@ class FunctionTestsBB(TestRun):
     def test_option1_4(self):
         ''' Testing general case (opt1, [0<a<c, c>1]) -> opt1. '''
         self._general_test('(n*a)-min(b,c)','1,c-1','~c',
-                      '2,{}'.format(self.range_mag),'int')
+                           '2,self.range_mag','int')
 
     # Option 2 -> (n*a) + max(b,c)
     def test_option2_1(self):
@@ -255,7 +255,7 @@ def func_to_test(a,b,c,n):
     can be tested for the loop.
 
     Where letters are left out in the test-cases below, they are general values,
-    so should be tested at a negative, 0, and positive value in each test.
+    so should be tested for a range of negative and positive values in each test.
 
     BRANCH 0 (a<0 or a>c and b>c)
     A     B       EXPECTED OUTPUT   REASON FOR TEST
