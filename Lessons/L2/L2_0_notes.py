@@ -207,4 +207,15 @@ if <condition>:
 
 
 # ----- NOTE: Evaluation ----- #
-''''''
+'''
+    Each 'if' block will have at most ONE section evaluated. Conditions are
+    checked successively from the initial 'if' condition, and if one condition
+    holds true, all subsequent sections of the same block will be ignored. If
+    no conditions hold true, and there is no 'else' statement, the entire 'if'
+    block will be ignored.
+
+    To write code which considers multiple conditions separately, use separate
+    'if' blocks.
+
+    '''
+'''

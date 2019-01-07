@@ -176,7 +176,7 @@ def my_func_2(input_var):
     '''
 
     <relevant function code>
-    if something:
+    if <something to do with input_var>:
         return True
     else:
         return False
@@ -189,15 +189,15 @@ def my_func_2(input_var):
     as lists and tuples, which can effectively output several values
     simultaneously.
 
-    Lesson 3 touched on mutable and immutable datatypes, where mutable values
-    allow for internal modification, without being replaced, whereas immutable
-    values cannot be changed. This has to do with memory pointers (references),
-    whereby an immutable value is from a direct pointer to a place in memory
-    where data is stored, whereas a mutable value stores one or more pointers
-    to other mutable or immutable values. The mutable value pointer(s) can be
-    redirected, so when a variable storing the mutable value is accessed, from
-    anywhere in the code, it can then access the current stored values, and
-    change them if desired.
+    Lessons 1 and 3 touched on mutable and immutable datatypes, where mutable
+    values allow for internal modification, without being replaced, whereas
+    immutable values cannot be changed. This has to do with memory pointers
+    (references), whereby an immutable value is from a direct pointer to a
+    place in memory where data is stored, whereas a mutable value stores one or
+    more pointers to other mutable or immutable values. The mutable value
+    pointer(s) can be redirected, so when a variable storing the mutable value
+    is accessed, from anywhere in the code, it can then access the current
+    stored values, and change them if desired.
 
     With functions, mutable inputs allow a function to change values from
     outside of itself without needing to return anything. Effectively, a
@@ -408,9 +408,9 @@ my_list[1](1,2) # returns 3
     Think of list comprehension as a way of turning an iterable into a list,
     usually with some kind of filter applied. The general syntax is:
 '''
-my_list = [element_expr for element in iterable if filter]
+my_list = [<element_expr> for element in <iterable> if <filter_expr>]
 '''
-    where element_expr is the result added to the list, and filter is some
+    where element_expr is the result added to the list, and filter_expr is some
     boolean expression relevant to 'element' (can be a function which returns a
     boolean). The resultant list is set as element_expr applied to all elements
     in the iterable that match the filter expression. As an example,
