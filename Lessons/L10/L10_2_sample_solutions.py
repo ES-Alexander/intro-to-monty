@@ -24,10 +24,12 @@ from random import randint
     been left (only one line of code should actually NEED to be modified to meet
     the specification).
 
-    Once you've found and fixed the bug (only edit the required line in the copy
-    of the function definition below the black box tests), determine the
-    relevant white box test cases and implement a new complete test suite, with
-    all the relevant tests.
+    Once you've found and fixed the bug (only edit the required line), determine
+    the relevant white box test cases and add any additional ones to your test
+    suite.
+
+    Finally, try to implement the full function correctly in a single line, and
+    test that with your tests as well.
 '''
 
 def func_to_test(a,b,c,n):
