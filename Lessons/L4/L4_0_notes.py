@@ -11,16 +11,17 @@
 
 #--------------------------- FUNCTIONAL PROGRAMMING ---------------------------#
 '''
-    Python is what is known as a hybrid language, comprised of both functional
-    programming, and object-oriented programming. Functional programming forms
-    programs which contain a number of linked functions, usually called within
-    some main function which assimilates and runs them in the desired sequence.
-    In contrast, object-oriented programming is formed by the creation and
-    usage of different Classes (objects), each of which has a number of
-    different functions, known as methods, associated with them.
+    Python is what is known as a hybrid language, allowing for both functional
+    and object-oriented programming. Functional programming is based off sets
+    of functions, which can run other functions in the same file, or functions
+    which have been imported to the file. Usually a program has some 'main'
+    function which runs the other functions in the desired sequence. In
+    contrast, object-oriented programming is based off the idea of separate
+    objects, all with their own properties (stored variables) and methods
+    (related functions).
 
     This lesson will focus on the basics of functions and functional
-    programming, with object-oriented programming covered in a later lesson.
+    programming, with object-oriented programming covered in lesson 6.
 '''
 
 
@@ -28,11 +29,10 @@
 
 #------------------------------ INBUILT FUNCTIONS -----------------------------#
 '''
-    To begin with, Python includes a number of inbuilt functions, by default
-    coloured in IDLE in purple colour. Some of these have been used already, in
-    earlier lessons, but the following list provides a brief description of the
-    most widely used default functions. As mentioned in lesson 1, function
-    names in Python are underscore_separated, by convention.
+    To begin with, Python includes a number of inbuilt functions (coloured
+    purple by default, if using the IDLE editor). Some of these have been used
+    already, in earlier lessons, but the following list provides a brief
+    description of the most widely used ones.
 '''
 
 
@@ -54,11 +54,12 @@
 # Typecasting Functions
 '''
     Typecasting occurs when the user wishes to explicitly declare a variable as
-    of a given type, even if said variable is not of the specified type. Given
+    of a given type, or convert it to the specified type if possible. Given
     this is explicitly user performed, any associated data-loss (e.g. in the
-    truncation of a float to an integer) is assumed to be intentional, without
-    warning given. At times python may throw errors, however, if necessary
-    attributes of a variable are not present when casting to another type.
+    truncation of a float to an integer [int(1.9) -> 1]) is assumed to be
+    intentional, without warning given. At times python may throw errors,
+    however, if necessary attributes of a variable are not present when casting
+    to another type.
 '''
     int(val[,base=10]) # casts val as an integer, with optional base specified
         # val is float -> truncates, val is string -> optional base
@@ -76,7 +77,7 @@
 
 
 # Itaration-based Functions
-    all(iterable) # returns True when all elements in an iterable are true.
+    all(iterable) # returns True when all elements in an iterable are True.
     any(iterable) # returns True if any element of an iterable is True
     enumerate(iterable[, start]) # returns an iterator over the indices and
         # values of an object
@@ -92,7 +93,7 @@
 
 
 # Object/Class Functions
-    callable(obj) # checks if obj is callable (a function)
+    callable(obj) # checks if obj is callable (as a function)
     delattr(obj, attribute) # deletes the specified attribute from the object
     getattr(obj, attribute) # returns the value of the named attribute of obj
     hasattr(obj, attribute) # checks if obj has an attribute with the given name
@@ -124,28 +125,27 @@
 
 
 
-#--------------------------- USER DEFINED FUNCTIONS ---------------------------#
+#------------------------------ CUSTOM FUNCTIONS ------------------------------#
 '''
     While inbuilt functions and datatypes tend to form the basis of the
-    majority of code, these are complemented by user-defined Classes and
-    functions. Python uses the keyword 'def' to define a new function, with
-    details of each function to be written in the initial comment, later
-    forming the basis for how the 'help' and 'dir' functions describe the
-    function.
+    majority of code, these are complemented by Classes and functions defined
+    by you and other programmers. Python uses the keyword 'def' to define a new
+    function, followed by the function name, and any input variables it takes.
 
     Descriptive comments at the start of a function are known as the function's
     docstring (documentation), and should describe what the function does,
-    including any inputs it takes and outputs it generates or changes it
-    causes. It is important not to describe the method by which a function
-    works in its documentation, because doing so restricts the programmer's
-    potential to reimplement a function with more efficient code at a later
-    date, and can also at times present security issues.
+    including any inputs it takes, outputs it generates, changes it causes, and
+    how the function should be run. The docstring forms the basis for how the
+    'help' and 'dir' builtin functions describe the function to users. It's
+    important not to describe a function's implementation details in its
+    documentation, because doing so restricts your potential to reimplement it
+    later, and can also present security issues, or encourage others to use the
+    function in ways it's not intended for.
 
-    Functions also have what is known as a return value, which can be either
-    nothing, represented by the 'None' type, or some relevant variable useful
-    to specify the result or effects of the function. Return value types are
-    given in the starting comments of a function, and within a function the
-    return value follows the 'return' keyword.
+    Functions also have a 'return value', which can be nothing (None), or some
+    relevant result or status indication. Return value types are specified in
+    the docstring of a function, as part of the 'how to run' code, and within a
+    function the return value follows the 'return' keyword.
 
     Some example functions, with appropriate documentation, are provided below.
 '''
@@ -154,13 +154,13 @@
 
 # Example function 1 (no inputs, no outputs)
 def my_func_1():
-    ''' One-line briefly describing what the function does.
+    ''' One line briefly describing what the function does.
 
     More in-depth description of the function's purposes and different ways in
         which it can be used.
 
-    my_func_1(None) -> None
-    (function_name(datatype of inputs) -> Return type/s)
+    my_func_1() -> None
+    (function_name(datatype of inputs (if any)) -> Return type/s)
 
     '''
 
@@ -185,55 +185,72 @@ def my_func_2(input_var):
 # ----- NOTE: Inputs and Outputs ----- #
 '''
     Functions can have any number of inputs, and can return either nothing or
-    some version of any other datatype. This includes user-defined datatypes,
-    as well as lists and tuples which can contain a number of different
-    variables and/or values.
+    some version of any other datatype. This includes custom datatypes, as well
+    as lists and tuples, which can effectively output several values
+    simultaneously.
 
-    Input values which are mutable can often be modified within the function
-    they are passed to, resulting in changes outside of the function as well.
-    Immutable input objects, on the other hand, cannot be modified, so passing
-    an immutable object into a function cannot result in modifications to that
-    object within the function propagating outside the function's operation
-    time.
+    Lesson 3 touched on mutable and immutable datatypes, where mutable values
+    allow for internal modification, without being replaced, whereas immutable
+    values cannot be changed. This has to do with memory pointers (references),
+    whereby an immutable value is from a direct pointer to a place in memory
+    where data is stored, whereas a mutable value stores one or more pointers
+    to other mutable or immutable values. The mutable value pointer(s) can be
+    redirected, so when a variable storing the mutable value is accessed, from
+    anywhere in the code, it can then access the current stored values, and
+    change them if desired.
 
-    The way this works is that immutable objects are passed into a function as
-    a value, known as "pass-by-value' passing, and a local variable is created
-    within the function to store this value. Any changes to this variable then
-    do not affect the inputted variable unless the value of the local variable
-    is returned from the function and set as the new value for the initial
-    variable. Note that the local variable and the passed in variable are
-    permitted to have the same name, which is cause for some confusion among
-    many a programmer expecting the two variables to be the same thing.
+    With functions, mutable inputs allow a function to change values from
+    outside of itself without needing to return anything. Effectively, a
+    'reference' to the outside object is passed into the function and assigned
+    to a local variable, which stops existing once the function ends.
+    Modifications inside the function (to the local variable) can occur to the
+    data being referred to, however, which is also being referred to outside
+    the function. This is known as 'pass by reference'.
 
-    Mutable objects, on the other hand, are passed in as references to the
-    memory where the initial value is stored, meaning the created local
-    variable has access to the same memory space as the inputted variable. This
-    means that data can be modified from within the function, and when it is
-    re-accessed from outside the function the modified data is displayed, since
-    the memory itself has been changed, not just where a certain variable
-    points.
+    Immutable inputs, on the other hand, cannot be modified, so passing an
+    immutable object into a function means changes to the object inside the
+    function have to occur by replacing it with modified copies, in which case
+    the modifications aren't accessible after the function has been run, unless
+    the modified object is returned. This is known as 'pass by value', because
+    the value is assigned to the local variable, which the code outside the
+    function doesn't have access to.
+'''
+
+# ----- NOTE: Local vs Global Namespace ----- #
+'''
+    Note that inside a function is a local namespace. This means that a
+    function can access variables and functions defined outside it (these are
+    known as 'global' to the function), but variables (and functions) defined
+    inside a function cannot be accessed outside of it, unless they are
+    returned, or placed inside a mutable value passed in or global to the
+    function. Files, functions, and classes each have their own namespace, and
+    can access the namespace of things that contain them, but not of things
+    they contain. This means a variable inside and outside of a function can
+    have the same name, but if the variable inside the function is set as equal
+    to something, it becomes local to the function, and is therefore not
+    accessible by the same variable name outside the function.
 '''
 
 # ----- NOTE: 'return' Keyword ----- #
 '''
     At any point in a function, the return keyword will end the function where
-    it is encountered, ignoring any subsequent code (irrespective of whether or
-    not it is followed by an intended return value. It is also worth noting
-    that using the return keyword is not necessary in functions where no value
-    is returned, in which case the function will end when the last of its code
-    is run.
+    it is encountered, ignoring any subsequent code. If the return keyword is
+    used without a specified return value, 'None' is returned. It is also worth
+    noting that using the return keyword is not necessary in functions where no
+    value is returned, in which case the function will automatically return
+    None when the last of its code is completed.
 '''
 
 # ----- NOTE: Default Values ----- #
 '''
-    Functional inputs can have default values, as specified by an equals (=)
-    sign, allowing for users to optionally set or ignore a particular input.
-    These should be placed after any standard inputs, so parameters entered by
-    the user are not assumed to be the optional ones, thus leaving one or more
+    Function inputs can have default values, specified by an equals (=) sign,
+    allowing for users to optionally set or ignore a particular input. These
+    should be placed after any standard inputs, so parameters entered by the
+    user are not assumed to be the optional ones, thus leaving one or more
     required inputs empty.
 
     Any optional inputs should be denoted by a preceding asterisk (*) in the
-    function calling code in the docstring.
+    function calling code in the docstring (as below).
 '''
 
 
@@ -254,14 +271,19 @@ def my_func_3(input_var, optional_var=False):
 '''
     Beyond the standard defined inputs, it is also possible to enable a user to
     input an unspecified number of their own inputs to a function, either in
-    the form of variables, or key-value pairs. This is done using one and two
-    asterisks in front of variable names respectively, for "unspecified
+    the form of normal inputs, or key-value pairs. This is done using one and
+    two asterisks in front of variable names respectively, for "unspecified
     arguments" and "unspecified key-word arguments" (e.g. *args and **kwargs).
-    These must be placed last in the functional input list, because there is no
-    delimiting character to denote the end of the unspecified values. *args and
-    **kwargs are common variable names to use for these, when the variable has
-    no particular predefined meaning. In examples where the additional values
-    have some predefined purpose, more meaningful variable names can be used.
+    Note that optional arguments with defaults specified by an equals (=) sign
+    are considered to be keyword arguments. All standard arguments must be
+    placed before all keyword arguments, and all unspecified inputs must be
+    placed after specified (required or default) inputs, because there is no
+    delimiting character to denote the end of the unspecified values. Keyword
+    arguments can be in any order, because the purpose of each value is
+    identifiable by its key. *args and **kwargs are common variable names to
+    use for undefined inputs when the variables have no particular predefined
+    meaning. In examples where the additional values have some predefined
+    purpose, more meaningful variable names can be used.
 
     The values within *args and **kwargs can then be accessed by iterating over
     args or over the keys of kwargs.
@@ -270,10 +292,10 @@ def my_func_3(input_var, optional_var=False):
 
 
 # Example of a function with unspecified inputs
-def my_func_4(input_var, *args, **kwargs):
+def my_func_4(input_var, *args, my_default=True, **kwargs):
     ''' Prints out all provided inputs in a pretty-print format.
 
-    my_func_4(str, *args, **kwargs) -> None
+    my_func_4(str, *args, *bool, **kwargs) -> None
 
     '''
     print("Initial value:", input_var)
@@ -285,44 +307,59 @@ def my_func_4(input_var, *args, **kwargs):
     for key in kwargs:
         print(key, '=', kwargs[key])
 
-# how to call my_func_4
+# how to call my_func_4 (default value left as default)
 my_func_4('first',2,3,'four',5.0,first_kwarg=0,key='value',etc='and the rest')
+
+
+# Dereferencing with Asterisks
+'''
+    Asterisks can also be used to turn an iterable or mapping variable into
+    inputs to a function. This is useful when passing inputted unspecified
+    inputs into another function to be dealt with, or when transforming a
+    list/tuple or dictionary into an ordered set of function inputs.
+
+    Try running the following example and see if you can understand how it
+    works.
+'''
+
+def my_print(*objects, **kwargs):
+    ''' Print each object in objects, and each key-value pair in kwargs.
+
+    my_print(*obj) -> None
+
+    '''
+    extra_stuff = ['this', 'is', 'kinda', 'cool']
+    print('My print printed: ', *objects, *extra_stuff)
+    for key in kwargs:
+        print(key, kwargs[key])
+    
+# to dereference a dictionary into keyword arguments, keys must be strings
+my_dict = {'great':True, 'stuff':'weee', 'me':'too'}
+my_print('How cool is this?', 'pretty great', **my_dict)
 
 
 
 
 #------------------------------ LAMBDA FUNCTIONS ------------------------------#
 '''
-    Lambda functions are essentially short, one-line functions with no name.
-    They are user-defined, and tend to be used in places where a function is
-    required, but its behaviour is relatively simple, and calling it by name is
-    not required at any point. This is most commonly required in conjunction
-    with the 'map', 'filter', and 'reduce' functions, which allow effective
-    comprehension of lists, in terms of elementwise operations and filtering.
-    Detailed explanations of these functions can be found online, and will not
-    be covered in this course.
+    Sometimes you have a one line, reasonably self-evident function, and you
+    don't feel like documenting it would be helpful or necessary. The 'lambda'
+    keyword allows you to do just this - you can define a one line function
+    with no documentation, and all it needs is somewhere to live. Unlike a
+    function defined with 'def', lambda functions can be completely anonymous -
+    they don't need a name. Instead, creating a lambda function returns a
+    function instance, which can be assigned to a name (like a normal
+    function), or could be put in a list, or a dictionary, or anywhere you want
+    it stored.
 
-    Additionally, a lambda function can be used where a function is required,
-    but parameter input is desired without calling said function in the
-    process. This is common practice in things such as event bindings, which
-    will be covered in greater depth in a later lesson.
-'''
-
-
-
-# Example lambda function
-lambda x, y : x + y
-
-
-# ----- NOTE: Accessing ----- #
-'''
-    While lambda functions are commonly anonymous (without a name), it is
-    possible to assign a lambda function to a name when it is defined, or to
-    set it as a stored value in any form of container data-type (e.g. list,
-    tuple, dictionary, etc.). This may seem somewhat counterintuitive, but
-    allows the programmer to specify short functions without the usually
-    required documentation and commenting overheads which can be preventative
-    to rapid development of programs.
+    Most commonly, lambda functions are required in conjunction with the 'map',
+    'filter', and 'reduce' functions, which allow effective comprehension of
+    lists, in terms of element-wise operations and filtering. Detailed
+    explanations of these functions can be found online, and will not be
+    covered in this course. Additionally, a lambda function can be used where a
+    function is required, but parameter input is desired without calling said
+    function in the process. This is common practice in things such as event
+    bindings, which will be covered in greater depth in a later lesson.
 
     If a function is required throughout a program, but is not intended to be
     accessible to users, defining it as a lambda function allows it to avoid
@@ -331,15 +368,23 @@ lambda x, y : x + y
 
 
 
-# Example of naming a lambda function
-my_lambda_func = lambda x, y : x + y
+# 'def' vs 'lambda'
+# assigning to a name
+def my_func(*input_vars):
+    ''' Wrapper for the builtin print function '''
+    print('mine', *input_vars)
 
+my_func = lambda *input_vars : print('mine', *input_vars)
 
-# Example of setting a lambda function as a list element
-my_list = [
-    lambda x : x + 3,
-    lambda x, y: x / (y - (x % 4))
-    ]
+# assigning somewhere else
+my_list = [1,2,3]
+my_list[0] = my_func # if defined already, by either method
+my_list[1] = lambda x,y : x+y
+
+# calling the functions
+my_func('testing this', 'one:', 1) # either definition
+my_list[0]('testing this', 'two:', 2)
+my_list[1](1,2) # returns 3
 
 
 # ----- NOTE: List Comprehension ----- #
@@ -352,9 +397,33 @@ my_list = [
     by programmers competent in its nuances.
 
     Given the relative complexity of list comprehension features, combined with
-    the limited usage in the average program, this syntax is left out of this
-    course, and can be further studied online by interested students.
+    the limited usage in the average program, only the basic syntax is covered
+    in this course, which can be further studied online by interested students.
 '''
+
+
+
+# Basic List Comprehension
+'''
+    Think of list comprehension as a way of turning an iterable into a list,
+    usually with some kind of filter applied. The general syntax is:
+'''
+my_list = [element_expr for element in iterable if filter]
+'''
+    where element_expr is the result added to the list, and filter is some
+    boolean expression relevant to 'element' (can be a function which returns a
+    boolean). The resultant list is set as element_expr applied to all elements
+    in the iterable that match the filter expression. As an example,
+    'my_double_evens' (below) is set as double the value of all the even
+    integers between 0 and 19, inclusive. If 'range(20)' was replaced with a
+    list variable, my_evens would be double all the even numbers in that list.
+    'num_threes' uses more memory than a traditional loop, but counts the
+    elements in an iterable that matched a condition in a single line of code.
+'''
+my_double_evens = [2*num for num in range(20) if num % 2 == 0]
+
+num_list = [1,4,2,3,6,3,8,3,5,6,3,9,0]
+num_threes = len([val for val in num_list if val == 3]) # num_threes = 4
 
 
 
@@ -363,18 +432,34 @@ my_list = [
 '''
     An essential aspect of programming, and indeed of much of modern
     technological or, more generally, technical work, is abstraction. This is
-    the process by which a specific idea or action is considered in a more
-    general case. Mathematically this is realised through the substitution of
-    numerical values with algebraic formulae, and programatically this can be
-    perfomed through avoiding unnecessary restrictions on user input, and the
-    domain over which each function is specified.
+    the process by which a specific idea or action is considered generally, as
+    opposed to as a specific case. Mathematically this is realised through the
+    substitution of numerical values with algebraic formulae, and
+    programatically it can be performed with functions which avoid unnecessary
+    restrictions on user input and the domain over which each function is
+    specified. So-called 'hard coding' fails to use abstraction, and
+    accordingly fails to allow for general behaviour, so should be avoided
+    where possible. Generalised behaviour means the same code can be used for
+    multiple purposes, which means code written once can be used in multiple
+    programs, and less code needs to be written in the long term.
 
-    A common realisation of this principle is to try to ensure each function
-    has only one purpose, and that where possible code should be reused from
-    external sources as opposed to being rewritten by the programmer. While
-    understanding can often be greatly improved by finding solutions to
-    problems which have already been solved, this should take place when there
-    is ample time and opportunity to do so. If solutions are required to new
-    problems, existing code should be used where circumstances permit, and
-    often it's beneficial to use code that is known to work well without having
-    to write every program from the absolute bottom up.
+    Commonly, useful abstraction can be encouraged by trying to ensure each
+    function has only one purpose, and that where possible code should be
+    reused from external sources as opposed to you developing and writing all
+    your code yourself. While understanding can often be greatly improved by
+    personally solving problems which have already been solved by others, this
+    should take place when there is ample time and opportunity to do so. If
+    solutions are required to new problems, existing code should be used where
+    circumstances permit. It's often beneficial to use code that is known to
+    work well without having to write every program from the absolute bottom up.
+
+    To reinforce the point, python itself is several layers of abstraction away
+    from the actual hardware being programmed, which allows millions of people
+    to write computer programs that work across billions of devices and can
+    even be run directly through internet browsers. Without those abstractions
+    we'd be left writing in binary, attempting to talk directly to the computer
+    in a language it understands, instead of one that humans understand.
+    Further, without the hardware abstractions provided by computer designers
+    and manufacturers, we'd likely still be flipping individual switches in
+    circuits.
+'''

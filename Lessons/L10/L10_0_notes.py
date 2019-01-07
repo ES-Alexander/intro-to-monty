@@ -610,11 +610,11 @@ Tests.run_tests()
     allows all users to have both public and private repos.
 
     To get access to a repo from a hosting server (ie not one you've created
-    locally on your computer), both mercurial and git support the 'clone URL'
+    locally on your computer), both mercurial and git support the 'clone <URL>'
     command. This downloads the repo to your device, and if you're copying it
     from someone else's account, registers the cloned repo in your name. Some
     hosting servers support a modified version of cloning, using the 'fork'
-    command, whereby they actively tracks the differences between the clone(s)
+    command, whereby they actively track the differences between the clone(s)
     and the original repo.
 
     Cloning allows multiple people to work on the same project simultaneously,
@@ -630,7 +630,7 @@ Tests.run_tests()
     them using the 'commit' command. This opens up your computer's default
     editor, and gets you to specify a commit message to say what has changed in
     the files you are committing. Using the -m flag allows you to also include
-    the commit message in the command line (e.g. 'git commit filename -m
+    the commit message in the command line (e.g. 'git commit filename.txt -m
     "useful commit message"'). If you wish to make all available commits
     simultaneously, swap out filename for the -a flag (e.g. 'git commit -a').
 
@@ -688,15 +688,15 @@ Tests.run_tests()
 
     Sometimes you want to move, rename, or delete a file. It's best to involve
     your repository system while doing this, to avoid having to manually update
-    the files being tracked afterwards. To move a file, use 'git/hg mv filename
-    new_path'. To rename a file, use the mv command with the new desired
-    filename at the end of the new_path (e.g. 'git mv old_file.txt
-    my_folder/moved_file.txt'). To delete a file use 'git rm filename' or 'hg
-    remove filename'.
+    the files being tracked afterwards. To move a file, use 'git/hg mv
+    <filename> <new_path>'. To rename a file, use the mv command with the new
+    desired filename at the end of the new_path (e.g. 'git mv old_file.txt
+    my_folder/moved_file.txt'). To delete a file use 'git rm <filename>' or 'hg
+    remove <filename>'.
 
     While setting up a general .gitignore file early on is a good idea,
     sometimes you still miss certain file-types. If you want to stop tracking a
-    file, use 'git rm --cached filename', or 'hg forget filename'.
+    file, use 'git rm --cached <filename>', or 'hg forget <filename>'.
 '''
 
 
@@ -717,7 +717,7 @@ Tests.run_tests()
 
     To check the changes that have occurred between the current version of a
     file and the last committed version, use the 'diff' command (e.g. 'git/hg
-    diff filename')
+    diff <filename>')
 '''
 
 
