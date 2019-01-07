@@ -184,7 +184,7 @@ class FunctionTestsBB(TestRun):
         self._general_test('(n*a)+max(b,c)','-1','~c','int','int')
 
     def test_option2_2(self):
-        ''' Testing edge case (opt2, min a < c, [a=c+1]) -> opt2. '''
+        ''' Testing edge case (opt2, min a > c, [a=c+1]) -> opt2. '''
         # THIS TEST FAILS (func_to_test uses wrong equation)
         self._general_test('(n*a)+max(b,c)','c+1','~c','int','int')
 
