@@ -14,11 +14,11 @@
 '''
     So far we've focused on the basic building blocks of a program, such as the
     data being stored and functions which take inputs and perform some action
-    based on that data. Intuitively, the progression of these is to link data
-    with functions intended to act on that data. This introduces the idea of
-    programming with objects, whereby each object has its own properties, and
-    those properties can be acted upon or retrieved using object-specific
-    functions, called 'methods'. This style of programming is known as
+    based on that data. The next step is to link data with the functions
+    intended to act on it. This introduces the idea of programming with
+    objects, whereby each object has its own properties, and those properties
+    can be acted upon or retrieved using object-specific functions, called
+    'methods'. This style of programming is known as
     'object-oriented-programming' (OOP), and is increasingly popular due to its
     increased readability and ease of understanding, particularly in complex
     systems involving multiple parts, or even just copies of the same object.
@@ -49,17 +49,17 @@
 
 #----------------------------------- CLASSES ----------------------------------#
 '''
-    Python's implementation of this is the 'class'. Linguistically this makes
-    some sort of sense, since the differentiation between an object and a class
-    of objects is when it's decided that the current level of detail, in terms
-    of properties and methods, is as specific as desired. This leaves open the
-    possibility for future extension, for example that from vehicle to cars,
-    trucks, etc., which will be covered in greater depth in the 'inheritance'
-    lesson. Each class can have an unspecified number of 'instances', and each
-    instance has its own version of that class's properties, and the same
-    methods, known as 'instance variables' and 'instance methods' respectively.
-    This follows the fundamental programming mindset of only writing each piece
-    of code once, particularly when using it in multiple occurrences.
+    Python's implementation of this is the 'class'. Linguistically, an object
+    is differentiated from a class of objects when it's decided that the
+    current level of detail is as specific as desired. Programmatically, this
+    leaves open the possibility for future extension, for example that from
+    vehicle to car, truck, etc., which will be covered in greater depth in the
+    'inheritance' lesson (L7). Each class can have an unspecified number of
+    'instances', and each instance has its own version of that class's
+    properties, and the same methods, known as 'instance variables' and
+    'instance methods' respectively. This follows the fundamental programming
+    mindset of only writing each piece of code once, particularly when using it
+    in multiple occurrences.
 
     Of course, not all grouping of data and/or methods has to be understood as
     an object. Sometimes it's simply beneficial to have methods grouped
@@ -73,22 +73,21 @@
 '''
     To begin with, using a class as an object requires that it be possible to
     create an instance of the class. This, in turn, requires what's called an
-    'initialisation method', which python calls __init__. In the initialisation
-    method, the programmer specifies any initialisation that needs to be run
-    when a new instance of that object is created. This could include setting
-    user-specified or default values of instance variables, or starting an
-    input-checking function if the object requires regular input, and so on and
-    so forth.
+    'initialisation method', which Python calls __init__. In this method you
+    specify any initialisation that needs to be run when a new instance of that
+    object is created. This could include setting user-specified or default
+    values of instance variables, or starting an input-checking function if the
+    object requires regular input, and so on and so forth.
 
     All base-level classes in python are based off the 'object' class, and to
-    start with all our classes will take the form of 'class ClassName(object)'.
+    begin with all our classes will be created with 'class ClassName(object)'.
     The ClassName is in upper-camel-case, with the start of each word
-    capitalised. Take note of the comment structure, since this helps make
-    classes understandable in terms of what they do, without necessarily
-    needing to read or understand how they are actually implemented.
+    capitalised. Take note of the comment structure in the example below, since
+    this helps make classes understandable in terms of what they do, without
+    requiring users to read or understand how they are actually implemented.
 
     The example below provides the instantiation code for a simple example
-    class, and how to create an instance of it.
+    class, and displays how to create an instance of it.
 '''
 
 class Example(object):
@@ -114,7 +113,7 @@ my_example_instance = ExampleClass('test', 3)
 # ----- NOTE: Underscores ----- #
 '''
     The double underscores of the __init__ function are important, and these,
-    along with the '._' parameter prefixes will be covered in the Encapsulation
+    along with the '_' parameter prefixes will be covered in the Encapsulation
     section below.
 '''
 
@@ -147,11 +146,11 @@ my_example_instance = ExampleClass('test', 3)
     methods, which can be accessed by simply entering an object into the
     console/IDLE, or printing it respectively.
 
-    As an extension the the string formatting presented in lesson 5, using !r
+    As an extension to the string formatting presented in lesson 5, using !r
     and !s as part of the format specifiers returns the __repr__ and __str__
-    method of each variable specified as such. These should always be used in
-    the __repr__ and __str__ methods you define, to make best use of existing
-    class behaviours.
+    method of the respective format input. These should always be used in the
+    __repr__ and __str__ methods you define, to make best use of existing class
+    behaviours.
 
     Examples of each of these methods is provided below. Note the indentation,
     since these methods are within a class definition.
@@ -191,46 +190,46 @@ my_example_instance = ExampleClass('test', 3)
             self._param1, self._param2)
 
 
-# Equality
+# Equivalency
 '''
     Another very common method to define in a class is the __eq__ method, which
-    allows a programmer to check for equality between two objects. An entire
-    lesson could be written just on how to check for equality, but the general
-    requirements are to ensure both objects are of the same type, and that all
-    the relevant instance variables are equal. Relevance here is defined by the
-    programmer of the class, but in most cases any and all instance values are
-    compared in an equality check. This helps to ensure that an equality check
-    of two objects does not hold true if those objects are not effectively
-    equal.
+    allows a programmer to check for equivalency between two objects. In
+    general, the requirements to check for equivalency are to ensure both
+    objects are of the same type, and that all the relevant instance variables
+    are also equivalent. Relevance here is defined by the programmer of the
+    class, but in most cases any and all instance values are compared in an
+    equivalency check. This helps to ensure that an equivalency check of two
+    objects does not hold true if those objects are not effectively the same.
     
     Note the importance of checking the type first, since if the checked object
-    is of a different type, attempting to check parameter equality may raise an
-    error if a checked parameter is not present in the checked object.
+    is of a different type, attempting to check parameter equivalency may raise
+    an error if a checked parameter is not present in the checked object.
 
-    In terms of equality, 'this' refers to the object whose equality function
-    is being called. 'obj' is the generally used reference for the object being
-    compared to.
+    In terms of equivalency, 'this' refers to the object whose equivalency
+    function is being called. 'obj' is the generally used reference for the
+    object being compared to.
 
-    Equality functions are callable using the '==' operator, with an example
-    equality function presented below. Note that this is different to checking
-    with the 'is' keyword, which explicitly checks if two objects are in the
-    same place in memory, as opposed to checking if they are effectively the
-    same. Additionally, it is worth noting that the '==' operator checks the
-    __eq__ method for both 'this' and 'obj' in the comparison. These should
-    ordinarily return the same thing, but occasionally with inheritance,
-    discussed in the next lesson, the two equality functions can have different
-    results, in which case it is generally preferable to be certain if the
-    objects are not equal, rather than assuming they are if just one of the
-    equality functions returns true.
+    Equivalency functions are callable using the '==' operator, with an example
+    equivalency function presented below. Note that this checks for if both
+    objects are effectively equivalent, as opposed to checking with the 'is'
+    keyword, which explicitly checks if two objects are in the same place in
+    memory, in which case they are exactly the same object. Additionally, it is
+    worth noting that the '==' operator checks the __eq__ method for both
+    'this' and 'obj' in the comparison. These should ordinarily return the same
+    thing, but occasionally with inheritance, discussed in the next lesson, the
+    two equivalency functions can have different results, in which case it is
+    generally preferable to be certain if the objects are not equivalent,
+    rather than assuming they are if just one of the equivalency functions
+    returns true.
 '''
 
     def __eq__(self, obj):
-        """ Returns True if this is equal to obj.
+        """ Returns True if this is equivalent to obj.
 
         self.__eq__(object) -> bool
 
         """
-        if not instance(obj, type(self)):
+        if not isinstance(obj, type(self)):
             return False
         if self._param1 != obj._param1:
             return False
@@ -243,11 +242,11 @@ my_example_instance = ExampleClass('test', 3)
         return True
 
 
-# ----- NOTE: Not Equal ----- #
+# ----- NOTE: Not Equivalent ----- #
 '''
-    The specified function for the 'not equals' operator (!=) is __ne__, and is
-    most commonly defined to return 'not self == obj', for both simplicity and
-    consistency of definition.
+    The specified function for the 'not equivalent' operator (!=) is __ne__,
+    and is most commonly defined to return 'not self == obj', for both
+    simplicity and consistency of definition.
 '''
 
 
@@ -268,23 +267,23 @@ my_example_instance = ExampleClass('test', 3)
 
     In order to hide instance variables and methods, appropriate syntax is
     using a single underscore '_' as a prefix to the relevant variable or
-    method names. This helps other programmers to understand that these
-    variables are intended as for implementation-use only. It is worth noting,
-    however, that these are still accessible as if they were normal variables
-    and methods, and this hiding method relies solely on users understanding
-    they're not intended to be directly accessed. The syntax in python to
-    actually hide something is a double underscore '__' prefix, as in the
-    standard methods mentioned earlier. Standard (builtin) methods used by
-    python are denoted with both a prefix and suffix of double underscores, and
-    these methods are inaccessible without using the appropriate calling method
-    (e.g. == for the __eq__ method, and len(obj) for the __len__ method).
+    method names. This informs other programmers that these variables are
+    intended as for implementation-use only. It is worth noting, however, that
+    these are still accessible as if they were normal variables and methods,
+    and this hiding method relies solely on users understanding they're not
+    intended to be directly accessed. To actually hide something in Python, you
+    can use a double underscore '__' prefixing its name, as in the standard
+    methods mentioned earlier. Standard (builtin) methods used by python are
+    denoted with both a prefix and suffix of double underscores, and these
+    methods are inaccessible without using the appropriate calling method (e.g.
+    == for the __eq__ method, and len(obj) for the __len__ method).
 
     As a security note, while double underscore prefixing hides variables and
     methods from users, technically they are still accessible at run-time,
     they're just internally renamed within the code (with a leading underscore
     followed by the class name). As such, using double underscore prefixing is
     insufficient to ensure actual data access restriction, and more
-    sophisticated methods need to be employed in cases where security is
+    sophisticated methods need to be employed in cases where real security is
     required.
 '''
 
@@ -347,28 +346,29 @@ class Example(object):
 #--------------- CLASS AND STATIC METHODS (AND CLASS VARIABLES) ---------------#
 '''
     Inevitably, grouping data and/or functions isn't always best performed
-    using instances. Classes also allow for grouping data as library modules,
-    or simply grouping a set of functions which logically fit well together.
-    This introduces the concept of methods and data defined within or inherent
-    to a particular class, but which can be accessed without an instance.
+    using instances. Classes also allow for grouping data and/or sets of
+    functions which logically fit well together. This introduces the concept of
+    methods and data defined within or inherent to a particular class, but
+    which can be accessed without an instance.
 
     There are two levels of this, known as 'class' and 'static' methods,
-    denoted with '@classmethod' and '@staticmethod' before the relevant method
-    definitions. Class methods are linked to the class, and have access to the
-    class's internal state (class variables), but don't require an instance to
-    be run. In order to have this internal access, class methods must take
-    'cls' as an implicit definition, in the same way 'self' is in instance
-    methods. Static methods are completely static from the class, and are
-    essentially just there because it makes sense to group them with that
-    class. As such, they take no implicit arguments such as 'self' or 'cls',
-    and perform as a normal function, just called using the class (or an
-    instance thereof).
+    denoted with '@classmethod' and '@staticmethod' so-called 'decorators'
+    before the relevant method definitions. Class methods are linked to the
+    class, and have access to the class's internal state (class variables), but
+    don't require an instance to be run. In order to have this internal access,
+    the first parameter of a class methods should be 'cls', implicitly
+    including the class, in the same way 'self' is used in instance methods.
+    Static methods are completely static from the class, and are essentially
+    just there because it makes sense to group them with that class. As such,
+    they take no implicit arguments such as 'self' or 'cls', and perform as a
+    normal function, just called using the class (or an instance thereof).
 
-    Class variables are just like instance variables, but with their values
-    shared across all instances of the class. If a class variable is mutable,
-    modifying it in one instance will modify it for all other instances.
-    Usually this is not desirable behaviour, in which case you should use
-    immutable values for your class variables, but at times it can be useful.
+    Other than separated methods, there are also class variables, which are
+    just like instance variables but with their values shared across all
+    instances of the class. If a class variable is mutable, modifying it in one
+    instance will modify it for all other instances. Usually this is not
+    desirable behaviour, in which case you should use immutable values for your
+    class variables, but at times it can be useful.
 
     The privacy and accessibility notes about underscores in naming (from
     above) also apply to class methods and variables, and static methods. It is
@@ -424,7 +424,8 @@ class MyClass(object):
 '''
     While class and static methods, unlike instance methods, can be called
     directly from the class, it's also possible to call them from any subset of
-    the class, including instances or subclasses.
+    the class, including instances or subclasses (as long as they are not
+    overwritten by variables or methods with the same name).
 '''
 
 
@@ -451,9 +452,10 @@ static_method_result_2 = MyClass.static_method('test')
 '''
     Reassigning a class variable for a particular instance will not modify that
     variable for other instances - it will instead create an instance variable
-    by the same name as the class variable, which makes the class variable no
-    longer accessible to that instance without directly invoking the class
-    name. This is explored in the following example.
+    by the same name as the class variable. This instance variable overwrites
+    the class variable, and makes it no longer accessible to that instance
+    without directly invoking the class name. This is explored in the following
+    example.
 '''
 
 

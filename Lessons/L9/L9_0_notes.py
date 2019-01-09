@@ -43,14 +43,14 @@
     enables the implementation of a GUI to be separated into three main
     elements. The model is where the data is stored, and includes the format
     (think variable types) of the data, as well as how external code can access
-    the data. This can be thought of as a database, and should be able to exist
-    without knowing anything about the rest of the GUI. The view is the
-    display, it specifies where and how information is to be presented, and
-    requires at least some knowledge of the type(s) of data which need display,
-    as well as how much data might be needed at any point in time. The
-    controller is the communications middle-man, and facilitates the
-    connection(s) of the view to the model, while also dealing with user input
-    and changing the view as appropriate as a result.
+    the data. This can be thought of as a database with processing
+    capabilities, and should be able to exist without knowing anything about
+    the rest of the GUI. The view is the display, it specifies where and how
+    information is to be presented, and requires at least some knowledge of the
+    type(s) of data which need display, as well as how much data might be
+    needed at any point in time. The controller is the communications enabler,
+    and facilitates the connection(s) of the view to the model, while also
+    dealing with user input and changing the view as appropriate as a result.
 
     Note that once connection has been set up by the controller, changes to
     data in the model are allowed to be automatically implemented in the view -
@@ -120,7 +120,7 @@
     If a widget is assigned to a variable on creation, its unique ID is stored
     in that variable. This can be used later to modify the properties of the
     widget. Additionally, widgets can be tagged, allowing you to modify the
-    property of multiple widgets at the same time.
+    properties of multiple widgets at the same time.
 '''
 
 
@@ -139,39 +139,40 @@
 # Geometry Management
 '''
     With an established set of elements, the remaining aspect of the display is
-    to position each widget in a desired position. This is known as geometry
-    management. Tkinter has inbuilt geometry management functionality using
-    either 'pack', 'grid', or 'place'. Pack allows you to specify the direction
-    in which widgets should be placed within a container widget (e.g. a Frame
-    or Canvas), with subsequent widgets positioned relative to the earlier
-    positioned widgets. Grid allows for position specification in a grid (i.e.
-    simply and nicely lines things up), and remembers previous settings when
-    hiding widgets, so they can be easily restored. Place allows you to specify
-    the pixel locations of widgets, but that also makes it incredibly
-    inflexible, and it's rarely used as a result.
+    to position each widget in a desired location, with enough space to fit it.
+    This is known as geometry management. Tkinter has inbuilt geometry
+    management functionality using either 'pack', 'grid', or 'place'. Pack
+    allows you to specify the direction in which widgets should be placed
+    within a container widget (e.g. a Frame or Canvas), with subsequent widgets
+    positioned relative to the earlier positioned widgets. Grid allows for
+    position specification in a grid (i.e. simply and nicely lines things up),
+    and remembers previous settings when hiding widgets, so they can be easily
+    restored. Place allows you to specify the exact pixel locations of widgets,
+    but that also makes it highly inflexible, and it's rarely used as a result.
 
     Pack and grid should never be used within the same window - they don't play
-    nice with each other. Pack was established before grid, so many online
+    nicely with each other. Pack was established before grid, so many online
     examples use pack, and you may find old code which uses it. Pack is
     generally considered easier to use for laying out widgets in a single
     column or row, but otherwise grid is suggested (tkdocs suggests using grid
     for most, if not all geometry management).
 
-    Widgets will not appear in the GUI until they have been put in place with a
-    geometry manager.
+    Widgets will not appear in the GUI until they have been put in position
+    with a geometry manager.
 '''
 
 
 # ----- NOTE: Widget Creation and Geometry Management ----- #
 '''
-    When creating widgets and putting them into place, it's generally best
-    practice to keep the creation separate from the layout. This helps to make
-    code much more readable, and easier to debug. If a widget is put in place
-    in the same line it's created, it is anonymous - assigning the result to a
-    variable just leaves None in that variable. Sometimes anonymous behaviour
-    is desired, particularly if you have no desire to access certain widgets
-    once they've been created, but only do so if you know what you're doing,
-    and generally for small numbers so debugging isn't made too difficult.
+    When creating widgets and putting them into position, it's generally best
+    practice to keep the creation code separate from the layout. This helps to
+    make code much more readable, and easier to debug. If a widget is put in
+    place in the same line it's created, it is anonymous - assigning the result
+    to a variable just leaves None in that variable. Sometimes anonymous
+    behaviour is desired, particularly if you have no desire to access certain
+    widgets once they've been created, but only do so if you know what you're
+    doing, and generally for small numbers of widgets so debugging isn't made
+    too difficult.
 '''
 
 
@@ -206,20 +207,20 @@
     The evaluate (eval) and execute (exec) functions are two powerful python
     functions which allow dynamic specification and execution of code. 'eval'
     takes a string, and determines (evaluates) and returns the result (e.g.
-    eval('1+3')), whereas 'exec' takes a string and executes it, returning
-    nothing.
+    'eval('1+3')' returns 4), whereas 'exec' takes a string and executes it,
+    returning nothing.
 
     Both eval and exec are known as potential security risks when run directly
-    off user input - and this should never be done. Instead, they should be
-    used for testing purposes, or use user input that has been verified as
-    valid, using regex (regular expressions) or comparison to a list of valid
-    inputs. Be aware that in most situations where eval or exec could be used,
-    there is a better, safer, and more efficient way to get the same
-    performance not using them. Additionally, dynamically generated and/or
-    executed code is problematic in that it can't be debugged, since you don't
-    know what code was run (unless it's logged before running it). In saying
-    that, there are cases where eval and exec are highly beneficial, or even
-    required.
+    off user input - and this should never be done, unless your application is
+    supposed to directly run user code. Instead, the functions should be used
+    for testing purposes, or on user input that has been verified as valid,
+    using regex (regular expressions) or comparison to a list of valid inputs.
+    Be aware that in most situations where eval or exec could be used, there is
+    a better, safer, and more efficient way to get the same performance not
+    using them. Additionally, dynamically generated and/or executed code is
+    problematic in that it can't be debugged, since you don't know what code
+    was run (unless it's logged before running it). In saying that, there are
+    cases where eval and exec are highly beneficial, or even required.
 
     As a security note, ANY time a user provides input, it should be treated as
     untrustworthy unless fully parsed into a set of proven safe
@@ -236,8 +237,8 @@
     variable name into the console, this is not particularly efficient,
     particularly for large numbers of variables. Here the __repr__ function is
     tested for an instance T1. The following behaviour should be the case for
-    any and every class you define, assuming it has a valid __eq__ method
-    defined for checking instance equality.
+    any and every instantiable class you define, assuming it has a valid __eq__
+    method defined for checking instance equivalency.
 '''
 
 T1 = [1,2,3]
@@ -245,7 +246,7 @@ T2 = eval(repr(T1))
 T2 == T1 # True
 
 
-# Exec with Valid Options and Type Checking (Using Eval)
+# Exec with Valid Options and Type Checking
 '''
     The following example defines some basic functions, then gets a user to
     input a semicolon-separated list specifying which function they'd like to
@@ -267,10 +268,11 @@ T2 == T1 # True
 '''
 
 # a set of predefined functions, and the argument types they take
-valid_funcs = {'test': ['int', 'int', 'str'],
-            'func2': ['float', 'int'],
-            'derp': ['int', ['int']],
-            'boop': ['dict', 'list']}
+# (functions are defined below user_run_func)
+valid_funcs = {'test': [int, (int,float), str],
+            'func2': [float, int],
+            'derp': [int, [int]],
+            'boop': [dict, list]}
 
 import re # import regular expressions (regex)
 
@@ -280,76 +282,115 @@ def user_run_func(valid_funcs):
         if the function and inputs are deemed to be valid according to
         valid_funcs.
 
+    If the user function request is invalid, prints an error message.
+
     valid_funcs should be of form:
-        {'func1': ['type1','type2',...],
+        {'func1': [type1,type2,...],
         ...}
     If a function uses *args with arguments of the same type, it can have
-        'funcN': ['type1','type2',['type3']]
-    where all arguments in *args have to be of type3.
+        'funcN': [type1,type2,...,[typeN]]
+    where all arguments in *args have to be of typeN.
     Type checking is only performed at the top layer.
+    Type specifiers should be types or tuples of types.
 
-    If user function request is invalid, prints an error message.
-
-    user_run_func(dict{str:list[str/list[str]]}) -> None
+    user_run_func(dict{str:list[type/list[type]]}) -> None
 
     '''
     input_func = input(
         'Specify a semicolon-separated list of func;var1;var2;...\n')
     inputs = input_func.split(';')
-    func = inputs[0]; func_inputs = inputs[1:]; valid_inputs = ''
+    func = inputs[0]; func_inputs = inputs[1:]
 
-    # run the desired function
-    if func in valid_funcs.keys():
-        star_args_type = None # initialise to not in *args yet
-        executable = True
-        for var_index, var in enumerate(func_inputs):
-            # check if type is valid, and add to valid_inputs, else error
-            try:
-                if star_args_type:
-                    # now in *args variables, which should all be the same type
-                    star_args_type(var) # check if this *args var type is valid
-                    continue # already checked, don't try to check again
-                    
-                input_type = valid_funcs[func][var_index]
-                if type(input_type) is str and input_type in \
-                        ['int','str','float','bool']:
-                    # check type validity - don't store result
-                    eval('{}(var)'.format(input_type))
-                elif type(input_type) is list:
-                    # remaining inputs are all of specified type,
-                    # only convert to type (from string) once, and store result
-                    star_args_type = eval(input_type[0])
-                    star_args_type(var) # check if type is valid
-                # use a regular expression to check for modifier accessing,
-                # without disabling floats in container objects
-                elif re.search(r"\.[a-zA-Z_]", var) is None:
-                    # remove spaces to get rid of obscure hacks
-                    var = var.replace(' ','')
-                    test_obj = eval(var)
-                    assert type(test_obj) == eval(input_type)
-                else:
-                    raise Exception('Invalid variable input {0}'.format(var))
-            except Exception as e:
-                for index, var_type in enumerate(valid_funcs[func]):
-                    if type(var_type) is list:
-                        valid_funcs[func][index] = str(var_type)
-                print(('Invalid input "{0}". {1} function should be used '+
-                    'as:\n\t{1};{2}').format(
-                        var, func, ';'.join(valid_funcs[func])))
-                executable = False
-                break # having no break here would identify all input var issues
-        if executable:
+    # check validity and run the desired function
+    if func in valid_funcs:
+        if inputs_valid(valid_funcs, func, func_inputs):
             # function name and inputs have been fully checked for validity
             # -> call desired function with specified inputs
             exec('{0}({1})'.format(func, ','.join(func_inputs)))
     else:
-        print("Invalid function '{0}'. Functions must be one of {1}".format(
+        print("Invalid function '{0}'. Functions must be one of:\n\t{1}".format(
             func, list(valid_funcs.keys())))
+
+def inputs_valid(valid_funcs, func, func_inputs):
+    ''' Returns True if func_inputs are type-correct for func, else False.
+    Prints an error message if any of func_inputs are invalid.
+
+    valid_funcs should be of form:
+        {'func1': [type1,type2,...],
+        ...}
+    If a function uses *args with arguments of the same type, it can have
+        'funcN': [type1,type2,...,[typeN]]
+    where all arguments in *args have to be of typeN.
+    Type checking is only performed at the top layer.
+    Type specifiers can be strings or types.
+
+    inputs_valid(dict{str:list[type/str/list[type/str]]}, str, list[str])
+        -> bool
+
+    '''
+    star_args_type = None # initialise to not in *args yet
+    for var_index, var in enumerate(func_inputs):
+        # confirm type is valid, else print relevant error and return invalid
+        try:
+            # use a regular expression to check for modifier accessing,
+            # without disabling floats in container objects
+            if re.search(r"\.[a-zA-Z_]", var) is None:
+                # remove spaces to get rid of obscure hacks
+                var = var.replace(' ','')
+            else:
+                raise Exception("Cannot contain access modifiers ('.').")
+
+            # get the correct input type of this variable
+            if star_args_type:
+                # now in *args variables, which should all be the same type
+                valid_type = star_args_type
+            else:
+                valid_type = valid_funcs[func][var_index]
+                if isinstance(valid_type, list):
+                    # remaining inputs are all of specified type
+                    valid_type = star_args_type = valid_type[0]
+                # else valid_type is assumed to be a type, or tuple of types
+                    
+            # check type validity
+            if not isinstance(eval(var), valid_type):
+                # determine the type value(s) for the exception
+                if isinstance(valid_type, tuple):
+                    p_type = '/'.join([t.__name__ for t in valid_type])
+                else:
+                    p_type = valid_type.__name__
+                    
+                raise Exception('Must match correct input type ({}).'.format(
+                    p_type))
+        except Exception as e:
+            print('Invalid function input: {}'.format(var))
+            if True: #type(e) is Exception:
+                print(e) # only print if I wrote the exception message
+            valid_types = list(valid_funcs[func]) # copy valid types for func
+            for index, var_type in enumerate(valid_types):
+                if isinstance(var_type, type):
+                    valid_types[index] = var_type.__name__
+                if isinstance(var_type, list):
+                    var_type = var_type[0]
+                    if isinstance(var_type, tuple):
+                        valid_types[index] = '/'.join(
+                            [t.__name__ for t in var_type])
+                    else:
+                        valid_types[index] = var_type.__name__
+                elif isinstance(var_type, tuple):
+                    valid_types[index] = '/'.join(
+                        [t.__name__ for t in var_type])
+                                        
+            print("'{0}' function should be used as:\n\t{0};{1}".format(
+                    func, ';'.join(valid_types)))
+            return False
+
+    # no inputs were determined to be invalid
+    return True
 
 # some basic functions for use as 'valid_funcs' in user_run_test (above)
 def test(a,b,c):
-    ''' test(int, int, str) -> None '''
-    print(c + str(a+b/2))
+    ''' test(int, int/float, str) -> None '''
+    print(c, str(a+b/2))
 
 def func2(a,b):
     ''' func2(float, int) -> None '''
@@ -357,7 +398,7 @@ def func2(a,b):
 
 def derp(a, *args):
     ''' derp(int, [int]) -> None '''
-    total = sum([*args],a)
+    total = sum(args,a)
     print('Start value =', a)
     print('Result =', total)
 
@@ -365,3 +406,4 @@ def boop(a,b):
     ''' boop(dict, list) -> None '''
     print(a); print(b);
     print('boop boop')
+

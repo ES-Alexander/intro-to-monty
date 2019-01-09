@@ -31,31 +31,31 @@
     it can become difficult to keep track of what is and isn't working. What's
     more, sometimes fixing one bug can cause a bug in another part of your
     program that might be hard to notice or pick up. This is where automated
-    testing comes in. You consider your specification and determine a suite of
-    tests (known as 'test cases') to cover every aspect of your program,
-    displaying every piece of desired functionality. Creating such a test suite
-    means you can provide your code to users with a guarantee that if used
-    within the specification, as tested by your tests, your code will perform
-    correctly. This also means that every time you modify your program you can
-    test all its specified behaviour, and check that it performs correctly,
-    without you having to remember or manually implement all the test cases.
+    testing comes in. You consider your specification and determine a set of
+    inputs (known as 'test cases') to cover every aspect of your program's
+    functionality. Creating such a test suite means you can provide your code
+    to users with a guarantee that if used within the specification, as tested
+    by your tests, your code will perform correctly. This also means that every
+    time you modify your program you can test all its specified behaviour, and
+    check that it performs correctly, without you having to remember or
+    manually implement all the test cases.
 
-    The ideal case of testing is to literally test every possible input and
-    behaviour for your program. For some programs, with highly specific input
-    requirements, this is possible and not unreasonable to do. For most
-    programs, however, this is quite unrealistic, and not particularly
-    possible. Instead, tests should cover representative cases, whereby a few
-    tests displaying the expected behaviour are taken to mean the
-    implementation is likely to be correct. As you get more experienced with
-    testing, which cases should be representative will become more obvious, but
-    to start with try to test any and all possible edge cases, along with one
-    or more cases of general input (e.g. a function accepting integers between
-    -10 and +10 could be tested at -10, 10, 0, and a random value between -9
-    and 9). For greater certainty, once the edge cases have been tested, a
-    function can potentially be tested multiple times with random inputs in its
-    accepted range (e.g. run it 10000 times with random inputs), if its correct
-    output can be predicted with some other function (perhaps a less efficient
-    but proven correct implementation).
+    The ideal case in testing is to literally test every possible input and
+    respective output behaviour for your program. For some programs, with
+    highly specific input requirements, this is possible and not unreasonable
+    to do. For most programs, however, this is quite unrealistic, and often not
+    possible within a reasonable time frame. Instead, tests should cover
+    representative cases, whereby a few tests displaying the expected behaviour
+    suggest that the implementation is likely to be correct. As you get more
+    experienced with testing, which cases should be representative will become
+    more obvious, but to start with try to test any and all possible edge
+    cases, along with one or more cases of general input (e.g. a function
+    accepting integers between -10 and +10 could be tested at -10 and 10, and a
+    random value between -9 and 9). For greater certainty, once the edge cases
+    have been tested, a function can potentially be tested multiple times with
+    random inputs in its accepted range (e.g. run it 10000 times with random
+    inputs), if its correct output can be predicted with some other function
+    (perhaps a less efficient but proven correct implementation).
 '''
 
 
@@ -63,10 +63,23 @@
 # Unit and Integration Tests
 '''
     Once the desired test-cases have been identified, the tests themselves must
-    be written. Testing can be comprised of unit tests, which test one
-    test-case each, and integration tests, which may test multiple test-cases
-    in the same test function, either passing all of them, or stopping at the
-    first failure or error.
+    be written. Testing can be comprised of 'unit' or 'atomic' tests, which
+    test one test-case each, and 'integration' tests, which may test multiple
+    test-cases in the same test function, either passing all of them, or
+    stopping at the first failure or error. Unit tests are generally more
+    helpful when determining where exactly a problem is occurring, but will
+    often take longer to write and implement than integration tests.
+    Additionally, some test-cases which have their functionality implemented
+    late in a function are likely reliant on other test-cases passing. This
+    means several unit tests might fail due to a single error, which can give a
+    sense of how important an error is, but can also make it difficult to
+    determine the cause if you're unaware of the dependencies between the tests.
+
+    The ideal test suite is one with minimal time spent writing and creating
+    it, and the quickest results when debugging to find the cause of an issue.
+    When writing integration tests, make sure to have them test related test
+    cases, and try to have helpful error messages for every test-case which is
+    tested.
 '''
 
 
@@ -75,35 +88,38 @@
     Black box testing is known and used across a variety of industries, largely
     due to its effectiveness and broad applicability. To apply black box
     testing, your program should be treated as a black box, testing only the
-    allowed inputs with the expected output, as according to its specification.
-    Generally a program will have some general specification, with each
-    function and/or class containing smaller parts of this specification in its
-    documentation. If the documentation can be shown to correctly and fully
-    represent the original specification, then testing can be applied to test
-    against the program documentation. This has the benefit of being more
-    specific than the general specification, so more test cases can be provided
-    that test different test cases, as opposed to just doing more tests of the
-    same general test case.
+    allowed inputs with the expected output, in accordance with its
+    specification. Generally a program will have some general specification,
+    with each function and/or class containing smaller parts of this
+    specification in its documentation. If the documentation can be shown to
+    correctly and fully represent the original specification, then testing can
+    be applied to test against the program documentation. This has the benefit
+    of being more specific than the general specification, so more test cases
+    can be provided that test different test cases, as opposed to just doing
+    more tests of the same general test case.
 
     A tradeoff must sometimes be made between testing and robustness. The more
     robust an application is supposed to be, the more it should be tested to
     make sure of its robustness. Conversely, the more a program has been
-    tested, the more robust it can be said to be. If a robust function claims
-    in its documentation that it returns -1 on any invalid input, care should
-    be taken to ensure that this is indeed the case for all manner of invalid
-    inputs. If, instead, a less robust function simply specifies a set of valid
-    inputs, behaviour for invalid inputs cannot be tested against, and is not
-    guaranteed to stay the same through different versions of the code, even if
-    the specification doesn't change.
+    tested, the more robust it can be assumed to be. If a robust function
+    claims in its documentation that it returns -1 on any invalid input, care
+    should be taken to ensure that this is indeed the case for all manner of
+    invalid inputs. If, instead, a less robust function simply specifies a set
+    of valid inputs, behaviour for invalid inputs cannot be tested against, and
+    is not guaranteed to stay the same through different versions of the code,
+    even if the specification doesn't change.
 
-    Sometimes a function's documentation is quite broad, and difficult to test
-    against. This is particularly the case for functions which are intended to
-    have random behaviour, or to behave according to some distribution. If
-    applying black box testing to these, statistical distributions should be
-    used, which generally requires running thousands or even millions of tests
-    to see where the output falls, and with what kind of consistency.
-    Alternatively, the intention of the programmer, through their
-    implementation, can be tested using white box testing.
+    Sometimes a function's documentation is quite broad, and difficult to
+    determine specific test cases for. This is particularly the case for
+    functions which are intended to have random behaviour, or to behave
+    according to some statistical distribution. If applying black box testing
+    to these it may be necessary to return probabilistic results, with some
+    measure of certainty, as opposed to the normal pass-fail test behaviour.
+    Mapping the behaviour to a statistical distribution generally requires
+    running thousands or even millions of tests to see where the output falls,
+    and with what kind of consistency. Alternatively, the intention of the
+    programmer, through their implementation, can be tested using white box
+    testing.
 '''
 
 
@@ -160,7 +176,7 @@ def factorial(n):
 '''
     While black box testing treats a program as an impenetrable device which
     can only be studied from input-output behaviour, white box testing opens
-    the box and tests directly against how the program is implemented. This is
+    the box and tests directly against how the program is implemented*. This is
     generally an extension to black box testing, and can yield a number of
     additional test cases which are significant to the program implementation,
     but not necessarily to the specification itself. Depending on how robust an
@@ -183,11 +199,17 @@ def factorial(n):
     only guaranteed to cover the implementation use-cases while the program
     remains in its original form. Any implementation change means the white box
     test cases could now test redundant cases, and miss new implementation
-    details. The tests should still be valid, however, so long as the
-    specification remains the same. When a program's specification is modified,
-    both black box and white box tests may no longer be valid. Luckily, this is
-    generally much less frequent than changes of implementation, and some tests
-    may still be valid, or at least require only minor modification.
+    details. The tests should still at least be valid 'general case' tests
+    however, so long as the specification remains the same. When a program's
+    specification is modified, both black box and white box tests may no longer
+    be valid. Luckily, this is generally much less frequent than changes of
+    implementation, and some tests may still be valid, or at least require only
+    minor modification.
+
+    * Testing against how the program is implemented involves using the
+    implementation to determine important input values. The output resulting
+    from these inputs should be tested against the specification, not against
+    what it looks like the result would be.
 '''
 
 
@@ -201,12 +223,14 @@ def factorial(n):
     but this is often not possible (or practical), particularly for loops with
     branch points inside them. Instead, effort should be made to do an
     inductive proof along the lines of 'if one input works correctly, and two
-    inputs work correctly, then n inputs should also work correctly.' If such a
-    statement can be made with proof, then only the one and two input cases are
-    required to be tested to effectively check the 'n-inputs' case. Additional
-    tests can still be performed in the 'n-loops' region, but these are just
-    for peace of mind. Even for relatively simple programs, it is easy to see
-    how white box testing can create large numbers of test cases.
+    inputs work correctly, and the same pattern is followed from there, then n
+    inputs should also work correctly.' If such a statement can be made with
+    proof, then only a set number of cases are required to be tested to
+    effectively check the 'n-inputs' case (in the example statement, it would
+    just be the inputs causing one and two loop iterations). Additional tests
+    can still be performed in the 'n-loops' region, but these are just for
+    peace of mind. Even for relatively simple programs, it is easy to see how
+    white box testing can create large numbers of test cases.
 '''
 
 
@@ -329,12 +353,12 @@ def factorial(n):
     statement as the testing component. The functions should not have a return
     value, but should have a 'reason' provided with the assert, in case it
     fails (see example below). Multiple assertions can be tested in a single
-    test function, but in this case only the first one which fails will be
-    explained in the results. As with normal functions, each test function
-    should have an explanatory docstring so the purpose of the test can be
-    discovered with help(MyTestClass.test_name). Unlike normal methods, the
-    running information for the test methods can be left off, as it is
-    automatically set when the class is instantiated.
+    test function (an integration test), but in this case only the first one
+    which fails will be explained in the results. As with normal functions,
+    each test function should have an explanatory docstring so the purpose of
+    the test can be discovered with help(MyTestClassInstance.test_name). Unlike
+    normal methods, the running information for the test methods can be left
+    off, as it is automatically set when the class is instantiated.
 
     Tests can be run individually using the run_test() method, but can also be
     run as a set using run_tests(['test_names']). Both running methods allow
@@ -352,16 +376,16 @@ def factorial(n):
 
     The module also allows for logging of print and error statements printed to
     the terminal (in both IDLE and other terminals). For a full demonstration
-    of all the module's features, look at and run the example at the bottom of
-    the TestRun.py file. Below is a more basic example, covering the
-    implementation of the test cases discussed in the white-box and black-box
-    testing sections.
+    of all the module's features, including testing printed output, look at and
+    run the example at the bottom of the TestRun.py file. Below is a more basic
+    example, covering the implementation of the test cases discussed in the
+    white-box and black-box testing sections.
 
-    * python treats the file being run as the top-level file in any hierarchy.
-    As such, even if the file is a low-level file within a module, the module
-    is not recognised until run from higher up. This can be resolved by
-    manually adding the folder where your import file is stored to the path, as
-    in the following example.
+    * Recall from lesson 5 that python treats the file being run as the
+    top-level file in any hierarchy. As such, even if the file is a low-level
+    file within a module, the module is not recognised until run from higher
+    up. This can be resolved by manually adding the folder where your import
+    file is stored to the path, as in the following example.
 '''
 
 
@@ -799,8 +823,8 @@ Tests.run_tests()
     enough about programming to be able to write useful programs to solve many
     problems and improve your efficiency and workflow. Additionally, should you
     need to learn a new programming language, you now have the tools to
-    understand the principles behind what a programming language can and can't
-    do, as well as how to use programming effectively to create desired
+    understand the principles behind what a high-level programming language can
+    can't do, as well as how to use programming effectively to create desired
     functionality and outputs.
 
     It's possible you will only use python rarely in future, but as the world

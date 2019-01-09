@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 4                                   #
-#                Functional Programming, Functions, Abstraction                #
+#      Functional Programming, Functions, List Comprehension, Abstraction      #
 #                                                                              #
 ################################################################################
 
@@ -216,6 +216,32 @@ def my_func_2(input_var):
     function doesn't have access to.
 '''
 
+# ----- NOTE: Polymorphism ----- #
+'''
+    Polymorphism in a programming language is the ability for functions to
+    optionally accept multiple types of input. Python is implicitly polymorphic
+    in that functions are not required to specify the type of input variables
+    they accept, and Python does not (by default) check the type of inputs to a
+    function when running a program. This generally makes for simpler coding,
+    but also means that if an input of an invalid type for a function is used,
+    the program can sometimes throw an error and stop execution.
+
+    Python's implicit polymorphism also comes with benefits, however. Robust
+    Python programs can allow for multiple valid input types, and effective
+    error handling can be used to present users with error messages informing
+    them of allowable input types and why their input was invalid.
+    Additionally, different computer hardware may assign different amounts of
+    memory to different variable types. This can be problematic if code is
+    explicitly written to only allow, for example, numbers of a certain size,
+    but a Python program can instead allow a function to accept all integers,
+    and the program interpreter abstracts the memory considerations away from
+    the programmer.
+
+    To ensure users are able to input valid inputs to a function, if inputs of
+    a certain type are required they should be specified in the function's
+    docstring.
+'''
+
 # ----- NOTE: Local vs Global Namespace ----- #
 '''
     Note that inside a function is a local namespace. This means that a
@@ -387,14 +413,14 @@ my_list[0]('testing this', 'two:', 2)
 my_list[1](1,2) # returns 3
 
 
-# ----- NOTE: List Comprehension ----- #
+
+
+#----------------------------- LIST COMPREHENSION -----------------------------#
 '''
     Lambda functions are a common source of struggle and confusion amongst
     beginning programmers, but the list comprehension aspects, namely the usage
     of lambda functions in conjunction with 'map', 'filter', and 'reduce', can
-    be entirely substituted with python's own list comprehension syntax. This
-    syntax extends to both generators and sets, and can be used to great effect
-    by programmers competent in its nuances.
+    be entirely substituted with python's own list comprehension syntax.
 
     Given the relative complexity of list comprehension features, combined with
     the limited usage in the average program, only the basic syntax is covered

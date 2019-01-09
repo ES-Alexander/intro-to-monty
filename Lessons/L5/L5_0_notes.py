@@ -2,8 +2,8 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 5                                   #
-#   File Types, Typecasting, User Input, String Formatting, Searching/Regex,   #
-#                               Imports/Libraries                              #
+#          File Types, User Input, String Formatting, Searching/Regex,         #
+#                               Imports/Packages                               #
 #                                                                              #
 ################################################################################
 
@@ -13,26 +13,27 @@
 #--------------------------------- FILE TYPES ---------------------------------#
 '''
     Text files, with the extension .txt, are un-formatted files containing only
-    text, which prove highly beneficial in the transfer of data - particularly
-    when written in a structure which lends itself to data extraction. A step
-    up from this in structured data is the JSON file, (.json), which is made
-    with the intention of storing data objects with particular properties,
-    allowing key-value pairs, arrays, and a number of other fundamental
-    datatypes. A simpler file-type used mainly for storing tabulated data is
-    the CSV, or comma-separated value file (.csv).
+    text, which makes them incredibly versatile for the transfer of data, but
+    difficult to extract data from without a well-defined format. A more
+    structured file type is the JSON format, (.json), which is made with the
+    intention of storing data objects with particular properties, allowing
+    key-value pairs, arrays, and a number of other fundamental datatypes. A
+    simpler file-type used mainly for storing tabulated data is the CSV, or
+    comma-separated value file (.csv).
 
-    Document parsing can be performed in a variety of ways, and what's most
-    important is that the files being passed into a program are of a type the
-    program is able to accept. While CSV and JSON files are commonly accepted
-    structures, they are, at base, comprised of just formatted text, and basic
-    text files can be structured in practically any way the programmer desires.
+    Extracting information from a document ('parsing') can be performed in a
+    variety of ways. The most important attribute of a file to parse is that
+    its format is one the parsing program or script is able to accept. While
+    CSV and JSON files are commonly accepted structures, they are, at base,
+    comprised of just formatted text, and basic text files can be structured in
+    practically any way the programmer desires.
 '''
 
 
 
 # Opening Files
 '''
-    Files can be opened in python using the 'open' function, which accepts a
+    Files can be opened in Python using the 'open' function, which accepts a
     filename and an opening mode. Opening modes include 'r' for reading, 'w'
     for writing (deleting any existing file with the same name), 'a' for
     appending (writing to the end of an existing file, or starting a new one if
@@ -64,7 +65,7 @@ my_file.close()
 
 with open('filename.txt', 'r') as my_file:
     # the file is open while in this block
-    <code>
+    <code parsing/processing data from file>
 
 # file is now closed
 
@@ -75,19 +76,20 @@ with open('filename.txt', 'r') as my_file:
     fails when presented with an unexpected file or file-structure, it can at
     times be beneficial to allow files of all types and structures to be
     accepted by the program, and present a controlled error message to the
-    user. If the only person using the program is the programmer, then this
-    kind of robustness is unnecessary, but controlled acceptance of unexpected
-    values is practically essential for any code created with the intention of
-    general or wide-reaching usage.
+    user. If you, as the programmer, are the only person using the program,
+    then this kind of robustness is unnecessary, but controlled acceptance of
+    unexpected inputs is practically essential for any code created with the
+    intention of general or wide-reaching usage.
 '''
 
 
 
 
-#----------------------- READING AND WRITING FROM FILES -----------------------#
+#---------------------- READING FROM AND WRITING TO FILES ---------------------#
 '''
-    Once a file has been opened it can be read from or written to. This can be
-    accomplished using the 'read', 'readline', and 'write' functions, as below.
+    Once a file has been opened it can be read from or written to (depending on
+    the opening mode). This can be accomplished using the 'read', 'readline',
+    and 'write' functions, as below.
 '''
 
 
@@ -100,11 +102,10 @@ with open('filename.txt', 'r') as my_file:
     possible to iterate over a file, implicitly using the 'readline' function
     at each iteration.
 '''
-my_file = open('filename.txt', 'r')
-my_file_as_string = my_file.read()
-first_line = my_file.readline()
-second_line = my_file.readline()
-my_file.close()
+with open('filename.txt', 'r') as my_file:
+    my_file_str = my_file.read()
+    first_line = my_file.readline()
+    second_line = my_file.readline()
 
 my_other_file = open('filename_2.txt', 'r')
 for index, line in enumerate(my_other_file):
@@ -113,14 +114,12 @@ my_other_file.close()
 
 
 # 'write' Function
-new_file = open('filename.txt', 'w') # empty file and write mode
-new_file.write('This is the first line in my file.\n')
-new_file.write('This is another line in my file.\n')
-new_file.close()
+with open('filename.txt', 'w') as new_file: # overwrite mode
+    new_file.write('This is the first line in my file.\n')
+    new_file.write('This is another line in my file.\n')
 
-existing_file = open('filename2.txt', 'a') # append to end of file mode
-existing_file.write('This is a line at the end of my file.\n')
-existing_file.close()
+with open('filename2.txt', 'a') as existing_file: # append mode
+    existing_file.write('This is a line at the end of my file.\n')
 
 
 # ----- NOTE: Newlines ----- #
@@ -134,8 +133,9 @@ existing_file.close()
     While it is important to close files after using them, if a file is needed
     multiple times within a short space in a script, it is often beneficial to
     leave the file open until you're finished using it, at which point it can
-    be closed. Wherever possible, close a file before a program has finished
-    running, or it can be left open indefinitely.
+    be closed. Wherever possible, make sure your files are closed when you are
+    finished with them, especially before the function you opened them in
+    returns.
 '''
 
 
@@ -143,15 +143,15 @@ existing_file.close()
 
 #--------------------------------- USER INPUT ---------------------------------#
 '''
-    While files are one type of possible user-input, python also provides a
-    dedicated 'input' function, accessed through the IDLE terminal, allowing
-    users to type a message which is then inputted to and parsed by the
-    program. An example of this is provided below.
+    While files are one type of possible user-input, Python also provides a
+    dedicated 'input' function, accessed through the terminal, allowing users
+    to type a message which is then inputted to and parsed by the program. An
+    example of this is provided below.
 
     Additionally, in the design of graphical user interfaces (GUIs), certain
     elements are provided to enable user input of different types. These
     usually come in the form of buttons, checklists, selection boxes, or
-    text-entry boxes, the last of which can often be set up to allow file input.
+    text-entry boxes.
 '''
 
 
@@ -170,43 +170,43 @@ string_var = input('message_string')
 '''
     Once an input has been accepted from a user, it is often necessary to
     convert the received data into a format appropriate for the intended use.
-    The principal and basics of typecasting were covered in the "inbuilt
-    functions" section of lesson 4, but it is worth noting here that
-    typecasting is extensively used in parsing situations, where data is passed
-    in as a string, and usually required in some numerical or data-type
+    Generally this involves splitting the input string into relevant sections,
+    and typecasting each section into its required data-type. The principle and
+    basics of typecasting were covered in the "inbuilt functions" section of
+    lesson 4. It is extensively used in parsing situations, where data is
+    passed in as a string, and usually required in some numerical or data-type
     specific format.
 
-    Beyond this, in giving users input-based feedback it is possible to modify
-    strings with pre-defined entry positions, using what's known as 'string
-    formatting'. This technique is available in a variety of ways, and can also
-    be used more generally, whenever it's desired to specify a string with a
-    set syntax or structure, and add necessary/relevant data later.
+    Reversing the process, adding select pieces of data into set positions in a
+    string can be accomplished with 'string formatting'. String formatting can
+    be used whenever it's desired to specify a string with a set syntax or
+    structure, and add necessary/relevant data later.
 
     Considerable depth of string formatting syntax and possibilities can be
-    found at pyformat.info, but a few basic examples are provided below.
+    found online at pyformat.info, but a few basic examples are provided below.
 '''
 
 
 
 # General String Formatting Example
 '''
-    Python string formatting is achieved using curly braces ({}) and the
-    'format' function. Braces can have any number of parameters in them, but
-    the simplest options are to leave them blank, in which case the format
-    function must contain the same number of arguments as there are brace
-    pairs, or to number them (starting at 0), which allows for specific
-    ordering of format parameters, and for using each inputted value multiple
-    times.
+    Python string formatting is achieved using curly braces ({}) within a
+    string and the 'format' function to add in the data. Braces can have any
+    number of parameters in them, but the simplest options are to leave them
+    empty, or to number them (starting at 0). When the braces are empty, the
+    format function must contain the same number of arguments as there are
+    brace pairs. Numbered braces allow for specific ordering of format
+    parameters, and for using each inputted value multiple times.
 
     Inputs can be explicit strings or other datatypes, or pre-existing
     variables.
 '''
 dob = 1901
-'my name is {}, and I was born in {}.'.format('Name', dob)
-    # 'my name is Name, and I was born in 1901.'
+'my name is {}, and I was born in {}.'.format('Iman Example', dob)
+    # 'my name is Iman Example, and I was born in 1901.'
 
-'my name is {1}, and I was born in {0}.'.format(dob, 'Name')
-    # 'my name is Name, and I was born in 1901.'
+'my name is {1}, and I was born in {0}.'.format(dob, 'Iman Example')
+    # 'my name is Iman Example, and I was born in 1901.'
 
 'Hi! My name is {0}, and I was born in {1}. {1} was great!'.format('Name', dob)
     # 'Hi! My name is Name, and I was born in 1901. 1901 was great!'
@@ -217,7 +217,7 @@ dob = 1901
 #------------------- SEARCHING AND REGULAR EXPRESSIONS/REGEX ------------------#
 '''
     Beyond formatting existing strings, it is also possible to search
-    containers in python, using the 'in' keyword or the 'index' or 'replace'
+    containers in Python, using the 'in' keyword or the 'index' or 'replace'
     functions. While these are highly useful functions in their own right, they
     become of particular benefit when applied in conjunction with pattern
     recognition in strings. This is implemented using regular expressions, or
@@ -225,27 +225,29 @@ dob = 1901
     characters in a particular order, as well as most conceivable patterns that
     could occur.
 
-    This is incredibly beneficial in the parsing of inputted data, from either
-    files or direct user input, and can also be useful in stripping out
-    unwanted characters or expressions, or determining what type of information
-    a particular string contains. Unfortunately the syntax of regular
-    expressions is quite extensive, so it is left for the reader to search for
-    themselves (https://docs.python.org/3/library/re.html provides a good
-    starting point).
+    Regular expressions are powerful, and can be used extensively in the
+    parsing of inputted data, from either files or direct user input, and can
+    also be useful in stripping out unwanted characters or expressions, or
+    determining what type of information a particular string contains. The
+    syntax of regular expressions is quite extensive, so is best looked at in a
+    resource dedicated to the task (https://docs.python.org/3/library/re.html
+    provides a good starting point).
 '''
 
 
 
-# 'in' Keyword
+# Membership Operator ('in' Keyword)
 '''
-    The 'in' keyword checks if a particular container contains one or more
-    instances of the specified object.
+    When searching for a distinct element in a container object, or a substring
+    within a string, the membership operator discussed in lesson 2 ('in'
+    keyword) is the go-to check in Python. The 'in' keyword checks if a
+    particular container contains at least one instance of the specified object.
 '''
-if 'password' in list_of_options:
-    print('Potential hack discovered!')
-
 while 'error' in my_code:
-    my_code.remove('error')
+    my_code.remove('error') # works if my_code is a list
+
+if ';' in user_input_str:
+    print("Invalid character in input, ';'.")
 
 
 # 'index' Function
@@ -264,75 +266,109 @@ for item in my_list:
 # 'replace' Function
 '''
     The 'replace' function is only implemented for strings, and replaces all or
-    an optionally specified number of occurrences of a specified string within
-    the string it is run from.
+    an optionally specified number of occurrences of a specified substring
+    within the string it is run from.
 '''
-my_code.replace('error', 'no error') # replace all errors
-my_code.replace('first error', 'no error', 1) # replace the first error
+my_code.replace('error', 'no error') # replace all 'error' occurrences
+my_code.replace('first error', 'no error', 1) # replace just the first 'error'
 
 
 
 
-#------------------------------ IMPORTS/LIBRARIES -----------------------------#
+#------------------------------ IMPORTS/PACKAGES ------------------------------#
 '''
-    There is a common saying in life that there is no need to reinvent the
-    wheel. Pythonic programming is strongly focussed on maintaining simplicity
-    and readability in code, but it is also equally important to avoid
-    needlessly recreating code which has already been written previously. While
-    it can be beneficial to learn to write simple code from scratch, in larger
-    applications and a performance-based environment, it is often highly
-    valuable to use code found online, from forums or libraries, or even from
-    code you've previously written yourself. The principal of abstraction also
-    applies here, since often code is more readable if it uses predefined
-    functions from external modules than to explicitly include every function
-    and variable used in a single file.
+    Pythonic programming is strongly focussed on maintaining simplicity and
+    readability in code, but it is also equally important to avoid needlessly
+    recreating code which you already have access to. While it can be
+    beneficial to learn to write simple code from scratch, in larger
+    applications and a performance-focused environment it is often preferable
+    to use code found online, from libraries or forums, or even from code
+    you've previously written yourself. The principal of abstraction also
+    applies here, since code is often more readable if it uses predefined
+    functions from external modules than defining every function and variable
+    used in a single file. If a program is getting too large, consider
+    splitting it into multiple files with independent purposes. This helps
+    reduce the amount to search through when you know what you're looking for,
+    and also makes separate functionality easier to import and reuse elsewhere.
 
-    As such, Python allows the imports of code from external files, either
-    fully or partially, using the 'from', 'import' and 'as' keywords, with
-    examples below.
+    A library of code in Python is known as a 'package', with Python files
+    inside a package known as 'submodules'. Packages are essentially folders of
+    Python files, which can be nested inside one another, and allow for
+    structured collections of code with similar functionality or purpose.
+    Sub-folders inside a package are 'subpackages', and free-standing Python
+    files (outside any packages) are just called 'modules'.
+
+    To make a package requires only a folder with one or more Python files in
+    it, as well as a file called '__init__.py', which provides the
+    initialisation code for a particular package when it is imported. Many
+    packages require no separate initialisation, in which case the __init__.py
+    file is still required, but it can be left empty. Generally it is good
+    practice inside the __init__.py file to specify a variable called __all__,
+    which is a list of the names of all the files in the package that are
+    intended to be imported when a user asks to 'import all' (example at the
+    end) the files of the package. Further detail on creating and accessing
+    packages can be found at
+    'https://docs.python.org/3/tutorial/modules.html#packages'.
+
+    Python allows the imports of code from modules and packages, either fully
+    or partially, using the 'from', 'import' and 'as' keywords, with examples
+    below.
+'''
+
+
+# ----- NOTE: 'Module' vs 'Package' vs 'Library' ----- #
+'''
+    Technically a 'library' is not a defined thing, and a 'package' is just a
+    special type of module which is able to contain other modules. The term
+    'library' is generally used to refer to collections of code which have been
+    published, and hence are available online. A library could contain multiple
+    packages, or even just a single module.
+
+    While it is useful to think of packages and modules as folders and files,
+    technically they are not required to be on the file system at all, and any
+    module with a '__path__' attribute is considered a package. Modules off the
+    file-system can happen if a package is written and compiled in a more
+    efficient programming language for higher performance, but which are still
+    accessible as normal Python modules.
 '''
 
 
 
 # 'import' Keyword
 '''
-    'import' can be used exclusively, in importing a whole module, after which
-    elements from that module must be accessed using so-called 'dot-notation',
-    whereby the module name must be used before each function or variable,
-    separated by a dot. Multiple imports can be performed in the same line
-    using comma separation.
+    'import' can be used by itself to import entire packages, after which
+    submodules and elements from that package must be accessed using so-called
+    'dotted module names'. In this dot notation the module name must be used
+    before each function or variable, separated by a dot (.). Multiple imports
+    can be performed in the same line using comma separation.
 '''
-import numpy, matplotlib.pyplot
+import numpy, matplotlib.pyplot # import numerical Python, and plotting tools
 
+my_array = numpy.array([1,2,3]) # creates a numerical array of [1,2,3]
 matplotlib.pyplot.plot([1,2,3],[2,4,6]) # plots y=2x over domain [1,3]
 
 
 # 'as' Keyword
 '''
-    The 'as' keyword can be used to simplify extensive module structure names,
-    allowing a file or function to be imported with a user-specified moniker.
+    The 'as' keyword can be used to simplify module names, allowing for imports
+    with user-specified nicknames.
 '''
-import matplotlib.pyplot as plt
-import tkinter as tk
+import numpy as np, matplotlib.pyplot as plt
 
-my_frame = tk.Frame()
+my_array = np.array([1,2,3])
 my_plot = plt.plot([1,2,3],[2,4,6])
-
-# Without the 'as' above, this would be
-my_frame = tkinter.Frame()
-my_plot = matplotlib.pyplot.plot([1,2,3],[2,4,6])
 
 
 # 'from' Keyword
 '''
-    'from' is used to specify a module, from which imports of a particular
-    function or set thereof can be performed. If individual functions or
-    objects are imported, this allows the user to avoid specifying the module
-    before using these. The potential detriment of this is the loss of clear
-    origin of each function or object, meaning a programmer unfamiliar with the
-    initial module from which imported objects originates may struggle to find
-    where a particular function or object is defined before realising it was
-    imported.
+    'from' is used to specify a module, from which partial imports can be
+    performed. Imports with this syntax mean you don't have to use the module
+    name when using the imported features. This is a positive when writing
+    code, but hides the origin of the features, which can cause difficulties
+    when debugging, especially if the person debugging is unaware of a relevant
+    import. A programmer unfamiliar with the initial module from which imported
+    objects originate may struggle to find where a particular function or
+    object is defined before they realise it was imported.
 '''
 from tkinter import Canvas
 from math import sqrt
@@ -343,27 +379,55 @@ my_irrational = sqrt(2)
 my_plot = plot([1,2,3],[2,4,6])
 
 
-# ----- NOTE: Import All Notation ----- #
+# Import All Notation
 '''
-    It is worth noting that python provides a notation to import every element
-    within a module or package, namely by using an asterisk (*) instead of
-    specifying a specific element to import. This is done as in:
+    Sometimes you want full functionality of a module or package, without
+    having to use the module name, or individually import each feature. Python
+    allows you to import every element within a module or package by using an
+    asterisk (*) instead of specifying a specific element to import. This is
+    done as in:
+'''
+from module import *
 
-    'from module import *'
+
+# ----- NOTE: Module Locations ----- #
+'''
+    When performing an import, Python searches for the top-level module of your
+    import statement in all locations available in the 'sys.path' variable.
+    This variable includes where your installed libraries can be found, as well
+    as your current working directory (the folder your program is being run
+    from), and some other default locations. When importing from your own
+    modules, the top-level module of each import must be available at one of
+    the locations in the path variable. If this is not the case, you may need
+    to add one or more directories to the path manually (using
+    sys.path.append), or perform the import in some other way.
+
+    To retrieve a published library and ready for importing, you can download
+    and install it using Python's package manager, 'pip'. Note that the correct
+    command sent to pip should complete both the download and installation for
+    you.
 '''
 
-# ----- NOTE: External Module Locations ----- #
+# ----- NOTE: Relative Imports ----- #
 '''
-    When importing from existing files, it often makes sense to do this from
-    the same directory as the file you are running (known as the current
-    working directory). This means imports can be made directly, and also means
-    that any time some code module is provided to someone else, it is simple to
-    also provide any imported files by just copying the whole folder it comes
-    in. If necessary, it is possible to modify the path from which files are
-    imported, instructions for which can be found online.
+    Sometimes it is beneficial to import code relative to your a file you are
+    in. To import from the directory which contains your code, you can import
+    from '..module_name'. Two preceding dots ('..') refers to one directory up
+    in the hierarchy. Each additional dot goes one level further. Be aware,
+    however, that these imports only work if the higher directories are
+    accessible from your path. This can be the case if they have been manually
+    added (e.g. from sys.path.append('..')), or you are running code from
+    higher up the hierarchy in a set of nested packages, each containing their
+    own __init__.py file.
+'''
 
-    As mentioned, it is also possible to import externally implemented
-    libraries/packages. These can be both downloaded and installed using
-    python's package manager, pip. Note it is not usually necessary to manually
-    download and install a package - the correct command sent to pip should
-    complete both the download and installation for you.
+
+
+# Intra-package Referencing
+# lower down the hierarchy (further nested)
+from folder1.folder2.file import function1, variable1, function2
+
+# higher up the hierarchy ('super' imports, less nested)
+from .. import * # import all from one level above the current one
+
+

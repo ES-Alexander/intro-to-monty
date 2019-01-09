@@ -11,11 +11,11 @@
 
 #------------------------------- ERROR HANDLING -------------------------------#
 '''
-    Code robustness is often what sets apart hobby programming from
+    Code robustness is part of what sets apart hobby programming from
     professionally produced programs intended for distribution. When you write
-    a program for yourself to use, it is relatively common to assume inputs
-    will be provided to functions of the correct form, and that functions and
-    classes will be used logically and as intended. This generally allows for
+    a program for yourself to use, it is relatively common to assume function
+    inputs will be valid and used correctly, and that functions and classes
+    will be used logically and as intended. This generally allows for
     robustness, and even at times commenting, to be significantly neglected.
 
     When writing a program for general use there are three accepted 'good
@@ -84,12 +84,12 @@ def list_divide(num_list):
 
 # Error Excepting
 '''
-    Errors (formally Exceptions) in python can also be 'caught' using the
+    Errors (formally 'Exceptions') in python can also be 'caught' using the
     keywords 'try' and 'except' as below. The following example tries to read a
-    file specified by the user, and print the file to the console. If an error
-    occurs in reading the file (in the 'try' block), it is caught in the
-    'except' block and allows the user to try a different file. Once an error
-    has been caught, dealing with it is known as 'handling'.
+    file specified by the user, and print the contents of the file to the
+    console. If an error occurs in reading the file (in the 'try' block), it is
+    caught in the 'except' block and allows the user to try a different file.
+    Once an error has been caught, dealing with it is known as 'handling'.
 '''
 
 file_input_incomplete = True
@@ -185,36 +185,38 @@ except FileNotFoundError:
     except FileNotFoundError:
         # provide exception message about not finding either file option
         raise FileNotFoundError("No such file or directory: '" +
-                                filename + "', '" + filename + ".txt'")
+                                filename + "' or '" + filename + ".txt'")
 f.close()
 
 
 
 
-#---------------------------------- SECURITY ----------------------------------#
+#-------------------------- DEEP COPIES AND SECURITY --------------------------#
 '''
     As you become more experienced as a programmer, your programs will tend to
     become more important, and may be shared amongst many people. The more
     widespread your code, the more desirable it is to avoid people being able
-    to break your programs, intentionally or otherwise. This is partially
-    protected for with code robustness, but also comes under the realm of
-    program security.
+    to break your programs, intentionally or otherwise. You can partially
+    protect against this with code robustness, but it also comes under the
+    realm of program security.
 
-    Following on from the lesson 4, where the idea of using immutable types as
-    function inputs was presented, security of a function can be improved by
-    using so-called 'deep copies' of variables. This applies to both input and
-    returning variables.
+    Lesson 4 suggested using immutable data-types as function inputs, to avoid
+    functions being able to modify your variables before they return. Returning
+    immutable data-types from a function also means that users calling the
+    function don't gain access to the input variables. It is not always
+    convenient to use immutable inputs and outputs however. Instead, security
+    of a function can be improved by using so-called 'deep copies' of variables.
 
-    A 'deep copy' is any copy of a variable which copies every possible aspect
-    (effectively making it pass-by-value instead of pass-by-reference). This is
-    different to a shallow copy, which is a copy that still allows some passing
-    by reference beyond the outer iterable layer.
+    A 'deep copy' is a copy of every possible aspect of a variable (effectively
+    making it pass-by-value instead of pass-by-reference). A 'shallow copy' is
+    a copy that still passes one or more references, and hence is inherently
+    insecure.
 
     Copies are relevant to all mutable objects, and copy types are applicable
     to those potentially containing additional mutable objects. The basic
     iterable classes (lists, tuples) have shallow copying implemented by
     default, but deep copies are able to be defined with some knowledge of the
-    contents (see note). Note that although tuples themselves are immutable,
+    contents (see note below). Also, although tuples themselves are immutable,
     any mutable contents can still be modified.
 '''
 
@@ -223,11 +225,14 @@ f.close()
 '''
     Creating a deep copy of a data storage type requires knowing something
     about the data being stored. If a tuple contains no data storage types, any
-    copy of it will be a deep copy, due to the immutable nature of tuples. If a
-    list contains no data storage types, a deep copy is provided by 'deep_copy
-    = my_list[:]'. Copying using [:] is deep for a single layer (for lists and
-    tuples), so deeper structures require additional iteration to get a full
-    deep copy (see the second Recursion section example).
+    copy of it will be a deep copy (including 'my_tuple2 = my_tuple'), due to
+    the immutable nature of tuples. If a list contains no data storage types, a
+    deep copy is provided by 'deep_copy = list(my_list)'. You may see this
+    instead done using my_list[:] in others' code, but using the 'list'
+    function is equivalent, and is clearer and easier to understand. Copying
+    using the 'list' function is deep for a single layer, so deeper structures
+    require additional iteration to get a full deep copy (see the second
+    Recursion section example).
 '''
 
 
@@ -241,7 +246,7 @@ f.close()
     thinking through, in a formal manner, a function calling itself multiple
     times. In saying that, recursion is in fact a powerful tool which can
     largely simplify the requirements of certain problems, and often uses less
-    code to do so than a corresponding for- or while-loop.
+    code to do so than a corresponding 'for' or 'while' loop.
 
     Recursion as a useable programming principle has two requirements: a
     function which calls itself, and an inevitable terminating case. If the
@@ -249,17 +254,19 @@ f.close()
     loop, which is usually undesirable. If an infinite loop is started, a
     program can be terminated manually using a keyboard interrupt, by pressing
     CTRL+C, sometimes repeatedly. If a program can't be interrupted, python can
-    be forced to quit and reopened to stop the program.
+    be forced to quit to stop the program, and reopened afterwards.
 
     Computer memory places a third requirement on recursion - the computer must
     provide sufficient memory to reach the terminating case of the recursive
-    loop. Operating systems generally allocate a set amount of memory for
-    remembering nested function calls, so if a program calls itself too many
-    times then the operating system can terminate the loop when it runs out of
-    allocated memory. This can cause issues when very long recursive loops are
-    desired, but is usually good for automatically terminating infinite
-    recursive loops, and also helps to protect the 'data' component of computer
-    memory from being overwritten by stored program calls.
+    loop.
+
+    Python itself applies a recursion limit which, if exceeded, terminates the
+    program. Sometimes this limit is counted as exceeded some number of
+    iterations below the limit, so try to avoid it where possible. This can
+    cause issues when very long recursive loops are desired, but is usually
+    good for automatically terminating infinite recursive loops. If need be the
+    limit can be modified (using 'sys.setrecursionlimit(num)'), but try to
+    avoid this unless absolutely necessary.
 
     Recursion is incredibly useful in rendering functions, such as those of
     fractals, where a specifiable amount of detail is able to be provided as
@@ -273,10 +280,10 @@ f.close()
 
 # ----- NOTE: Loop Equivalency (Revisited) ----- #
 '''
-    The lesson 3 notes presented the fact that for- and while-loops are proven
-    to be technically equivalent, in the sense that any loop written as one
-    type can also be expressed as the other. Adding to this, any recursive loop
-    can also technically be expressed as a for- or while-loop, it is just
+    The lesson 3 notes presented the fact that 'for' and 'while' loops are
+    proven to be technically equivalent, in the sense that any loop written as
+    one type can also be expressed as the other. Adding to this, any recursive
+    loop can also technically be expressed as a for or while loop, it is just
     preferable in some cases to use one particular loop type to solve a given
     problem. Generally, recursion is used in cases where it is relatively easy
     to see the terminating case(s) and have a function which re-applies itself
@@ -284,7 +291,7 @@ f.close()
 
     Be aware that in cases where an algorithm has multiple self-references at
     different stages (see third example), recursive implementations will
-    generally be much less efficient than for- or while-loops. This is because
+    generally be much less efficient than for or while loops. This is because
     recursion can't directly re-use the previously calculated result, so a
     recursive function might have to make the same low-level call multiple
     times, while a traditional loop can calculate it once and re-use the result.
@@ -292,16 +299,19 @@ f.close()
 
 
 
-# Recursive Factorial (!)
+# Recursive Factorial (n!)
 '''
     Factorials are a common topic in mathematics, representing the
     multiplication of a non-negative integer with all the integers below it
     (e.g. 4! = 4*3*2*1). The general form for calculating a factorial is n! = n
     * (n-1)!. Additionally, 0! = 1.
 
-    In this case, the terminating cases are if n is 0 or 1, and if n is
-    negative, above 2/3 of the system's recursion limit, or not an integer, the
-    input is considered invalid.
+    In this case, the terminating cases are if n is 0 or 1, and the input is
+    considered invalid if n is negative, not an integer, or above 2/3 of the
+    system's recursion limit. The maximum limit is set to have a defined
+    largest input, above which a meaningful 'invalid input' result can be
+    returned, instead of causing errors when the actual recursive limit is
+    reached.
 '''
 
 def factorial(n):
@@ -348,13 +358,13 @@ def list_deep_copy(old_list):
     list_deep_copy(str) -> str
 
     '''
-    # check if old_list is immutable
+    # check if old_list is an immutable type (not a list)
     if isinstance(old_list, str) or isinstance(old_list, int) or \
             isinstance(old_list, float):
         return old_list
 
     # old_list must be a list (by specification)
-    new_list = old_list[:] # make a deep copy of old_list first layer
+    new_list = list(old_list) # make a deep copy of old_list first layer
     for index, element in enumerate(old_list):
         # replace the shallow copy of each element with a deep copy
         if element is old_list:
@@ -370,7 +380,7 @@ def list_deep_copy(old_list):
     The Fibonacci sequence of numbers is a numerical sequence commonly found in
     nature, and is named after Leonardo Da Vinci, otherwise known as Fibonacci.
     The nth Fibonacci number is defined by the sum of the two previous
-    fibonacci numbers (e.g. F(n) = F(n-1) + F(n-2). Once again, n should be a
+    Fibonacci numbers (e.g. F(n) = F(n-1) + F(n-2). Once again, n should be a
     non-negative integer. In this case, F(0) = 0, and F(1) = 1.
 
     At first glance, this seems similar to the factorial example, where the
@@ -417,6 +427,7 @@ class Fibonacci(object):
 
         '''
         self._memory = {0:0, 1:1}
+
     def __call__(self, n):
         ''' Returns the nth number in the Fibonacci sequence.
 

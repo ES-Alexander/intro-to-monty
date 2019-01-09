@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 7                                   #
-#        Inheritance, Abstract Classes, Libraries/Packages, Polymorphism       #
+#                         Inheritance, Abstract Classes                        #
 #                                                                              #
 ################################################################################
 
@@ -31,15 +31,16 @@
     parent class(es), so each existing property and method must exist. For
     consistency of use, it is best practice to uphold the specification of any
     parent class methods that are redefined in a child class. This means that
-    redefining methods should only ever make their specification tighter,
-    resulting in output behaviour that is a subset of the behaviour specified
-    as allowable by the function definition in the parent. The major benefit of
-    this is that child class instances can then be accepted in the place of a
-    parent class instance without issue. In terms of python implementation,
-    child classes will register as instances of parent classes, using the
-    'isinstance(class, type)' command, so unless you are certain that a child
-    class will never be used in the place of a parent, you should uphold
-    specifications of all a class's parents in any and all child classes.
+    redefining a superclass method in a subclass should only ever make its
+    specification tighter, resulting in output behaviour that is a subset of
+    the behaviour specified as allowable by the function definition in the
+    parent. The major benefit of this is that child class instances can then be
+    accepted in the place of a parent class instance without issue. In terms of
+    Python implementation, child classes will register as instances of parent
+    classes, using the 'isinstance(class, type)' command, so unless you are
+    certain that a child class will never be used in the place of a parent, you
+    should uphold specifications of all a class's parents in any and all child
+    classes.
 
     If it is desired for a child class to build upon a parent class method,
     without following the requirements specified by the parent, a new method
@@ -48,11 +49,9 @@
     potential issues, and allows for unlimited expansion of class hierarchy.
 
     By default, any inheriting class automatically implements all methods of
-    its parents, but, for instantiable classes, instance variables must be
-    specified in the __init__ function. This means all instantiable subclasses
-    must re-implement the __init__ function, but any methods which don't
-    require changing do not have to be rewritten or redefined - they can just
-    be used as they would in the parent class. (Example after next section).
+    its parents, so any methods which don't require changing do not have to be
+    rewritten or redefined - they can just be used as they would in the parent
+    class. An example is provided after the next section.
 '''
 
 
@@ -63,10 +62,10 @@
     Inheritance can be applied to both instantiable and non-instantiable
     classes, but is almost exclusively used for the former. For
     non-instantiable classes, inheritance could potentially be used to extend
-    someone else's library without having to edit the original.
+    someone else's library functionality without having to modify the original.
 
-    Given non-instantiable classes usually don't use inheritance, an example of
-    only instantiable-class inheritance is displayed below. For
+    Given non-instantiable classes usually don't use inheritance, only an
+    example of instantiable-class inheritance is provided below. For
     non-instantiable classes, the behaviour is the same, but without the
     necessity for instance comparison or initialisation functions, such as
     __init__, or __eq__.
@@ -78,7 +77,8 @@
 '''
     This represents the most used case, where each class inherits from only one
     parent class. Note the tightening of specification of some of the parent
-    class methods.
+    class methods. Following the example are some additional notes and
+    explanations.
 '''
 
 class MyParentClass(object):
@@ -232,25 +232,25 @@ class MyChildChild(MyChild):
 # ----- NOTE: Method 'super' ----- #
 '''
     The 'super' method is used by a class to refer to its superclass(es). It
-    informs python to not check the current instance/class for a specified
+    informs Python to not check the current instance/class for a specified
     method or property, and instead checks at the next level up. More generally
-    if a function or property is not defined in the current instance, python
+    if a function or property is not defined in the current instance, Python
     will check up through the inheritance hierarchy until finding the first
     occurrence of it, or, if not at all present, raising an error. This is an
     important part of inheritance, since it allows superclass methods to be
     used within their redefinition in a subclass.
 
     The 'super' method can also be used for class and static methods, using
-    additional parameters. Calling super(type).method(vars) checks for method
-    starting at the next class from type in the inheritance hierarchy. This is
-    an unbound call, which means it can be used for staticmethods, but can also
-    be used for instance methods or class methods if self or a class are passed
-    in as the first variable in vars. Using super(type, type2).method(vars)
-    allows for calling classmethods of type2 (or higher in the hierarchy), but
-    only works if type2 is a subclass of type. Finally, super(type,
-    obj).method() (often used as super(type, self).method()) allows for
-    checking instance methods but skipping to check from the specified class
-    type (e.g. checking starting from a grandparent instead of a direct
+    additional parameters. Calling super(type).method_n(vars) checks for
+    method_n starting at the next class from type in the inheritance hierarchy.
+    This is an unbound call, which means it can be used for staticmethods, but
+    can also be used for instance methods or class methods if self or a class
+    are passed in as the first variable in vars. Using super(type,
+    type2).method(vars) allows for calling classmethods of type2 (or higher in
+    the hierarchy), but only works if type2 is a subclass of type. Finally,
+    super(type, obj).method() (often used as super(type, self).method()) allows
+    for checking instance methods but skipping to check from the specified
+    class type (e.g. checking starting from a grandparent instead of a direct
     parent). In this case, obj must be an instance of type (or an instance of a
     subclass of type).
 
@@ -447,7 +447,7 @@ class C(A,B):
 '''
     Within the object oriented paradigm, it is sometimes beneficial to declare
     methods and their output specifications without actually implementing them.
-    These are known as abstract classes, and they allow a general class
+    These are known as abstract methods, and they allow a general class
     specification to be formed while allowing the implementation and specific
     output and property values to be dealt with by the subsequent child
     classes. The keyword 'pass' can be used in Python to continue with the
@@ -456,10 +456,11 @@ class C(A,B):
 
     While it is possible to create abstract classes by simply specifying the
     abstract nature in the relevant documentation, there also exists an
-    abstract class library, which can be downloaded and installed from online.
-    This provides a formal set of tags and code which can specify a class as
-    abstract, and gives some additional functionality similar to that found in
-    languages such as Java for abstract class definitions.
+    abstract class library, which can be downloaded and installed from online
+    (or using pip). This provides a formal set of decorators (e.g.
+    @abstractmethod) and code which can specify a class as abstract, and gives
+    some additional functionality similar to that found in languages such as
+    Java for abstract class definitions.
 '''
 
 
@@ -516,106 +517,3 @@ class AbstractExample2(ABC):
         pass
 
 
-
-
-#----------------------------- LIBRARIES/PACKAGES -----------------------------#
-'''
-    One of the significant benefits of using a popular programming language is
-    the extensive amount of code which other programmers have already written
-    and shared online. This allows for significant reduction of work for the
-    vast majority of coding projects, and it is sometimes possible to find that
-    almost the entirety of the code needed for a project is readily accessible
-    from external sources. Given the benefits of accessing shared code, and in
-    time sharing your own code, it makes sense to have an easy way to package
-    code.
-
-    Similar to the way libraries are collections of knowledge and information,
-    of varying levels of utility, python has its own libraries of code. Some
-    libraries are compiled using more efficient programming languages for the
-    computer to read (low-level programming languages), and they exist as
-    freestanding libraries of code which can be imported and used as desired.
-    When python code is collected and distributed, however, it can be described
-    as modules and packages.
-
-    A module in python is technically any python file, although usually code is
-    only referred to as a module if it is part of a package. Packages are
-    essentially folders of python files, which can be nested inside one
-    another, and allow for structured collections of code with similar
-    functionality or purpose.
-
-    To make a package requires only a folder with one or more python files in
-    it, as well as a file called '__init__.py', which provides the
-    initialisation code for a particular package when it is imported. Many
-    packages require no separate initialisation, in which case the __init__.py
-    file is still required, but it can be left empty. Generally it is good
-    practice inside the __init__.py file to specify a variable called __all__,
-    which is a list of the names of all the files in the package that are
-    intended to be imported when a user asks to 'import all' the files of the
-    package.
-
-    When multiple packages are nested it can be valuable to make intra-package
-    references throughout the structure. Deeper levels of nesting can be
-    imported normally, and imports from higher levels of nesting than the
-    current one use preceding dots for the number of folders up the structure
-    are desired. This works as long as each folder in the package structure
-    contains its own '__init__.py' file, and an example is provided below.
-'''
-
-
-
-# Intra-package Referencing
-    # lower down the hierarchy (further nested)
-    from folder1.folder2.file import function1, variable1, function2
-
-    # higher up the hierarchy ('super' imports, less nested)
-    from . import * # import all from one folder above the current one
-
-
-# ----- NOTE: Additional Information ----- #
-'''
-    For additional information regarding python packages and modules, the
-    official documentation of python, found online, covers in-depth examples of
-    how to create packages and how to perform relative imports. This can be
-    accessed at the following link:
-
-    https://docs.python.org/3/tutorial/modules.html
-'''
-
-
-
-
-#-------------------------------- POLYMORPHISM --------------------------------#
-'''
-    Polymorphism in a programming language is the ability for functions to
-    optionally accept multiple types of input. Python is implicitly polymorphic
-    in that functions are not required to specify the type of input variables
-    they accept, and python does not check the type of inputs to a function
-    when running a program. This generally makes for simpler coding, but also
-    means that if an input of an invalid type for a function is used, the
-    program can sometimes throw an error and stop execution.
-
-    Python's implicit polymorphism also comes with benefits, however. Robust
-    python programs will often check for the type of input variables, which
-    means valid variables are passed, and effective error handling can be used
-    to present users with error messages informing them of allowable input
-    types and why their input was invalid. Additionally, some different
-    hardware types have different amounts of memory assigned to different
-    variable types. This can be problematic if code is explicitly written to
-    only allow, for example, numbers of a certain size, but a python program
-    can instead allow a function to accept any size of the same variable and
-    the program interpreter abstracts the memory considerations away from the
-    programmer.
-
-    To ensure users are able to input valid inputs to a function, if variables
-    of a certain type are required they can be specified in the docstring (the
-    documentation) of the function, as has been presented in the course thus
-    far.
-'''
-
-
-# ----- NOTE: Docstring ----- #
-'''
-    The docstring in a python function is the documentation/specification at
-    the top, that comes directly after the line where it is named (between the
-    triple quotation marks).
-'''
