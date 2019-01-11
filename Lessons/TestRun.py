@@ -28,8 +28,8 @@
 
 import traceback # controlled printing of tracebacks (from caught Exceptions)
 import multiprocessing # used for automatic timeouts (not available in IDLE)
-import time # used for measuring test times and user-generated timeouts
-import sys # used for shell io functionality
+import time      # used for measuring test times and user-generated timeouts
+import sys       # used for shell io functionality
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -383,6 +383,41 @@ class TestPrint(object):
         print('Testing took {:.3f}s'.format(duration))
         print('#' + '-'*78 + '#\n')
         
+class TestGroup(object):
+    ''' A class for grouping TestRun instances. '''
+    # Inspiration: https://stackoverflow.com/q/616645 (shx2)
+    def __init__(self, *test_runs):
+        ''' A class for holding and maintaining a group of TestRun instances.
+
+        Allows for running tests from all or select TestRuns, using the
+            run_tests() method. Keyword-argument 'runs' can be set to a tuple
+            of TestRun classes to determine which run(s) to run tests from. By
+            default, runs is set to TestRun, which runs all runs.
+
+        All methods are the same as those for an instance of the TestRun class,
+            with the addition of the 'runs' argument in each.
+
+        Constructor: TestGroup(*TestRun)
+
+        '''
+        self._test_runs = test_runs
+        
+    def __getattr__(self, attr, *args, runs=TestRun):
+        ''' Wraps called methods with _wrap function and 'runs' variable. '''
+        return self._wrap(attr, runs, *args)
+    
+    def _wrap(self, attr, runs, *args):
+        ''' Calls requested method on all stored instances that match at least
+            one class in 'runs'.
+        '''
+        def g(*a, runs=runs, **kw):
+            res = None
+            for test_run in self._test_runs:
+                if isinstance(test_run, runs):
+                    res = getattr(test_run, attr, *args)(*a, **kw)
+            return res
+        return g
+
 
 class Redirect(object):
     ''' Redirect a stream to one or more places. '''
@@ -526,11 +561,11 @@ if __name__ == '__main__':
 
         def test_b_type(self):
             ''' Testing if 'b' is a dictionary. '''
-            assert type(b) is dict, "'b' is supposed to be a dictionary"
+            assert isinstance(b, dict), "'b' is supposed to be a dictionary"
 
         def test_a_type(self):
             ''' Testing if 'a' is an integer. '''
-            assert type(a) is int, "'a' is supposed to be an integer"
+            assert isinstance(a, int), "'a' is supposed to be an integer"
 
         def test_timeout(self):
             ''' Testing timeout behaviour of test module. '''
