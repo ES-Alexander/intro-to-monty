@@ -402,15 +402,15 @@ class TestGroup(object):
         '''
         self._test_runs = test_runs
         
-    def __getattr__(self, attr, *args, runs=TestRun):
+    def __getattr__(self, attr, *args):
         ''' Wraps called methods with _wrap function and 'runs' variable. '''
-        return self._wrap(attr, runs, *args)
+        return self._wrap(attr, *args)
     
-    def _wrap(self, attr, runs, *args):
+    def _wrap(self, attr, *args):
         ''' Calls requested method on all stored instances that match at least
             one class in 'runs'.
         '''
-        def g(*a, runs=runs, **kw):
+        def g(*a, runs=TestRun, **kw):
             res = None
             for test_run in self._test_runs:
                 if isinstance(test_run, runs):
@@ -446,11 +446,20 @@ class Redirect(object):
         elif in_stream is sys.stderr:
             sys.stderr = self
             self.state = 'stderr'
+        elif in_stream is sys.stdin:
+            sys.stdin = self
+            self.state = 'stdin'
+
+        '''
+        class Shell(object):
+            def __init__(self, func):
+                self.write = func
+        self.shell = Shell(self.shell_write)
+        '''
 
         # attempt to redirect IDLE direct shell writes
         try:
             self._shell_write = self.in_stream.shell.write
-            self.in_stream.write = self.shell_write
         except AttributeError:
             # not using IDLE
             self._shell_write = self.shell_write = None
@@ -461,7 +470,7 @@ class Redirect(object):
         if maintain:
             self._out_streams += [self.in_stream]
             if self.state is None:
-                self.ext_streams += 1
+                self.ext_streams += 1 # standard streams not counted
 
     def __del__(self):
         ''' Clean up the streams in use. '''
@@ -470,7 +479,7 @@ class Redirect(object):
     def __enter__(self):
         ''' Initialisation functionality for usage in 'with' statements.
 
-        Only works if in_stream is stdout/stderr.
+        Only works if in_stream is stdout/stderr/stdin.
 
         '''
         pass
@@ -478,18 +487,33 @@ class Redirect(object):
     def __exit__(self, *args):
         ''' Cleanup functionality for usage in 'with' statements.
 
-        Only works if in_stream is stdout/stderr.
+        Only works if in_stream is stdout/stderr/stdin.
 
         '''
         self.close()
 
-    def write(self, message):
+    def read(self):
+        ''' Wrapper function for 'read', for accepting input from streams. '''
+        ret = ''
+        for stream in self._get_open_streams():
+            ret += stream.read()
+        return ret
+
+    def readline(self):
+        ''' Wrapper function for 'readline', for multiple streams. '''
+        for stream in self._get_open_streams():
+            ret = stream.readline()
+            if ret != '':
+                return ret
+        return ''
+
+    def write(self, message, *args, **kwargs):
         ''' Wrapper function for 'write', to output to all desired streams. '''
         if self._shell_write is None:
             for stream in self._get_open_streams():
                 stream.write(message)
         else:
-            self.shell_write(message, self.state)
+            self.shell_write(message, *args, **kwargs)
 
     def shell_write(self, message, *args, **kwargs):
         ''' Wrapper function for IDLE's shell.write. '''
@@ -497,8 +521,8 @@ class Redirect(object):
             stream = self._out_streams[stream_id]
             if stream is not None:
                 stream.write(message)
-
-        self._shell_write(message, *args, **kwargs)
+        if self.ext_streams < len(self._out_streams):
+            self._shell_write(message, *args, **kwargs)
 
     def flush(self):
         ''' Wrapper for stream flush - flush all streams. '''
@@ -517,14 +541,14 @@ class Redirect(object):
             append mode, and inputting that stream.
 
         '''
-        if stream_id < self._ext_streams:
+        if stream_id < self.ext_streams:
             self._out_streams[stream_id] = stream
 
     def close(self, *streams):
         ''' Close all streams, or the streams specified by *streams indices. '''
         if streams:
             for stream_id in streams:
-                if stream_id < self._ext_streams:
+                if stream_id < self.ext_streams:
                     stream = self._out_streams[stream_id]
                     if stream is not None:
                         stream.close()
@@ -532,12 +556,14 @@ class Redirect(object):
             return
 
         # streams unspecifed - clean up all streams and close as necessary
-        # restore stdout/stderr where possible
+        # restore stdout/stderr/stdin where possible
         if self.state is not None:
             if self.state == 'stdout':
                 sys.stdout = self.in_stream
             elif self.state == 'stderr':
                 sys.stderr = self.in_stream
+            elif self.state == 'stdin':
+                sys.stdin = self.in_stream
             self.in_stream = None
 
         for index in range(self.ext_streams):
@@ -574,7 +600,7 @@ if __name__ == '__main__':
 
     # log printed output
     log_file = open('log.txt','w')
-    Log = Redirect(sys.stdout, log_file)
+    Log = Redirect(sys.stdout, log_file, maintain=False)
 
     # run tests
     Tests = ExampleTests(log_func=Log.shell_write) # log test outputs too
