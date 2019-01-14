@@ -315,7 +315,7 @@ class TestPrint(object):
             print('\033[0;{1};40m{2}\033[0;32;0m'.format(ss, success_state))
         else:
             # mode must be IDLE, use sys.stdout.shell to write standard colours
-            a = self._colour.write(success_state+'\n', ss)
+            a = self._colour.write(success_state + '\n', ss)
 
     @staticmethod
     def test_run(test_name):
