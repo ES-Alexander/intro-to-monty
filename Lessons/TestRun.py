@@ -88,14 +88,6 @@ class TestRun(object):
         '''
         return [m for m in dir(self) if m.startswith('test_')]
 
-    def exists(self, *check_vars):
-        ''' '''
-        try:
-            for var in check_vars:
-                eval(var)
-        except NameError as n:
-            assert False, 'NameError: ' + str(n)
-
     def run_tests(self, methods=[], section='', verbose=False, timeout=None):
         ''' Runs the specified methods at the given verbosity.
 
@@ -184,7 +176,7 @@ class TestRun(object):
         ''' Returns the success state of running test_name.
 
         Return values are within the set [TestRun.PASS, TestRun.FAIL,
-            TestRun.ERROR].
+            TestRun.ERROR, TestRun.TIMEOUT].
 
         'test_name' should be an instance method of the running class.
 
@@ -237,27 +229,28 @@ class TestRun(object):
 
         '''
         start = time.time()
+        self._TP.test_run(test_name)
         try:
             exec('self.{}()'.format(test_name)) # run the function normally
-            self._TP.test_success(test_name)    # test succeeded if no errors
+            self._TP.test_result('PASS')        # test succeeded if no errors
             if send_end: send_end.send(TestRun.PASS)
             return TestRun.PASS
         except (AssertionError,NameError) as e:
-            self._TP.test_failure(test_name)    # test failed
+            self._TP.test_result('FAIL')        # test failed
             if verbose: print('    ' + str(e) + '\n')
             if send_end: send_end.send(TestRun.FAIL)
             return TestRun.FAIL
         except KeyboardInterrupt:
             # User-specified timeout of test occurred
             duration = time.time() - start
-            self._TP.test_timeout(test_name)
+            self._TP.test_result('TIMEOUT')
             if verbose:
                 print('    User-generated timeout after',
                       '{:.2f} seconds\n'.format(duration))
             if send_end: send_end.send(TestRun.TIMEOUT)
             return TestRun.TIMEOUT
         except Exception as e:
-            self._TP.test_error(test_name)      # unknown error occurred
+            self._TP.test_result('ERROR')       # unknown error occurred
             if verbose:
                 traceback.print_tb(e.__traceback__)
                 print('    {}: {}'.format(type(e).__name__, str(e)) + '\n',
@@ -308,53 +301,30 @@ class TestPrint(object):
             # using a standard terminal, not IDLE
             self.mode = 'TERM'
 
-    def test_success(self, test_name):
-        ''' Prints test_name with a coloured PASS qualifier.
+    def test_result(self, success_state):
+        ''' Prints success state in a standardised format.
 
-        self.test_success(str) -> None
+        success_state can be one of 'PASS', 'FAIL', 'ERROR' or 'TIMEOUT'.
 
-        '''
-        self.test_eval(test_name, 'PASS')
-
-    def test_failure(self, test_name):
-        ''' Prints test_name with a coloured FAIL qualifier.
-
-        self.test_failure(str) -> None
-
-        '''
-        self.test_eval(test_name, 'FAIL')
-
-    def test_error(self, test_name):
-        ''' Prints test_name with a coloured ERROR qualifier.
-
-        self.test_error(str) -> None
-
-        '''
-        self.test_eval(test_name, 'ERROR')
-
-    def test_timeout(self, test_name):
-        ''' Prints test_name with a coloured TIMEOUT qualifier.
-
-        self.test_timeout(str) -> None
-
-        '''
-        self.test_eval(test_name, 'TIMEOUT')
-
-    def test_eval(self, test_name, success_state):
-        ''' Prints test_name and success state in a standardised format.
-
-        success_state 
+        self.test_result(str) -> None
 
         '''
         ss = TestPrint.ColourMap[self.mode][success_state]
         if self.mode == 'TERM':
             # use ANSI escape codes to print desired colour
-            print('  {0:<45}\033[0;{1};40m{2}\033[0;32;0m'.format(test_name, ss,
-                    success_state))
+            print('\033[0;{1};40m{2}\033[0;32;0m'.format(ss, success_state))
         else:
             # mode must be IDLE, use sys.stdout.shell to write standard colours
-            a = self._colour.write('  {0:<45}'.format(test_name), 'stdout')
             a = self._colour.write(success_state+'\n', ss)
+
+    @staticmethod
+    def test_run(test_name):
+        ''' Prints the test name in a standardised format.
+
+        TestPrint.test_run(str) -> None
+
+        '''
+        print('  {0:<45}'.format(test_name), end='')
 
     @staticmethod
     def print_section(section):
