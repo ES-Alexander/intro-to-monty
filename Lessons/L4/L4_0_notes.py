@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 4                                   #
-#      Functional Programming, Functions, List Comprehension, Abstraction      #
+#    Functional Programming, Functions, List Comprehension, and Abstraction    #
 #                                                                              #
 ################################################################################
 

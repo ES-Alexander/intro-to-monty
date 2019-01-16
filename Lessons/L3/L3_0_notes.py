@@ -73,18 +73,27 @@ my_list = [1, 'test', 6]
 my_list += ['tree', ['does','this','work?'], 'yes']
 if 5 < len(my_list):
     my_list[5] = 'does it really?'
-    # print a string version of element 4 of my_list
-    print(str(my_list[4]))
-# alternatively, indexing at int mod len(list), or mod some value < len(list)
-# will always return a value from within the list
-print(str(my_list[5 % len(my_list)]))
+    # print element 4 of my_list
+    print(my_list[4])
+# alternatively, indexing at int mod len(list), or
+# int mod some value < len(list) will always return a value from within the
+# list
+print(my_list[5 % len(my_list)])
 
 # Defining a dictionary and a tuple, using the tuple as a key and value, and
 # accessing a value
 my_dict = {'key' : 'value', 1 : 'test', 2.3 : 34}
 my_tuple = ('1 string', True, 5, 3,2)
 my_dict[my_tuple] = 'tuple_key_value'
+my_dict['tuple_val'] = my_tuple
 print(str(my_dict[2.3]) + ', ' + str(my_dict.get('key')))
+
+# Accessing multiple list/tuple values with 'slicing'
+my_tuple_slice_1 = my_tuple[1:3] # from index 1 to before 3 -> (True, 5)
+my_tuple_slice_2 = my_tuple[1:-1] # from 1 to before 1 before the end (as above)
+my_list_slice_1 = my_list[:3] # from start to index < 3 -> [1, 'test', 6]
+my_list_slice_2 = my_list_slice_2[1:] # from index 1 to the end -> ['test', 6]
+my_list_slice_3 = my_list[7:] # from 7 to the end (len(my_list)=6) -> []
 
 
 # ----- NOTE: Numerical Indexing ----- #
@@ -150,13 +159,13 @@ for index, item in enumerate(my_list):
     print('Index: ' + str(index) + ', Item: ' + str(item))
 
 # A for loop iterating over a count
-stop_value_plus_one
+stop_value_plus_one = 5
 for count in range(stop_value_plus_one):
     print(count)
 
 # An equivalent while loop
 count = 0
-while count < 5:
+while count < stop_value_plus_one:
     print(count)
     count += 1
 

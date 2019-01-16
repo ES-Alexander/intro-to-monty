@@ -2,7 +2,7 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 9                                   #
-#              GUIs, Model-View-Controller, Tkinter, Eval and Exec             #
+#            GUIs, Model-View-Controller, Tkinter, and Eval and Exec           #
 #                                                                              #
 ################################################################################
 

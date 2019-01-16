@@ -216,6 +216,4 @@ if <condition>:
 
     To write code which considers multiple conditions separately, use separate
     'if' blocks.
-
-    '''
 '''

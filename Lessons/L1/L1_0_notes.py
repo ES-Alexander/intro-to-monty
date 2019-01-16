@@ -2,9 +2,72 @@
 ################################################################################
 #                                                                              #
 #                                   Lesson 1                                   #
-#                           Commenting and Variables                           #
+#        'Hello World', General Introduction, Commenting, and Variables        #
 #                                                                              #
 ################################################################################
+
+
+
+
+#--------------------------------- HELLO WORLD --------------------------------#
+'''
+    A common programming convention when starting a new project or learning
+    experience is to check that your system is set up and running as intended.
+    This is often referred to as the 'hello world' protocol, where you get your
+    machine to tell you it's communicating as desired. In Python, this can be
+    done by opening a console (IDLE or some other option) and typing the
+    command "print('hello world')", then pressing enter. It's also possible to
+    just type in the string 'hello world', because Python automatically prints
+    back any values entered in the console.
+
+    Once you've run your 'hello world' and are happy the computer is talking to
+    you, you can return to these lesson notes.
+'''
+
+
+
+
+#---------------------------- GENERAL INTRODUCTION ----------------------------#
+'''
+    This course is intended for people wanting to learn python syntax, as well
+    as several more general programming principles as we go. If you have
+    already learnt to program in another language (or even in Python), the
+    principles are likely the most interesting aspects to you. The exercises in
+    the first few lessons are quite simple, so will be most useful to beginner
+    programmers who haven't programmed at all before, or as a refresher of
+    basic programming ideas.
+
+    Reiterating the README file, the course has been written and developed for
+    use in Python IDLE. Using any other shell is perfectly fine, and all
+    features should still work, but some descriptions may be less clear. If you
+    have access to a Python shell, and are able to edit, save, and run .py
+    files, you should be mostly fine. With IDLE open, new and existing files
+    can be opened from the File menu in the menubar at the top of your window
+    (on Windows or Linux) or the top of your screen (on Mac). Files can also be
+    saved from the File menu. To run a file (while you're in it), use the Run
+    menu, and select Run Module (or use the shortcut F5).
+
+    In general, there will be 3 files of interest per lesson. The first is
+    LN_0_notes.py, which is where the notes are stored. The second is
+    LN_1_exercises.py, where you will find exercises based off the content
+    covered in the notes and up to that point in the course. The third is
+    LN_2_exercise_checker.py, which is where automated tests for the exercises,
+    as well as sample solutions (at the bottom of the file) can be found. Note
+    that running the exercise file will run the tests on your attempt at the
+    exercises. Running the exercise_checker file will instead run the tests on
+    the provided sample solution.
+
+    Significant effort has been put into making useful exercises to accompany
+    the notes in each lesson, as well as automated tests to give you feedback
+    as you complete the exercises. These tests are written to cover as much of
+    the specified functionality as possible, while still giving you room for
+    some creative freedom to explore the language. If you have any questions or
+    concerns regarding the exercises or tests, feel free to raise an issue on
+    the GitHub repository where this course is stored
+    (ES-Alexander/intro-to-monty), or contact me directly at
+    'sandman.esalexander@gmail.com'. The same applies for any other course
+    feedback or suggestions you might have.
+'''
 
 
 
