@@ -67,6 +67,7 @@
     bool(val) # casts val as a boolean (True if non-zero/non-empty, else False)
     list(iterable) # casts the iterable as a list
     tuple(iterable) # casts the iterable as a tuple
+    set(iterable) # casts the iterable as a set (unique set of elements)
     dict(mapping) # casts the key, value pairs of the mapping as a dictionary
 
 
@@ -99,8 +100,10 @@
     hasattr(obj, attribute) # checks if obj has an attribute with the given name
     dir(obj) # tries to return the attributes of obj
     help(obj) # invokes the built-in Help System
-    isinstance(obj, class) # checks if obj is an instance of class
-    issubclass(obj, class) # checks if obj is a subclass of class
+    isinstance(obj, class/tuple) # checks if obj is an instance of class or one
+        # of the classes in the tuple of classes
+    issubclass(obj, class/tuple) # checks if obj is a subclass of class or one
+        # of the classes in the tuple of classes
     super() # allows access to superclass methods and attributes
     str(obj) # returns an informal representation of obj
     repr(obj) # returns a printable representation of obj
@@ -450,6 +453,17 @@ my_double_evens = [2*num for num in range(20) if num % 2 == 0]
 
 num_list = [1,4,2,3,6,3,8,3,5,6,3,9,0]
 num_threes = len([val for val in num_list if val == 3]) # num_threes = 4
+
+
+# ----- NOTE: Set Comprehension ----- #
+'''
+    The same syntax can be used for 'set comprehension', which works the same
+    way as for lists, just with sets, which are like lists but every element is
+    unique. A list can be typecast into a set, using set(my_list), which
+    removes any duplicate elements. A set is created with curly-braces (e.g.
+    {1,2,3}), and set comprehension is just list comprehension syntax with
+    curly-braces instead of the square-brackets used by lists.
+'''
 
 
 
