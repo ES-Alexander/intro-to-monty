@@ -312,7 +312,7 @@ class TestPrint(object):
         ss = TestPrint.ColourMap[self.mode][success_state]
         if self.mode == 'TERM':
             # use ANSI escape codes to print desired colour
-            print('\033[0;{1};40m{2}\033[0;32;0m'.format(ss, success_state))
+            print('\033[0;{};40m{}\033[0;32;0m'.format(ss, success_state))
         else:
             # mode must be IDLE, use sys.stdout.shell to write standard colours
             a = self._colour.write(success_state + '\n', ss)
@@ -676,6 +676,10 @@ if __name__ == '__main__':
             ''' Testing if 'a' is an integer. '''
             assert isinstance(a, int), "'a' is supposed to be an integer"
 
+        def test_b_type(self):
+            ''' Testing if 'b' is a dictionary. '''
+            assert isinstance(b, dict), "'b' is supposed to be a dictionary"
+
         def test_timeout(self):
             ''' Testing timeout behaviour of test module. '''
             while True:
@@ -748,8 +752,7 @@ if __name__ == '__main__':
     Tests.run_tests() # run tests for all TestRuns in the group
 
     # run failed tests again with explanation (only check in ExampleTests)
-    #Tests.run_failed_tests(runs=ExampleTests)
-    Tests.run_tests(verbose=True)
+    Tests.run_failed_tests(runs=ExampleTests)
 
     if ET._TP.mode == 'IDLE':
         print("\nExample 'help' output from auto-set docstring:")
