@@ -31,6 +31,7 @@ import traceback # controlled printing of tracebacks (from caught Exceptions)
 import multiprocessing # used for automatic timeouts (not available in IDLE)
 import time      # used for measuring test times and user-generated timeouts
 import sys       # used for shell io functionality (stream redirections)
+import os        # for creating folders if necessary
 
 class TestRun(object):
     ''' A class for running tests. '''
@@ -690,9 +691,9 @@ if __name__ == '__main__':
         def __init__(self):
             ''' Initialise this test suite. '''
             super().__init__()
-            self._in = 'in.txt'
-            self._err = 'err.txt'
-            self._out = 'out.txt'
+            self._in = 'test_files/in.txt'
+            self._err = 'test_files/err.txt'
+            self._out = 'test_files/out.txt'
 
         # test functions
         def test_stdin_stdout(self):
@@ -741,8 +742,12 @@ if __name__ == '__main__':
                            "{!r} should contain the first line of {!r}".format(
                                self._err, self._in)
 
+    # create a folder for the test files, if one doesn't already exist
+    if not os.path.dirname('test_files'):
+        os.mkdir('test_files')
+
     # first redirection (tests also internally redirect the same streams)
-    log_out = 'logout.txt'; log_err = 'logerr.txt'
+    log_out = 'test_files/logout.txt'; log_err = 'test_files/logerr.txt'
     Log = MultiRedirect(Redirect(sys.stdout, open(log_out,'w')),
                         Redirect(sys.stderr, open(log_err,'w')))
 

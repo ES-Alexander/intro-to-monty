@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-# L10_1_examples SAMPLE SOLUTION (code testing)
+################################################################################
+# This file contains sample solutions for the L10_1_exercises.py file.         #
+################################################################################
 
 # import the TestRun module
-import sys
-sys.path.append('..')
+import sys; sys.path.append('..')
 from TestRun import TestRun
 
 from random import randint
