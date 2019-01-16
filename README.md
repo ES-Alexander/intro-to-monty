@@ -41,7 +41,9 @@ The course is separated into 10 lessons, with each lesson containing a number of
 
 REQUIREMENTS:
 
-The course is intended for use with Python 3 with the IDLE integrated development environment (IDE), although more advanced users are welcome to use alternative IDEs at their preference. IDLE and python can be freely downloaded from the internet, and the course materials should provide most other required files. In later lessons some external libraries will need to be installed, so to be extra prepared you can install the Python Package Installer (PyPI) on your computer, and install the 'numpy' (Numerical Python), 'opencv-python' (Open Computer-Vision), and 'Pillow' (Python Image Library) libraries.
+The course is intended for use with Python 3 with the IDLE integrated development environment (IDE), although more advanced users are welcome to use alternative IDEs at their preference. IDLE and python can be freely downloaded from the internet, and the course materials should provide most other required files. Python files can be opened in IDLE by right clicking and selecting 'Edit with IDLE'.
+
+In later lessons some external libraries will need to be installed, so to be extra prepared you can install the Python Package Installer (PyPI) on your computer, and install the 'numpy' (Numerical Python), 'opencv-python' (Open Computer-Vision), and 'Pillow' (Python Image Library) libraries.
 
 
 Best of luck to any and all participants in their coding,
