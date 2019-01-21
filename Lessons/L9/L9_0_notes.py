@@ -191,7 +191,14 @@
     (open-source computer vision), and Pillow (python image library for python
     3). If you have pip (python package installer), open a terminal/command
     prompt and run the command:
+        pip install numpy opencv-python Pillow
+    If your computer has Python 2 installed as well, or if the above command
+    doesn't work, try using:
+        pip3 install numpy opencv-python Pillow
+    or
         python3 -m pip install numpy opencv-python Pillow
+    or
+        python -m pip install numpy opencv-python Pillow
     If you don't have pip, look online for how to install it and get it up and
     running. Windows users should have pip installed by default with their
     python installation, but you need to make sure that python3 (or just
