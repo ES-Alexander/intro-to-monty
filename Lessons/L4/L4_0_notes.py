@@ -304,15 +304,16 @@ def my_func_3(input_var, optional_var=False):
     two asterisks in front of variable names respectively, for "unspecified
     arguments" and "unspecified key-word arguments" (e.g. *args and **kwargs).
     Note that optional arguments with defaults specified by an equals (=) sign
-    are considered to be keyword arguments. All standard arguments must be
-    placed before all keyword arguments, and all unspecified inputs must be
-    placed after specified (required or default) inputs, because there is no
-    delimiting character to denote the end of the unspecified values. Keyword
-    arguments can be in any order, because the purpose of each value is
-    identifiable by its key. *args and **kwargs are common variable names to
-    use for undefined inputs when the variables have no particular predefined
-    meaning. In examples where the additional values have some predefined
-    purpose, more meaningful variable names can be used.
+    can be either keyword arguments or standard arguments, depending on where
+    they are placed relative to any unspecified arguments. All standard
+    arguments must be placed before all keyword arguments, and all unspecified
+    inputs must be placed after specified (required or default) inputs, because
+    there is no delimiting character to denote the end of the unspecified
+    values. Keyword arguments can be in any order, because the purpose of each
+    value is identifiable by its key. *args and **kwargs are common variable
+    names to use for undefined inputs when the variables have no particular
+    predefined meaning. In examples where the additional values have some
+    predefined purpose, more meaningful variable names can be used.
 
     The values within *args and **kwargs can then be accessed by iterating over
     args or over the keys of kwargs.
