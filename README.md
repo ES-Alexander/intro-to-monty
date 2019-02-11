@@ -2,7 +2,7 @@
 An introductory Python 3 and programming principles course.
 
 _________________________________
- Version: 1.0.3                 
+ Version: 1.0.4                 
  Author: ES Alexander         
  Release Date: 11/02/2019
 _________________________________
