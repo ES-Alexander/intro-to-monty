@@ -274,9 +274,9 @@ def my_func_2(input_var):
 '''
     Function inputs can have default values, specified by an equals (=) sign,
     allowing for users to optionally set or ignore a particular input. These
-    should be placed after any standard inputs, so parameters entered by the
-    user are not assumed to be the optional ones, thus leaving one or more
-    required inputs empty.
+    should be placed after any standard ('positional') inputs, so parameters
+    entered by the user are not assumed to be the optional ones, thus leaving
+    one or more required inputs empty.
 
     Any optional inputs should be denoted by a preceding asterisk (*) in the
     function calling code in the docstring (as below).
@@ -298,14 +298,14 @@ def my_func_3(input_var, optional_var=False):
 
 # ----- NOTE: Unspecified Inputs ----- #
 '''
-    Beyond the standard defined inputs, it is also possible to enable a user to
-    input an unspecified number of their own inputs to a function, either in
-    the form of normal inputs, or key-value pairs. This is done using one and
-    two asterisks in front of variable names respectively, for "unspecified
+    Beyond the positional inputs, it is also possible to enable a user to input
+    an unspecified number of their own inputs to a function, either in the form
+    of positional inputs, or key-value pairs. This is done using one and two
+    asterisks in front of variable names respectively, for "unspecified
     arguments" and "unspecified key-word arguments" (e.g. *args and **kwargs).
     Note that optional arguments with defaults specified by an equals (=) sign
-    can be either keyword arguments or standard arguments, depending on where
-    they are placed relative to any unspecified arguments. All standard
+    can be either keyword arguments or positional arguments, depending on where
+    they are placed relative to any unspecified arguments. All positional
     arguments must be placed before all keyword arguments, and all unspecified
     inputs must be placed after specified (required or default) inputs, because
     there is no delimiting character to denote the end of the unspecified
@@ -322,20 +322,28 @@ def my_func_3(input_var, optional_var=False):
 
 
 # Example of a function with unspecified inputs
-def my_func_4(input_var, *args, my_default=True, **kwargs):
+def my_func_4(input_var, default_pos=3, *args, default_kwarg=True, **kwargs):
     ''' Prints out all provided inputs in a pretty-print format.
+
+    'input_var' is a required positional argument.
+
+    'default_pos' is an optional positional argument (with a default value).
+        This is overridden if the function is called with more than 1
+        positional argument, so *args cannot be used without overriding this.
+
+    'default_kwarg' is an optional keyword argument (with a default value).
 
     my_func_4(str, *args, *bool, **kwargs) -> None
 
     '''
-    print("Initial value:", input_var)
+    print("Positional values:", input_var, default_pos)
     # Prints a new-line, before printing the variables in *args
     print("\n*args:")
     for argument in args:
-        print(argument)
+        print('\t', argument)
     print("\n**kwargs:")
-    for key in kwargs:
-        print(key, '=', kwargs[key])
+    for key, value in kwargs.items():
+        print('\t', key, '=', value)
 
 # how to call my_func_4 (default value left as default)
 my_func_4('first',2,3,'four',5.0,first_kwarg=0,key='value',etc='and the rest')
@@ -360,8 +368,8 @@ def my_print(*objects, **kwargs):
     '''
     extra_stuff = ['this', 'is', 'kinda', 'cool']
     print('My print printed: ', *objects, *extra_stuff)
-    for key in kwargs:
-        print(key, kwargs[key])
+    for key, value in kwargs.items():
+        print(key, value)
     
 # to dereference a dictionary into keyword arguments, keys must be strings
 my_dict = {'great':True, 'stuff':'weee', 'me':'too'}
