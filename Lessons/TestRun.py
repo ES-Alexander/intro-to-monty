@@ -7,7 +7,7 @@
 ###--------------------------------------------------------------------------###
 #                                                                              #
 # Author: ES Alexander                                                         #
-# Released: 2018-12-26                                                         #
+# Released: 2019-02-11                                                         #
 #                                                                              #
 # This module is exempt from any external license it is provided with, and is  #
 #   instead provided under the modified MIT license below:                     #
@@ -35,11 +35,33 @@
 #                                                                              #
 ###--------------------------------------------------------------------------###
 #                                                                              #
-# Modified: 2019-01-13                                                         #
-# Author: ES Alexander                                                         #
+# This testing module is intended for small-scale testing of python, including #
+#   in IDLE. Notable features include:                                         #
 #                                                                              #
-# Added stream redirection (and logging) functionality for filestreams.        #
-# Added emulation groups, for stream redirection and groups of test-suites.    #
+#       'TestRun': A base class for a test-suite, including automatic test-    #
+#           detection (for methods beginning with 'test_'), running all        #
+#           available tests or a specified set with 'run_tests', running the   #
+#           tests which failed in the last run with 'run_failed_tests', and    #
+#           automatic (not in IDLE) and user-generated timeouts while testing. #
+#                                                                              #
+#       'TestGroup': A class for grouping multiple TestRun instances as though #
+#           they are a single instance.                                        #
+#                                                                              #
+#       'Redirect': A class for stream redirection and multiplication, focused #
+#           on stdin, stdout, and stderr, but also usable for general file     #
+#           streams. Allows for capturing printed output and simulating typed  #
+#           input while testing.                                               #
+#                                                                              #
+#       'MultiRedirect': A class for managing multiple redirections, allowing  #
+#           for methods to be run simultaneously run on all stored             #
+#           redirections.                                                      #
+#                                                                              #
+###--------------------------------------------------------------------------###
+#                                                                              #
+# Modified: YYYY-MM-DD                                                         #
+# Author: _                                                                    #
+#                                                                              #
+# Modification details                                                         #
 #                                                                              #
 ################################################################################
 
