@@ -630,8 +630,8 @@ Tests.run_tests()
 # Accessing a Repository (Clone/Fork)
 '''
     The hosting server you use determines if you are able to make repos
-    private. GitHub only allows public repos for free users, whereas BitBucket
-    allows all users to have both public and private repos.
+    private. Both GitHub and BitBucket allow all users to have both public and
+    private repos.
 
     To get access to a repo from a hosting server (ie not one you've created
     locally on your computer), both mercurial and git support the 'clone <URL>'
