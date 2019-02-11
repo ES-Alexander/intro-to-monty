@@ -129,8 +129,7 @@ func_to_test = None
 # Repositories
 '''
     Set up a GitHub or BitBucket account and your own Git or Mercurial
-    repository (both platforms support both types). Note that GitHub
-    repositories can only be private if you have a paid subscription.
+    repository (both platforms support both types).
 
     With an account set up and a repository made, create a basic README file
     including the author (you), the last modified date, and what the repository
