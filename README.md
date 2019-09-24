@@ -31,12 +31,10 @@ DISTRIBUTION:
 
 Feel free to distribute this course at will, in the hopes it will help other aspiring programmers learn to program basic python, and perhaps be inspired to go further in their programming journey. In saying that, please include this README out of respect for the original author, to include a meaningful introduction to new participants, and preferably also maintain the course as a complete package. 
 
-DO NOT distribute this course for economic benefit or individual personal gain. The course is intended as free-access, and its usage should not be restricted or used for the profits of any individual or organisation.
-
 
 USAGE:
 
-The course is separated into 10 lessons, with each lesson containing a number of files, including notes, exercises, an automated exercise checker (with sample exercise solutions), and occasionally challenge problems. The intention for users following the course’s progression is to read the relevant notes on syntax and programming principles prior to completing each set of exercises, then checking the sample solutions after your attempt to complete the exercises is passing as many tests as possible. The notes can be referred back to at any point, and once examples have been completed and passed all checks, they should also serve as a valuable reference for recalling certain features and uses of syntax.
+The course is separated into 10 lessons, with each lesson containing a number of files, including notes, exercises, an automated exercise checker (with sample exercise solutions), and occasionally challenge problems. The intention for users following the course’s progression is to read the relevant notes on syntax and programming principles prior to completing each set of exercises, then checking the sample solutions after your attempt to complete the exercises is passing as many tests as possible. The notes can be referred back to at any point, and once the examples have been completed and passed all checks they should also serve as a valuable reference for recalling certain features and uses of syntax.
 
 
 REQUIREMENTS:
