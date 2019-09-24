@@ -248,7 +248,7 @@ class TestRun(object):
             
             if p.is_alive():
                 p.terminate(); p.join() # automatic timeout has occurred
-                self._TP.test_timeout(test_name)
+                self._TP.test_result('TIMEOUT') # test_name?
                 if verbose:
                     print('    Automatic timeout after {}'.format(timeout),
                           'seconds\n')
@@ -364,6 +364,8 @@ class TestPrint(object):
 
         '''
         print('  {0:<45}'.format(test_name), end='')
+        sys.stdout.flush() # flush in case timeout causes print not to display
+        
 
     @staticmethod
     def print_section(section):
@@ -781,7 +783,7 @@ if __name__ == '__main__':
                                self._err, self._in)
 
     # create a folder for the test files, if one doesn't already exist
-    if not os.path.dirname('test_files'):
+    if not os.path.isdir('test_files'):
         os.mkdir('test_files')
 
     # first redirection (tests also internally redirect the same streams)
