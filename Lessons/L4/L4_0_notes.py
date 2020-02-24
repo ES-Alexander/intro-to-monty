@@ -296,6 +296,34 @@ def my_func_3(input_var, optional_var=False):
     return output_str
 
 
+# ----- NOTE: Default Value Initialisation ----- #
+'''
+    Python initialises default values only once, when a function is defined, so
+    if using mutable default values it is recommended to avoid modifying them
+    inside the function or returning them, so as to avoid affecting later calls
+    to the same function.
+'''
+
+
+
+# Modifying and returning mutable default value
+def my_default(default=[]):
+    ''' Modifies and returns the optional input 'default'.
+
+    my_default(*list) -> list
+
+    '''
+
+    default.append(3)
+    return default
+
+# results as follows
+my_default()         # -> [3]
+uh_oh = my_default() # -> uh_oh = [3, 3]
+uh_oh.append(5)      # -> uh_oh = [3, 3, 5]
+my_default()         # -> uh_oh = [3, 3, 5, 3]
+
+
 # ----- NOTE: Unspecified Inputs ----- #
 '''
     Beyond the positional inputs, it is also possible to enable a user to input
