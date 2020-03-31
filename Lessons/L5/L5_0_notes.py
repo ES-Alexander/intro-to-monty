@@ -55,32 +55,22 @@ my_file.close()
 # Opening Files (the 'Pythonic' way)
 '''
     The open-close method of opening files intuitively makes sense, but
-    forgetting to close a file can cause issues. Python also includes a method
-    of opening files using the 'with' and 'as' keywords, which automatically
-    closes the files for you. This is less intuitive to use, but is safer, so
-    where possible is the preferred method of reading files. In this case,
-    don't try to close the file afterwards - as soon as you exit the with
-    block, the file is automatically closed.
+    forgetting to close a file can cause issues with other programs,
+    particularly if your program runs for long periods of time. Python also
+    includes a method of opening files using a 'context manager'. To start a
+    context manager, open it using a 'with' statement (like an 'if' statement
+    for a context), and it will automatically clean up at the end of the
+    indented block. You can assign the context you've opened to a variable
+    using the 'as' keyword. This is the safest way to open a file, because the
+    'with' block will make sure the file gets closed, even if an error occurs
+    while reading it.
 '''
 
 with open('filename.txt', 'r') as my_file:
     # the file is open while in this block
     <code parsing/processing data from file>
 
-# file is now closed
-
-
-# ----- NOTE: Program Robustness ----- #
-'''
-    While it is possible, and often simpler, to create a program which simply
-    fails when presented with an unexpected file or file-structure, it can at
-    times be beneficial to allow files of all types and structures to be
-    accepted by the program, and present a controlled error message to the
-    user. If you, as the programmer, are the only person using the program,
-    then this kind of robustness is unnecessary, but controlled acceptance of
-    unexpected inputs is practically essential for any code created with the
-    intention of general or wide-reaching usage.
-'''
+# file is closed automatically
 
 
 
@@ -96,30 +86,37 @@ with open('filename.txt', 'r') as my_file:
 
 # 'read' and 'readline' Functions
 '''
-    The 'read' function will read the entirety of a file as a single string, to
-    be separated and parsed as desired. 'readline' reads only a single line,
-    and is often quite useful when parsing of each line is required. It is also
-    possible to iterate over a file, implicitly using the 'readline' function
-    at each iteration.
+    The 'read' function will read the entirety of a file (from the current
+    point) as a single string, to be separated and parsed as desired.
+    'readline' reads only a single line at a time, and is often quite useful
+    when parsing of each line is required. It is also possible to iterate over
+    a file, which reads one line per iteration.
 '''
-with open('filename.txt', 'r') as my_file:
-    my_file_str = my_file.read()
-    first_line = my_file.readline()
-    second_line = my_file.readline()
+with open('filename.txt', 'r') as remaining_lines:
+    first_line = remaining_lines.readline()
+    second_line = remainng_lines.readline()
+    all_the_rest = remaining_lines.read()
 
-my_other_file = open('filename_2.txt', 'r')
-for index, line in enumerate(my_other_file):
-    print('LINE {}: '.format(index) + line)
-my_other_file.close()
+with open('filename_2.txt', 'r') as my_other_file:
+    for index, line in enumerate(my_other_file):
+        print('LINE {}: '.format(index) + line)
 
 
 # 'write' Function
 with open('filename.txt', 'w') as new_file: # overwrite mode
-    new_file.write('This is the first line in my file.\n')
+    new_file.write('This is the first')
+    new_file.write('line in my file.\n')
     new_file.write('This is another line in my file.\n')
 
 with open('filename2.txt', 'a') as existing_file: # append mode
     existing_file.write('This is a line at the end of my file.\n')
+
+
+# 'read', parse, 'write'
+with open('filename.txt', 'r') as input_data,
+        open('output.txt', 'w') as output_data:
+    for line in input_data:
+        output_data.write('Input: ' + line)
 
 
 # ----- NOTE: Newlines ----- #
@@ -138,6 +135,18 @@ with open('filename2.txt', 'a') as existing_file: # append mode
     returns.
 '''
 
+# ----- NOTE: Streams and Seeking ----- #
+'''
+    Using the 'open' function returns a file stream, which goes from the top to
+    the bottom of the file. If you read part of a file, the stream is moved to
+    the position you have reached, so if you want to access a part of the file
+    you have already passed you will need to use the 'seek' method of the
+    stream to go backwards, or you can close and reopen the file to start again
+    from the top. Generally it is best to avoid this by saving parts of the
+    file you are interested in to variables so you can refer back to them
+    quickly and easily.
+'''
+
 
 
 
@@ -149,9 +158,9 @@ with open('filename2.txt', 'a') as existing_file: # append mode
     example of this is provided below.
 
     Additionally, in the design of graphical user interfaces (GUIs), certain
-    elements are provided to enable user input of different types. These
-    usually come in the form of buttons, checklists, selection boxes, or
-    text-entry boxes.
+    elements are provided to enable user input of different types. Some
+    possibilities are buttons, checklists, selection boxes, and text-entry
+    boxes.
 '''
 
 
