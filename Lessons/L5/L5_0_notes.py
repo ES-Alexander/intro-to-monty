@@ -412,9 +412,12 @@ from module import *
     sys.path.append), or perform the import in some other way.
 
     To retrieve a published library and ready for importing, you can download
-    and install it using Python's package manager, 'pip'. Note that the correct
-    command sent to pip should complete both the download and installation for
-    you.
+    and install it using Python's package manager, 'pip'. Pip usually gets
+    installed when you install Python itself, so you most likely already have
+    it. Note that the correct command sent to pip should complete both the
+    download and installation of a library for you. Often this will have the
+    form 'python -m pip install package_1 package_2 ...', but the specific
+    syntax for your operating system can be found online.
 '''
 
 # ----- NOTE: Relative Imports ----- #
