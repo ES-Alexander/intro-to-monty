@@ -275,8 +275,9 @@ my_example_instance = ExampleClass('test', 3)
     can use a double underscore '__' prefixing its name, as in the standard
     methods mentioned earlier. Standard (builtin) methods used by python are
     denoted with both a prefix and suffix of double underscores, and these
-    methods are inaccessible without using the appropriate calling method (e.g.
-    == for the __eq__ method, and len(obj) for the __len__ method).
+    methods are inaccessible without using the appropriate calling method or
+    operator (e.g. == for the __eq__ method, len(obj) for the __len__ method,
+    with context_manager() as name: ... for the __enter__ and __exit__ methods).
 
     As a security note, while double underscore prefixing hides variables and
     methods from users, technically they are still accessible at run-time,
