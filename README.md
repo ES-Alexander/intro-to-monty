@@ -2,9 +2,9 @@
 An introductory Python 3 and programming principles course.
 
 _________________________________
- Version: 1.0.5                 
+ Version: 1.0.6                 
  Author: ES Alexander         
- Release Date: 25/02/2020
+ Release Date: 31/03/2020
 _________________________________
 
 Lesson Breakdown:
@@ -39,9 +39,9 @@ The course is separated into 10 lessons, with each lesson containing a number of
 
 REQUIREMENTS:
 
-The course is intended for use with Python 3 with the IDLE integrated development environment (IDE), although more advanced users are welcome to use alternative IDEs at their preference. IDLE and python can be freely downloaded from the internet, and the course materials should provide most other required files. Python files can be opened in IDLE by right clicking and selecting 'Edit with IDLE'.
+The course is intended for use with Python 3 with the IDLE integrated development environment (IDE), although more advanced users are welcome to use alternative IDEs at their preference. Python (with IDLE included) can be freely downloaded from the internet, and the course materials should provide most other required files. Python files can be opened in IDLE by right clicking and selecting 'Edit with IDLE'.
 
-In later lessons some external libraries will need to be installed, so to be extra prepared you can install the Python Package Installer (PyPI) on your computer, and install the 'numpy' (Numerical Python), 'opencv-python' (Open Computer-Vision), and 'Pillow' (Python Image Library) libraries (e.g. `python3 -m pip install numpy opencv-python Pillow`).
+In later lessons some external libraries will need to be installed, so to be extra prepared you can install the Python Package Installer (PyPI) on your computer, and install the relevant libraries using `python3 -m pip install -r requirements.txt`. Alternatively, you can install the required libraries manually with `python3 -m pip install numpy opencv-python Pillow` (note your operating system may have a slightly different syntax). The libraries used in the course are `numpy` (Numerical Python), `opencv-python` (Open Computer-Vision), and `Pillow` (Python Image Library) libraries (e.g. ). Additionally, the library `testrun` is used for automated testing, but it is included with the course for help writing your own tests. If you wish to use the same test module in your own projects, feel free to install `testrun` with pip as well.
 
 
 Best of luck to any and all participants in their coding,
