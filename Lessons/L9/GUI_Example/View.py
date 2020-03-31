@@ -18,9 +18,11 @@ class View(object):
     # the set of valid external bindings used in the class
     external_bindings = ('save_data', 'clear_data', 'clear_stored_pts',
                          'set_def_pts', 'new_point', 'del_point')
+    INVALID_BINDING_MSG = "Invalid binding '{}'\nValid bindings are found " \
+                          "using View.external_bindings."
     # the set of valid internal bindings used in the class
     _internal_bindings = ('define', 'add', 'delete')
-    
+
     def __init__(self, master, graph_img=None):
         ''' A class for managing the display of a graph-analysis GUI.
 
@@ -42,15 +44,15 @@ class View(object):
         '''
         self._master = master # set the overarching master of the view
         self._master.title("Data From Graph") # set a title for the view
-        
+
         # set the window to be 2/3 of the full size of the screen (int division)
         sw = self._master.winfo_screenwidth()
         sh = self._master.winfo_screenheight()
         self._master.geometry("{}x{}".format(sw*2//3,sh*2//3))
-        
+
         # turn off resizing in the x and y directions
         self._master.resizable(0, 0)
-        
+
         # make GUI as tall as window
         self._master.rowconfigure(0, weight=1)
 
@@ -101,7 +103,7 @@ class View(object):
                 |               | ------- |
                 |               | errors  |
                 +---------------+---------+
-                
+
         self._setup_display() -> None
 
         '''
@@ -168,7 +170,7 @@ class View(object):
         heading = tk.Label(master, text='Set Defining Points')
         grid_frame = tk.Frame(master)
 
-        # pack the heading and frame into the control frame grid
+        # put the heading and frame into the control frame grid
         heading.grid()
         grid_frame.grid()
 
@@ -207,10 +209,10 @@ class View(object):
             self._errors.set('Please set a defining point location on the ' +
                              'graph before submitting')
             return # invalid starting point - do not continue
-        
+
         # update controls
         self._def_pt_controls[index].submit()
-        
+
         # check if all 3 points defined (ready to submit to external Model)
         currently_defined = self._graph_canvas.find_withtag('define')
         if len(currently_defined) == 3:
@@ -260,10 +262,10 @@ class View(object):
         # reset controls
         for point in range(3):
             self._def_pt_controls[point].reset()
-            
+
         # set to defining first def pt
         self._def_pt_select(0)
-        
+
     def _setup_control_buttons(self, master):
         ''' Initialises the stored-points control buttons.
 
@@ -296,7 +298,7 @@ class View(object):
         self._errors.set('')
         tk.Label(master, textvariable=self._errors, fg='red', justify=tk.LEFT,
                  wraplength=200).grid(pady=10)
-        
+
     def _setup_menubar(self):
         ''' Initialises the menubar with the desired menus.
 
@@ -328,7 +330,7 @@ class View(object):
         filemenu.add_separator() # add a separation line (denote sections)
         filemenu.add_command(label="Save Data", command=self._save_data)
         filemenu.add_command(label="Save Graph", command=self._save_graph)
-        
+
         # add to the menubar
         self._menubar.add_cascade(label="File", menu=filemenu)
 
@@ -373,7 +375,7 @@ class View(object):
                     title = "Select graph image",
                     filetypes = (("JPEG image","*.jpg"), ("PNG image","*.png"),
                                  ("All Files","*.*")))
-        
+
         img = Image.open(graph_img) # extract image as PIL Image
         # scale image to take up the full canvas (stretching is fine)
         size = (self._graph_canvas.winfo_width(),
@@ -381,7 +383,7 @@ class View(object):
         resized = img.resize(size, resample=Image.BILINEAR)
         # convert to tkinter PhotoImage, store externally to make visible
         self._img = PhotoImage(resized)
-        
+
         # add the image to the canvas (modify existing if possible)
         canvas_image = self._graph_canvas.find_withtag('graph_image')
         if canvas_image:
@@ -389,7 +391,7 @@ class View(object):
         else:
             self._graph_canvas.create_image(0, 0, image=self._img, anchor=NW,
                                             tags='graph_image')
-        
+
         # new graph specified, so re-initialise data and view
         self._clear_data()          # clear all data
         self._reset_def_points()    # reset defining points controls
@@ -406,14 +408,14 @@ class View(object):
             filename = tk.filedialog.asksaveasfilename(title = "Save Data As",
                 filetypes = (("Comma Separated Value","*.csv"),
                              ("All Files","*.*")))
-        
+
         self._call_bind_func('save_data', filename)
 
     def _clear_data(self):
         ''' Clears all data from the graph display and model.
 
         self._clear_data() -> None
-        
+
         '''
         self._graph_canvas.delete('point') # delete all view points
         self._call_bind_func('clear_data') # clear external point data
@@ -439,7 +441,7 @@ class View(object):
 
         '''
         # delete all points with tag 'define'
-        self._graph_canvas.delete('define') 
+        self._graph_canvas.delete('define')
 
     def _add_stored_point(self, pixel_point):
         ''' Add a new stored point to the external data and the graph.
@@ -451,7 +453,7 @@ class View(object):
         '''
         # check if point can be added (try adding to external data)
         point_added = self._call_bind_func('new_point', pixel_point)
-        
+
         if point_added:
             self._draw_point(pixel_point, {'outline':'','fill':'blue',
                                            'tags':('stored','point')})
@@ -476,7 +478,7 @@ class View(object):
         'pixel_point' should be (x,y) coordinates of the point
         'properties' should be a dictionary of desired properties of the point
 
-        self._draw_point(tuple(int,int), dict) -> 
+        self._draw_point(tuple(int,int), dict) -> None
 
         '''
         ppx, ppy = pixel_point # extract coordinates
@@ -493,10 +495,10 @@ class View(object):
         if not self._graph_canvas.find_withtag('stored'):
             # no stored points defined
             return
-        
+
         # remove the point from the external data storage
         point_removed = self._call_bind_func('del_point', pixel_point, max_dist)
-        
+
         if point_removed:
             # if a point was removed, it must satisfy the max_dist condition,
             #   so remove the closest point (to pixel_point) from the view
@@ -542,7 +544,7 @@ class View(object):
         if self._mode == 'add':
             pixel_point = (event.x, event.y)
             self._delete_point(pixel_point)
-        
+
     def _call_bind_func(self, binding, *args, **kwargs):
         ''' Call a binding function with the given arguments.
 
@@ -562,7 +564,7 @@ class View(object):
         ''' Display usage instructions on startup.
 
         self._display_instructions() -> None
-        
+
         '''
         instructions = 'Choose 3 defining points which specify the plane ' +\
             'your graph is on (click to select point location, then specify ' +\
@@ -571,22 +573,28 @@ class View(object):
             'pressing File/Save Data or File/Save Graph to save.'
         self._errors.set(instructions)
 
-    def add_binding_func(self, binding, callback):
-        ''' Adds the specified callback to the given binding, if valid.
+    def add_binding_funcs(self, **bindings_map):
+        ''' Adds the bindings and callbacks in 'bindings_map'.
 
-        A valid binding must be in the tuple returned by View.external_bindings.
+        If any bindings are invalid (ie they are not found in
+            View.external_bindings), raises Exception.
 
-        Raises Exception on invalid binding.
-
-        self.add_binding_func(str, func) -> None
+        self.add_binding_funcs(**binding=func) -> None
 
         '''
-        if binding in View.external_bindings:
-            self._bindings[binding] = callback
-        else:
-            raise Exception('Invalid binding option {!r} -'.format(binding),
-                            'Valid bindings are found using ',
-                            'View.external_bindings')
+        # update but with validity check first in a dictionary comprehension
+        self._bindings.update({binding: callback if binding in self._bindings \
+                               else self.invalid_binding(binding) \
+                               for binding, callback in bindings_map.items()})
+
+    @classmethod
+    def invalid_binding(cls, binding):
+        ''' Raises Exception specifying that 'binding' is invalid.
+
+        cls.invalid_binding(str)
+
+        '''
+        raise Exception(cls.INVALID_BINDING_MSG.format(binding))
 
     @staticmethod
     def snapshot(widget, filename, scale=None):
@@ -605,7 +613,7 @@ class View(object):
                 scale = 2 # computer is a mac
             else:
                 scale = 1 # assume everything is fine
-                
+
         # determine minimum bounds of widget
         x_min = widget.winfo_rootx() * scale
         y_min = widget.winfo_rooty() * scale
@@ -619,7 +627,7 @@ class View(object):
             save_image.save(filename)
         except Exception:
             save_image.save(filename + '.png')
-            
+
 
 class DefPointControl(object):
     ''' A class for a defining point control in a View. '''
@@ -635,11 +643,11 @@ class DefPointControl(object):
         # initialise external functinos to do nothing until set externally
         self._view_submit = lambda: None
         self._view_select = lambda: None
-        
+
         # set up some variables to easily extract Entry values later
-        xr = tk.StringVar();           yr = tk.StringVar()
+        xr = tk.StringVar();        yr = tk.StringVar()
         xr.set('x{}'.format(r));    yr.set('y{}'.format(r))
-        
+
         # create "Def Pt r (_,_)"
         self._button = tk.Button(master, text='Def Pt {}'.format(r), width=9,
                                  command=lambda: self._view_select(self._id))
@@ -702,7 +710,7 @@ class DefPointControl(object):
                             command=lambda: self._view_select(self._id))
         for entry in self._entries:
             entry.config(state='disabled')
-            
+
     def reset(self):
         ''' The internal reset function for this defining point.
 

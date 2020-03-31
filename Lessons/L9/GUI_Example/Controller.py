@@ -18,7 +18,7 @@ class Controller(object):
             automatic line detection, saving of state (to reopen where you left
             off), or full automation with automatic axis detection and line
             detection combined.
-        
+
         Constructor: Controller(tk.Tk, *str)
 
         '''
@@ -36,15 +36,15 @@ class Controller(object):
         self._add_bind_functions() -> None
 
         '''
-        self._view.add_binding_func('save_data', self._model.save_data)
-        self._view.add_binding_func('clear_data',self._model.clear_data)
-        self._view.add_binding_func('new_point', self._model.add_stored_point)
-        self._view.add_binding_func('del_point',
-                                    self._model.remove_stored_point)
-        self._view.add_binding_func('clear_stored_pts',
-                                    self._model.clear_stored_points)
-        self._view.add_binding_func('set_def_pts',
-                                    self._model.set_defining_points)
+        self._view.add_binding_funcs(
+            save_data        = self._model.save_data,
+            clear_data       = self._model.clear_data,
+            clear_stored_pts = self._model.clear_stored_points,
+            set_def_pts      = self._model.set_defining_points,
+            new_point        = self._model.add_stored_point,
+            del_point        = self._model.remove_stored_point,
+        )
+
 
 if __name__ == '__main__':
     root = tk.Tk()

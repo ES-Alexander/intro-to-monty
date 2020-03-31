@@ -11,9 +11,9 @@ class Model(object):
         Users specify defining points mapping the pixel-plane to the graph-
             plane. The Model stores the mapping, and converts additional pixel-
             point values to graph-points.
-        
+
         Constructor: Model()
-        
+
         '''
         # initialise memory and points
         self.clear_data()
@@ -74,14 +74,14 @@ class Model(object):
 
         # try to remove the exact point
         point_removed = self._stored_points.pop(pixel_point, None)
-        
+
         if point_removed is None:
             # pixel_point is not a key in stored points, find nearest
             closest_point, dist = Model.get_closest(pixel_point,
                     list(self._stored_points.keys()))
             if dist < max_dist:
                 point_removed = self._stored_points.pop(closest_point)
-                
+
         return point_removed
 
     def _update_stored_points(self):
@@ -193,8 +193,7 @@ class Model(object):
         # check graph values are integers/floats
         for graph_point in points_map.values():
             Model._verify_point(graph_point)
-        
-            
+
     @staticmethod
     def _verify_point(point, value_type=None):
         ''' Checks if a point is valid.
@@ -221,7 +220,7 @@ class Model(object):
                                      "point values should be {}.".format(
                                      value_type)))
             return # no issues, continue where left off
-        
+
         raise Exception(("Invalid point length: {}".format(num_vals),
                          "- points should have 2 values"))
 
@@ -262,7 +261,7 @@ class Model(object):
         cp = np.matrix(check_point)
         sps = np.matrix(search_points)
         diff = sps - cp
-        
+
         # get a list of the distance between check_point and each search point
         dists = [np.linalg.norm(i) for i in diff]
         # 'zip' joins N iterables for the first m elements, where m is the
@@ -272,5 +271,5 @@ class Model(object):
         #   the values of dists). Also available in 'max' function.
         min_dist, closest_point = min(zip(dists,search_points),
                                       key=lambda dist_sp: dist_sp[0])
-        
+
         return (closest_point, min_dist)
