@@ -38,7 +38,15 @@
     by your tests, your code will perform correctly. This also means that every
     time you modify your program you can test all its specified behaviour, and
     check that it performs correctly, without you having to remember or
-    manually implement all the test cases.
+    manually implement all the test cases. Many professional and open-source
+    programming projects are made with a 'test first' mentality, whereby you
+    write your test cases for your functions before you write the functions
+    themselves. This forces you to consider the types of inputs and outputs you
+    are dealing with, and the functionality you want, which also lends itself
+    to writing clear documentation. Additionally, with the tests already
+    written it is easy to check which components you have implemented correctly
+    as soon as you write them, which means bugs get found as you write your
+    code, instead of being hard to find at the end.
 
     The ideal case in testing is to literally test every possible input and
     respective output behaviour for your program. For some programs, with
@@ -345,7 +353,9 @@ def factorial(n):
     the TestRun.py file in the Lessons folder, which has been developed for
     this course. It can also be used for other testing situations, particularly
     where you want a readable output, and don't require significant performance
-    optimisation of your testing module.
+    optimisation of your testing module. To use TestRun in your own projects,
+    you can install it to your computer using pip, e.g. with 'python -m pip
+    install testrun'.
 
     To use this test module, import the TestRun class* from TestRun.py, and
     create your own test class inheriting from TestRun. Test functions should
@@ -527,7 +537,7 @@ Tests.run_tests()
 
 # Git and Mercurial
 '''
-    The most widely used open-source (free) repository systems are Git and
+    The most widely used open-source, free repository systems are Git and
     Mercurial, which have mostly similar functionality. Both systems are
     'distributed', in the sense that all contributors to a repository store all
     the information of the repository on local storage (your own computer).
